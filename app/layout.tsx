@@ -26,8 +26,7 @@ const inter = Inter({
 // Render on each request so pages always reflect the live database.
 export const dynamic = "force-dynamic";
 
-const SITE_DESCRIPTION =
-  "Máquinas, ferramentas diamantadas, suporte técnico e formação para a transformação de granitos, mármores, quartzo e cerâmicos. Representantes Thibaut e Aquafil em Portugal.";
+const SITE_DESCRIPTION = "Soluções para a indústria da pedra.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://gmptools.fabiodrbarros.cloud"),

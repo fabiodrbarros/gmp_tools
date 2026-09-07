@@ -26,11 +26,26 @@ const inter = Inter({
 // Render on each request so pages always reflect the live database.
 export const dynamic = "force-dynamic";
 
+const SITE_DESCRIPTION =
+  "Máquinas, ferramentas diamantadas, suporte técnico e formação para a transformação de granitos, mármores, quartzo e cerâmicos. Representantes Thibaut e Aquafil em Portugal.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://gmptools.fabiodrbarros.cloud"),
   title: { default: "GMP Tools", template: "%s | GMP Tools" },
-  description: "Ferramentas diamantadas, máquinas CNC e soluções para granitos, mármores, quartzo e cerâmicos. Representante exclusivo Thibaut em Portugal.",
-  keywords: ["ferramentas diamantadas", "CNC", "granito", "mármore", "quartzo", "cerâmica", "Thibaut", "Portugal"],
-  openGraph: { type: "website", locale: "pt_PT", siteName: "GMP Tools" },
+  description: SITE_DESCRIPTION,
+  keywords: ["ferramentas diamantadas", "máquinas", "granito", "mármore", "quartzo", "cerâmica", "Thibaut", "Aquafil", "Portugal"],
+  openGraph: {
+    type: "website",
+    locale: "pt_PT",
+    siteName: "GMP Tools",
+    title: "GMP Tools",
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary",
+    title: "GMP Tools",
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

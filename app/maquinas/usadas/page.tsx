@@ -1,0 +1,74 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { db } from "@/lib/db";
+import { parseImages } from "@/lib/upload";
+import { Catalog, type CatalogCategory, type CatalogItem } from "@/components/pages/catalog";
+
+export const metadata: Metadata = {
+  title: "Máquinas Usadas e Recondicionadas",
+  description: "Máquinas usadas e recondicionadas para granitos, mármores, quartzo e cerâmicos. Equipamento testado e certificado, com garantia.",
+};
+
+const CATEGORIES: CatalogCategory[] = [
+  { slug: "recondicionadas", label: "Recondicionadas" },
+  { slug: "usadas", label: "Usadas" },
+];
+
+const DEMO: CatalogItem[] = [
+  { id: "1", name: "Ponteadora Recondicionada", href: "/contactos", category: "recondicionadas", brand: "—", price: null, quoteOnly: true },
+];
+
+async function load(): Promise<CatalogItem[]> {
+  try {
+    const rows = await db.machine.findMany({
+      where: { isActive: true, condition: { in: ["USED", "REFURBISHED"] } },
+      include: { brand: true },
+      orderBy: { createdAt: "asc" },
+    });
+    if (rows.length === 0) return DEMO;
+    return rows.map((m) => ({
+      id: m.id,
+      name: `${m.name}${m.year ? ` (${m.year})` : ""}`,
+      href: `/maquinas/${m.slug}`,
+      category: m.condition === "REFURBISHED" ? "recondicionadas" : "usadas",
+      brand: m.brand?.name ?? undefined,
+      badge: m.label ?? (m.condition === "REFURBISHED" ? "Recondicionada" : "Usada"),
+      image: parseImages(m.images)[0],
+      price: m.price,
+      quoteOnly: m.price == null,
+    }));
+  } catch {
+    return DEMO;
+  }
+}
+
+export default async function UsedMachinesPage() {
+  const items = await load();
+
+  return (
+    <>
+      <Catalog eyebrow="— Maquinaria Usada & Recondicionada" allLabel="Todas" categories={CATEGORIES} items={items} searchable pageSize={9} />
+
+      {/* CTA */}
+      <div className="max-w-screen-xl mx-auto px-6 lg:px-10 pb-20">
+        <div className="bg-[#0a0a0a] p-10 lg:p-12">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div>
+              <h3 className="font-display text-2xl font-medium text-white mb-2">Procura outra máquina?</h3>
+              <p className="text-gray-400">Temos acesso a equipamento usado de vários fabricantes. Diga-nos o que precisa.</p>
+            </div>
+            <div className="flex gap-3 shrink-0">
+              <Link href="/maquinas" className="inline-flex items-center gap-2 border border-white/20 text-white text-sm font-semibold px-6 py-3 hover:bg-white/10 transition-colors">
+                Máquinas novas
+              </Link>
+              <Link href="/contactos" className="inline-flex items-center gap-2 bg-red-600 text-white text-sm font-semibold px-6 py-3 hover:bg-red-700 transition-colors group">
+                Contacte-nos <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

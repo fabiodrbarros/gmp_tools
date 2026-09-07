@@ -1,0 +1,72 @@
+"use client";
+
+import { motion } from "framer-motion";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+export function Hero() {
+  return (
+    <section className="relative h-screen min-h-[600px] w-full overflow-hidden bg-[#0a0a0a]">
+      {/* Background video */}
+      <video
+        className="absolute inset-0 h-full w-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        poster=""
+      >
+        <source src="/videos/video-banner-site-web.mp4" type="video/mp4" />
+      </video>
+
+      {/* Overlays for legibility */}
+      <div className="absolute inset-0 bg-black/45" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-red-600/40" />
+
+      {/* Headline */}
+      <div className="relative z-10 h-full flex items-center">
+        <div className="w-full max-w-screen-xl mx-auto px-6 lg:px-16">
+          <h1 className="font-display font-medium tracking-tight text-white leading-[0.9] text-[clamp(3rem,8.5vw,8rem)]">
+            <Line delay={0.15}>Precisão</Line>
+            <Line delay={0.28} className="text-red-500">que transforma</Line>
+            <Line delay={0.41}>a indústria.</Line>
+          </h1>
+        </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.9 }}
+        className="absolute bottom-9 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3 pointer-events-none"
+      >
+        <span className="text-[10px] tracking-[0.3em] text-white/60 uppercase font-medium">Scroll</span>
+        <span className="block w-px h-12 bg-white/20 relative overflow-hidden">
+          <motion.span
+            animate={{ y: ["-100%", "200%"] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-x-0 top-0 h-1/2 bg-red-500"
+          />
+        </span>
+      </motion.div>
+    </section>
+  );
+}
+
+function Line({ children, delay, className = "" }: { children: React.ReactNode; delay: number; className?: string }) {
+  return (
+    <span className="block overflow-hidden py-[0.04em]">
+      <motion.span
+        initial={{ y: "110%" }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, delay, ease: EASE }}
+        className={`block ${className}`}
+      >
+        {children}
+      </motion.span>
+    </span>
+  );
+}

@@ -1,0 +1,24 @@
+node_modules
+.next
+out
+build
+.git
+.gitignore
+.dockerignore
+Dockerfile
+docker-compose.yml
+*.md
+.vercel
+.DS_Store
+npm-debug.log*
+*.tsbuildinfo
+
+# never bake local data into the image (these live in volumes)
+prisma/dev.db
+prisma/dev.db-journal
+public/uploads
+
+# env files — provide them at runtime instead
+.env
+.env.*
+!.env.production.example

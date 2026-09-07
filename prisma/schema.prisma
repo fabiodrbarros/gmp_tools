@@ -1,0 +1,141 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  kind      String    @default("PRODUCT") // PRODUCT | MACHINE
+  sortOrder Int       @default(0)
+  products  Product[]
+}
+
+model Brand {
+  id         String    @id @default(cuid())
+  name       String
+  slug       String    @unique
+  country    String?
+  isFeatured Boolean   @default(false)
+  products   Product[]
+  machines   Machine[]
+}
+
+model Product {
+  id               String    @id @default(cuid())
+  name             String
+  slug             String    @unique
+  sku              String    @unique
+  shortDescription String?
+  description      String?
+  price            Float?
+  comparePrice     Float?
+  stock            Int       @default(0)
+  isActive         Boolean   @default(true)
+  isFeatured       Boolean   @default(false)
+  quoteOnly        Boolean   @default(false)
+  applications     String?
+  materials        String?
+  specifications   String?
+  images           String?
+  categoryId       String?
+  brandId          String?
+  category         Category? @relation(fields: [categoryId], references: [id])
+  brand            Brand?    @relation(fields: [brandId], references: [id])
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model Machine {
+  id               String   @id @default(cuid())
+  name             String
+  slug             String   @unique
+  shortDescription String?
+  description      String?
+  price            Float?
+  condition        String   @default("NEW")
+  category         String?
+  year             String?
+  label            String?
+  isActive         Boolean  @default(true)
+  isFeatured       Boolean  @default(false)
+  specifications   String?
+  images           String?
+  brandId          String?
+  brand            Brand?   @relation(fields: [brandId], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  orderNumber String   @unique
+  name        String
+  email       String
+  phone       String
+  company     String?
+  address     String
+  city        String
+  postalCode  String
+  notes       String?
+  items       String
+  subtotal    Float
+  shipping    Float    @default(0)
+  total       Float
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+}
+
+model QuoteRequest {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  company     String?
+  message     String
+  productName String?
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+}
+
+model AssistanceRequest {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String
+  company     String?
+  machineType String
+  urgency     String   @default("NORMAL")
+  description String
+  status      String   @default("OPEN")
+  createdAt   DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model News {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  category    String
+  date        DateTime @default(now())
+  readMin     Int      @default(3)
+  excerpt     String
+  body        String?
+  images      String?
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

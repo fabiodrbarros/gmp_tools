@@ -1,0 +1,30 @@
+services:
+  web:
+    build: .
+    image: gmp-tools:latest
+    container_name: gmp-tools
+    restart: unless-stopped
+    ports:
+      # host:container — expose only to localhost if a reverse proxy / cloudflared runs on the host
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      # SQLite database lives in the gmp-data volume
+      DATABASE_URL: "file:/data/gmp.db"
+      # Set true when served over HTTPS (e.g. behind Cloudflare) so the admin cookie is Secure
+      COOKIE_SECURE: "${COOKIE_SECURE:-true}"
+      # Seed demo products/machines on first boot (set once, then back to false)
+      SEED_ON_START: "${SEED_ON_START:-false}"
+      # Public site URL (used for metadata / links)
+      NEXT_PUBLIC_SITE_URL: "${NEXT_PUBLIC_SITE_URL:-https://exemplo.pt}"
+      # Admin panel credentials — CHANGE THESE
+      ADMIN_USER: "${ADMIN_USER:?set ADMIN_USER}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD:?set ADMIN_PASSWORD}"
+      ADMIN_TOKEN: "${ADMIN_TOKEN:?set ADMIN_TOKEN}"
+    volumes:
+      - gmp-data:/data                  # SQLite database
+      - gmp-uploads:/app/public/uploads # uploaded product/machine images
+
+volumes:
+  gmp-data:
+  gmp-uploads:

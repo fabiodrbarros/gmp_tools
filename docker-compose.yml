@@ -5,8 +5,10 @@ services:
     container_name: gmp-tools
     restart: unless-stopped
     ports:
-      # host:container — expose only to localhost if a reverse proxy / cloudflared runs on the host
-      - "3000:3000"
+      # localhost only — for host-side checks (curl). Cloudflare reaches it via the "web" network.
+      - "127.0.0.1:3000:3000"
+    networks:
+      - web
     environment:
       NODE_ENV: production
       # SQLite database lives in the gmp-data volume
@@ -28,3 +30,8 @@ services:
 volumes:
   gmp-data:
   gmp-uploads:
+
+networks:
+  # shared network where cloudflared and the other sites live; reached by container name
+  web:
+    external: true

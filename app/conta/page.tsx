@@ -5,6 +5,7 @@ import { LogOut, Package } from "lucide-react";
 import { db } from "@/lib/db";
 import { getCustomer } from "@/lib/customer-auth";
 import { customerLogout } from "@/app/actions/customer-auth";
+import { ProfileForm } from "@/components/customer/profile-form";
 
 export const metadata: Metadata = { title: "A minha conta" };
 
@@ -25,10 +26,7 @@ export default async function ContaPage() {
   if (!session) redirect("/entrar");
 
   const [customer, orders] = await Promise.all([
-    db.customer.findUnique({
-      where: { id: session.id },
-      include: { categoryDiscounts: { include: { category: true } } },
-    }),
+    db.customer.findUnique({ where: { id: session.id } }),
     db.customerOrder.findMany({
       where: { customerId: session.id },
       orderBy: { createdAt: "desc" },
@@ -54,35 +52,15 @@ export default async function ContaPage() {
         </div>
       </div>
 
-      <div className="max-w-screen-xl mx-auto px-6 lg:px-10 py-12 grid lg:grid-cols-3 gap-10">
-        {/* Discounts */}
-        <div className="lg:col-span-1">
-          <h2 className="text-sm font-medium text-black uppercase tracking-wider mb-4">As suas condições</h2>
-          <div className="border border-gray-100 divide-y divide-gray-100">
-            <div className="flex justify-between px-4 py-3 text-sm">
-              <span className="text-gray-500">Desconto geral</span>
-              <span className="font-semibold text-black">{customer.discountPct}%</span>
-            </div>
-            {customer.categoryDiscounts.map((d) => (
-              <div key={d.id} className="flex justify-between px-4 py-3 text-sm">
-                <span className="text-gray-500">{d.category.name}</span>
-                <span className="font-semibold text-black">{d.discountPct}%</span>
-              </div>
-            ))}
-          </div>
-          <p className="text-[11px] text-gray-400 mt-3">Os descontos por quantidade aplicam-se automaticamente no carrinho.</p>
-          <Link href="/produtos" className="inline-flex items-center gap-2 mt-6 bg-black text-white text-sm font-semibold px-6 py-3 hover:bg-red-600 transition-colors">
-            Ver catálogo
-          </Link>
-        </div>
-
+      <div className="max-w-screen-xl mx-auto px-6 lg:px-10 py-12 grid lg:grid-cols-2 gap-12">
         {/* Orders */}
-        <div className="lg:col-span-2">
+        <div>
           <h2 className="text-sm font-medium text-black uppercase tracking-wider mb-4">Encomendas</h2>
           {orders.length === 0 ? (
             <div className="border border-gray-100 p-10 text-center">
               <Package className="h-8 w-8 text-gray-200 mx-auto mb-3" />
               <p className="text-gray-400 text-sm">Ainda não tem encomendas.</p>
+              <Link href="/produtos" className="inline-flex items-center gap-2 mt-6 bg-black text-white text-sm font-semibold px-6 py-3 hover:bg-red-600 transition-colors">Ver catálogo</Link>
             </div>
           ) : (
             <div className="border border-gray-100 divide-y divide-gray-100">
@@ -103,6 +81,23 @@ export default async function ContaPage() {
               })}
             </div>
           )}
+        </div>
+
+        {/* Profile / address */}
+        <div>
+          <h2 className="text-sm font-medium text-black uppercase tracking-wider mb-4">Os meus dados</h2>
+          <ProfileForm
+            initial={{
+              name: customer.name,
+              email: customer.email,
+              company: customer.company,
+              phone: customer.phone,
+              taxId: customer.taxId,
+              address: customer.address,
+              postalCode: customer.postalCode,
+              city: customer.city,
+            }}
+          />
         </div>
       </div>
     </div>

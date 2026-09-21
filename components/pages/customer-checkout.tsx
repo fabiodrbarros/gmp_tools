@@ -61,7 +61,7 @@ export function CustomerCheckout() {
       <div className="border-b border-gray-100 bg-gray-50">
         <div className="max-w-3xl mx-auto px-6 py-10">
           <h1 className="text-4xl font-medium text-black">Finalizar encomenda</h1>
-          <p className="text-gray-500 mt-1">Confirme os artigos e envie o pedido — sem pagamento online.</p>
+          <p className="text-gray-500 mt-1">Confirme os artigos e envie o pedido.</p>
         </div>
       </div>
 
@@ -79,12 +79,9 @@ export function CustomerCheckout() {
         </div>
 
         <div className="flex justify-between text-sm mb-8">
-          <span className="text-gray-500">Subtotal estimado (sem IVA)</span>
+          <span className="text-gray-500">Subtotal (sem IVA)</span>
           <span className="font-semibold text-black">{fmt(subtotal)}</span>
         </div>
-        <p className="text-[12px] text-gray-400 mb-8 -mt-6">
-          Os descontos por quantidade são aplicados ao registar a encomenda; o valor final é confirmado pela GMP.
-        </p>
 
         <label className="block text-xs font-semibold text-gray-600 mb-1.5">Notas (opcional)</label>
         <textarea

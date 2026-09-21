@@ -19,6 +19,7 @@ function readForm(formData: FormData) {
     const n = Number(((v as string) || "").replace(",", "."));
     return isNaN(n) ? 0 : n;
   };
+  const s = (k: string) => ((formData.get(k) as string) || "").trim() || null;
   return {
     base: schema.safeParse({
       email: ((formData.get("email") as string) || "").trim().toLowerCase(),
@@ -28,6 +29,7 @@ function readForm(formData: FormData) {
       discountPct: num(formData.get("discountPct")),
       isActive: formData.get("isActive") === "on",
     }),
+    address: { taxId: s("taxId"), address: s("address"), postalCode: s("postalCode"), city: s("city") },
     password: ((formData.get("password") as string) || "").trim(),
     // category overrides: inputs named catDisc_<categoryId>
     categoryDiscounts: [...formData.entries()]
@@ -38,7 +40,7 @@ function readForm(formData: FormData) {
 }
 
 export async function createCustomer(formData: FormData) {
-  const { base, password, categoryDiscounts } = readForm(formData);
+  const { base, address, password, categoryDiscounts } = readForm(formData);
   if (!base.success) return { success: false, error: base.error.issues[0]?.message ?? "Dados inválidos." };
   if (password.length < 6) return { success: false, error: "A palavra-passe tem de ter pelo menos 6 caracteres." };
 
@@ -49,6 +51,7 @@ export async function createCustomer(formData: FormData) {
         name: base.data.name,
         company: base.data.company ?? null,
         phone: base.data.phone ?? null,
+        ...address,
         discountPct: base.data.discountPct,
         isActive: base.data.isActive,
         passwordHash: await hashPassword(password),
@@ -66,7 +69,7 @@ export async function createCustomer(formData: FormData) {
 }
 
 export async function updateCustomer(id: string, formData: FormData) {
-  const { base, password, categoryDiscounts } = readForm(formData);
+  const { base, address, password, categoryDiscounts } = readForm(formData);
   if (!base.success) return { success: false, error: base.error.issues[0]?.message ?? "Dados inválidos." };
   if (password && password.length < 6) return { success: false, error: "A nova palavra-passe tem de ter pelo menos 6 caracteres." };
 
@@ -79,6 +82,7 @@ export async function updateCustomer(id: string, formData: FormData) {
         name: base.data.name,
         company: base.data.company ?? null,
         phone: base.data.phone ?? null,
+        ...address,
         discountPct: base.data.discountPct,
         isActive: base.data.isActive,
         ...(password ? { passwordHash: await hashPassword(password) } : {}),

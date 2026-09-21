@@ -12,6 +12,10 @@ export interface CustomerInitial {
   name: string;
   company: string | null;
   phone: string | null;
+  taxId: string | null;
+  address: string | null;
+  postalCode: string | null;
+  city: string | null;
   discountPct: number;
   isActive: boolean;
   categoryDiscounts: { categoryId: string; discountPct: number }[];
@@ -68,6 +72,17 @@ export function CustomerForm({
         <Field label={editing ? "Nova palavra-passe (deixar vazio para manter)" : "Palavra-passe *"}>
           <input name="password" type="text" autoComplete="new-password" placeholder={editing ? "••••••" : "mínimo 6 caracteres"} />
         </Field>
+      </Section>
+
+      <Section title="Morada & faturação">
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Field label="NIF"><input name="taxId" defaultValue={customer?.taxId ?? ""} /></Field>
+          <Field label="Morada"><input name="address" defaultValue={customer?.address ?? ""} placeholder="Rua, número" /></Field>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Field label="Código postal"><input name="postalCode" defaultValue={customer?.postalCode ?? ""} placeholder="0000-000" /></Field>
+          <Field label="Localidade"><input name="city" defaultValue={customer?.city ?? ""} /></Field>
+        </div>
       </Section>
 
       <Section title="Descontos">

@@ -93,12 +93,10 @@ export function CartPage() {
 
             <div className="space-y-2 text-sm">
               <div className="flex justify-between font-medium text-black text-base">
-                <span>Subtotal estimado</span>
+                <span>Subtotal</span>
                 <span>{fmt(subtotal)}</span>
               </div>
-              <div className="text-[11px] text-gray-400">
-                Valores sem IVA. Os descontos por quantidade são aplicados ao registar a encomenda; o valor final é confirmado pela GMP.
-              </div>
+              <div className="text-[11px] text-gray-400">Valores sem IVA.</div>
             </div>
 
             <Link
@@ -107,20 +105,6 @@ export function CartPage() {
             >
               Finalizar encomenda <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-          </div>
-
-          {/* Reassurance */}
-          <div className="bg-white p-5 space-y-3">
-            {[
-              "Encomenda sem pagamento online",
-              "A GMP confirma stock, prazo e valor final",
-              "Preços com as suas condições de cliente",
-            ].map((t) => (
-              <div key={t} className="flex items-center gap-2 text-xs text-gray-500">
-                <span className="h-px w-3 bg-red-600 shrink-0" />
-                {t}
-              </div>
-            ))}
           </div>
         </div>
       </div>

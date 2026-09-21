@@ -155,20 +155,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {/* Price */}
             {!pricesVisible ? (
               <Link href="/entrar" className="inline-flex items-center gap-2 mb-8 border border-gray-200 px-4 py-3 text-sm text-gray-600 hover:border-black transition-colors">
-                <Lock className="h-4 w-4" /> Inicie sessão para ver o preço
+                <Lock className="h-4 w-4" /> Entrar para ver preço
               </Link>
             ) : custPrice != null ? (
               <>
                 <div className="flex items-baseline gap-3 mb-2">
                   <span className="text-4xl font-medium text-black">{fmt(custPrice)}</span>
-                  {listPrice != null && custPrice < listPrice && (
-                    <>
-                      <span className="text-lg text-gray-400 line-through">{fmt(listPrice)}</span>
-                      <span className="text-sm font-medium text-red-600 bg-red-50 px-2 py-0.5">-{Math.round((1 - custPrice / listPrice) * 100)}%</span>
-                    </>
-                  )}
                 </div>
-                <div className="text-xs text-gray-400 mb-6">Preço sem IVA{custPct > 0 ? " · já com o seu desconto" : ""}</div>
+                <div className="text-xs text-gray-400 mb-6">Preço sem IVA</div>
                 {p.tiers.length > 0 && (
                   <div className="mb-8 border border-gray-100">
                     <div className="text-[11px] font-medium tracking-wider text-gray-400 uppercase px-4 py-2 border-b border-gray-100">Descontos por quantidade</div>
@@ -180,7 +174,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                         </div>
                       ))}
                     </div>
-                    <p className="text-[11px] text-gray-400 px-4 py-2">Somam-se ao seu desconto e aplicam-se no carrinho.</p>
+                    <p className="text-[11px] text-gray-400 px-4 py-2">Aplicam-se automaticamente no carrinho.</p>
                   </div>
                 )}
               </>

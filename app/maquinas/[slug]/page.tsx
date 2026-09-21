@@ -98,7 +98,7 @@ export default async function MachinePage({ params }: { params: Promise<{ slug: 
               <span className={`text-[10px] font-medium uppercase px-2 py-1 tracking-widest ${cond.cls}`}>{cond.label}</span>
               {!pricesVisible ? (
                 <Link href="/entrar" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black transition-colors">
-                  <Lock className="h-4 w-4" /> Inicie sessão para ver o preço
+                  <Lock className="h-4 w-4" /> Entrar para ver preço
                 </Link>
               ) : (
                 <span className="text-3xl font-medium text-black">

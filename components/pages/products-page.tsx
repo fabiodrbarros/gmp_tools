@@ -17,16 +17,14 @@ async function load(pricesVisible: boolean, discountCtx: Awaited<ReturnType<type
       if (p.category) catMap.set(p.category.slug, p.category.name);
       const list = p.quoteOnly ? null : p.price;
 
-      // Customer base discount for this product's category (quantity tiers apply in the cart)
+      // Customer base discount for this product's category (quantity tiers apply in the cart).
+      // The discount is internal — the customer just sees their final price, never the % or list price.
       let price = list;
-      let comparePrice = p.comparePrice;
       if (list != null && discountCtx) {
         const pct = customerDiscountFor(discountCtx, p.categoryId);
-        if (pct > 0) {
-          price = applyDiscount(list, pct);
-          comparePrice = list; // strike the list price
-        }
+        if (pct > 0) price = applyDiscount(list, pct);
       }
+      const comparePrice = null;
 
       return {
         id: p.id,

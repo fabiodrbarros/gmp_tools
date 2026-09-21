@@ -150,8 +150,12 @@ model Customer {
   name              String
   company           String?
   phone             String?
+  taxId             String? // NIF / VAT
+  address           String?
+  postalCode        String?
+  city              String?
   passwordHash      String
-  discountPct       Float                      @default(0) // general per-customer discount
+  discountPct       Float                      @default(0) // general per-customer discount (internal, never shown to the customer)
   isActive          Boolean                    @default(true)
   createdAt         DateTime                   @default(now())
   updatedAt         DateTime                   @updatedAt

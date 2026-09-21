@@ -13,7 +13,7 @@ export default async function EntrarPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <h1 className="font-display text-3xl font-medium text-black tracking-tight">Área de cliente</h1>
-          <p className="text-sm text-gray-500 mt-2">Inicie sessão para ver preços e fazer encomendas.</p>
+          <p className="text-sm text-gray-500 mt-2">Aceda à sua conta GMP.</p>
         </div>
         <div className="bg-white border border-gray-100 p-8 shadow-sm">
           <CustomerLoginForm />

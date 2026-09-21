@@ -169,7 +169,7 @@ export function Catalog({ eyebrow, title, allLabel = "Todos", categories, items,
                       <span className="text-xs text-gray-400 italic">Sob consulta</span>
                     ) : !pricesVisible ? (
                       <span className="inline-flex items-center gap-1.5 text-[11px] text-gray-400">
-                        <Lock className="h-3 w-3" /> Inicie sessão p/ ver preço
+                        <Lock className="h-3 w-3" /> Entrar para ver preço
                       </span>
                     ) : (
                       <div className="flex items-baseline gap-1.5">

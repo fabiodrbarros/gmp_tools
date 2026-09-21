@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LayoutDashboard, Package, Cpu, Tag, Newspaper, FileText, MessageSquare, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, Cpu, Tag, Newspaper, FileText, MessageSquare, Users, ShoppingCart, LogOut } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import { Logo } from "@/components/layout/logo";
 
@@ -12,6 +12,8 @@ const nav = [
   { href: "/gmp-panel-admin/produtos", label: "Produtos", Icon: Package },
   { href: "/gmp-panel-admin/maquinas", label: "Máquinas", Icon: Cpu },
   { href: "/gmp-panel-admin/noticias", label: "Notícias", Icon: Newspaper },
+  { href: "/gmp-panel-admin/clientes", label: "Clientes", Icon: Users },
+  { href: "/gmp-panel-admin/encomendas", label: "Encomendas", Icon: ShoppingCart },
   { href: "/gmp-panel-admin/pedidos", label: "Pedidos", Icon: FileText },
   { href: "/gmp-panel-admin/mensagens", label: "Mensagens", Icon: MessageSquare },
 ];

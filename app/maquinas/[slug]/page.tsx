@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, ArrowRight, Check, FileDown } from "lucide-react";
+import { ChevronRight, ArrowRight, Check, FileDown, Lock } from "lucide-react";
 import { db } from "@/lib/db";
 import { parseImages } from "@/lib/upload";
 import { Gallery } from "@/components/gallery";
 import { QuoteForm } from "@/components/forms/quote-form";
 import { SITE } from "@/lib/site";
+import { getCustomer } from "@/lib/customer-auth";
 
 const COND: Record<string, { label: string; cls: string }> = {
   NEW: { label: "Nova", cls: "bg-green-50 text-green-600" },
@@ -47,6 +48,7 @@ export default async function MachinePage({ params }: { params: Promise<{ slug: 
   const images = parseImages(m.images);
   const cond = COND[m.condition] ?? COND.NEW;
   const used = m.condition !== "NEW";
+  const pricesVisible = !!(await getCustomer());
 
   // Meta rows (only the ones that exist)
   const meta: { k: string; v: string }[] = [
@@ -94,9 +96,15 @@ export default async function MachinePage({ params }: { params: Promise<{ slug: 
             <h1 className="font-display text-3xl lg:text-4xl font-medium text-black tracking-tight mb-3">{m.name}</h1>
             <div className="flex items-center gap-3 mb-6">
               <span className={`text-[10px] font-medium uppercase px-2 py-1 tracking-widest ${cond.cls}`}>{cond.label}</span>
-              <span className="text-3xl font-medium text-black">
-                {m.price != null ? <>{fmt(m.price)}<span className="text-gray-400 font-normal text-base ml-1">+ IVA</span></> : "Sob consulta"}
-              </span>
+              {!pricesVisible ? (
+                <Link href="/entrar" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black transition-colors">
+                  <Lock className="h-4 w-4" /> Inicie sessão para ver o preço
+                </Link>
+              ) : (
+                <span className="text-3xl font-medium text-black">
+                  {m.price != null ? <>{fmt(m.price)}<span className="text-gray-400 font-normal text-base ml-1">+ IVA</span></> : "Sob consulta"}
+                </span>
+              )}
             </div>
 
             {(m.description || m.shortDescription) && (

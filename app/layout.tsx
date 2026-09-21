@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { CartProvider } from "@/lib/cart";
 import { LanguageProvider } from "@/lib/i18n";
+import { getCustomer } from "@/lib/customer-auth";
 import "./globals.css";
 
 // Display: industrial grotesque echoing the GMP wordmark — heavy, squared, wide
@@ -47,13 +48,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const customer = await getCustomer();
   return (
     <html lang="pt" className={`${saira.variable} ${inter.variable}`}>
       <body className="font-sans antialiased">
         <LanguageProvider>
           <CartProvider>
-            <Header />
+            <Header customer={customer ? { name: customer.name } : null} />
             <main>{children}</main>
             <Footer />
           </CartProvider>

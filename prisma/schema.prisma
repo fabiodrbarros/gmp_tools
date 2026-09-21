@@ -7,12 +7,13 @@ datasource db {
 }
 
 model Category {
-  id        String    @id @default(cuid())
-  name      String
-  slug      String    @unique
-  kind      String    @default("PRODUCT") // PRODUCT | MACHINE
-  sortOrder Int       @default(0)
-  products  Product[]
+  id                String                     @id @default(cuid())
+  name              String
+  slug              String                     @unique
+  kind              String                     @default("PRODUCT") // PRODUCT | MACHINE
+  sortOrder         Int                        @default(0)
+  products          Product[]
+  customerDiscounts CustomerCategoryDiscount[]
 }
 
 model Brand {
@@ -47,6 +48,7 @@ model Product {
   brandId          String?
   category         Category? @relation(fields: [categoryId], references: [id])
   brand            Brand?    @relation(fields: [brandId], references: [id])
+  quantityTiers    QuantityTier[]
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 }
@@ -140,4 +142,63 @@ model News {
   isPublished Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Customer {
+  id                String                     @id @default(cuid())
+  email             String                     @unique
+  name              String
+  company           String?
+  phone             String?
+  passwordHash      String
+  discountPct       Float                      @default(0) // general per-customer discount
+  isActive          Boolean                    @default(true)
+  createdAt         DateTime                   @default(now())
+  updatedAt         DateTime                   @updatedAt
+  categoryDiscounts CustomerCategoryDiscount[]
+  orders            CustomerOrder[]
+}
+
+model CustomerCategoryDiscount {
+  id          String   @id @default(cuid())
+  customerId  String
+  categoryId  String
+  discountPct Float
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([customerId, categoryId])
+}
+
+model QuantityTier {
+  id          String  @id @default(cuid())
+  productId   String
+  minQty      Int
+  discountPct Float
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model CustomerOrder {
+  id         String              @id @default(cuid())
+  customerId String
+  status     String              @default("PENDING") // PENDING | CONFIRMED | CANCELLED
+  subtotal   Float               @default(0)
+  notes      String?
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  customer   Customer            @relation(fields: [customerId], references: [id])
+  items      CustomerOrderItem[]
+}
+
+model CustomerOrderItem {
+  id          String        @id @default(cuid())
+  orderId     String
+  productId   String?
+  sku         String
+  name        String
+  qty         Int
+  unitPrice   Float // list price before discount
+  discountPct Float         @default(0)
+  lineTotal   Float // qty * unitPrice * (1 - discountPct/100)
+  order       CustomerOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }

@@ -1,0 +1,114 @@
+"use client";
+
+import * as React from "react";
+import Link from "next/link";
+import { CheckCircle2, ArrowRight, ShoppingCart } from "lucide-react";
+import { useCart } from "@/lib/cart";
+import { submitOrder } from "@/app/actions/order";
+
+function fmt(n: number) {
+  return new Intl.NumberFormat("pt-PT", { style: "currency", currency: "EUR" }).format(n);
+}
+
+export function CustomerCheckout() {
+  const { items, subtotal, clear } = useCart();
+  const [notes, setNotes] = React.useState("");
+  const [pending, setPending] = React.useState(false);
+  const [error, setError] = React.useState("");
+  const [orderId, setOrderId] = React.useState<string | null>(null);
+
+  async function confirm() {
+    setPending(true);
+    setError("");
+    const res = await submitOrder(items.map((i) => ({ sku: i.sku, qty: i.qty })), notes);
+    setPending(false);
+    if (res.success) {
+      setOrderId(res.orderId);
+      clear();
+    } else {
+      setError(res.error);
+    }
+  }
+
+  if (orderId) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center px-6 text-center">
+        <CheckCircle2 className="h-14 w-14 text-green-500 mb-6" />
+        <h1 className="text-3xl font-medium text-black mb-2">Encomenda enviada!</h1>
+        <p className="text-gray-500 mb-1">Referência #{orderId.slice(-6).toUpperCase()}</p>
+        <p className="text-gray-500 mb-8 max-w-md">Recebemos a sua encomenda e a nossa equipa entra em contacto para confirmar os detalhes.</p>
+        <Link href="/conta" className="inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-8 py-4 hover:bg-red-600 transition-colors group">
+          Ver as minhas encomendas <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center px-6 text-center">
+        <ShoppingCart className="h-14 w-14 text-gray-100 mb-6" />
+        <h1 className="text-3xl font-medium text-black mb-3">O carrinho está vazio.</h1>
+        <Link href="/produtos" className="inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-8 py-4 hover:bg-red-600 transition-colors">
+          Ver catálogo
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      <div className="border-b border-gray-100 bg-gray-50">
+        <div className="max-w-3xl mx-auto px-6 py-10">
+          <h1 className="text-4xl font-medium text-black">Finalizar encomenda</h1>
+          <p className="text-gray-500 mt-1">Confirme os artigos e envie o pedido — sem pagamento online.</p>
+        </div>
+      </div>
+
+      <div className="max-w-3xl mx-auto px-6 py-12">
+        <div className="border border-gray-100 divide-y divide-gray-100 mb-6">
+          {items.map((i) => (
+            <div key={i.sku} className="flex items-center justify-between gap-4 px-5 py-4">
+              <div>
+                <div className="font-medium text-gray-900 text-sm">{i.name}</div>
+                <div className="text-xs text-gray-400">{i.sku} · {i.qty} × {fmt(i.price)}</div>
+              </div>
+              <div className="font-semibold text-black text-sm">{fmt(i.price * i.qty)}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex justify-between text-sm mb-8">
+          <span className="text-gray-500">Subtotal estimado (sem IVA)</span>
+          <span className="font-semibold text-black">{fmt(subtotal)}</span>
+        </div>
+        <p className="text-[12px] text-gray-400 mb-8 -mt-6">
+          Os descontos por quantidade são aplicados ao registar a encomenda; o valor final é confirmado pela GMP.
+        </p>
+
+        <label className="block text-xs font-semibold text-gray-600 mb-1.5">Notas (opcional)</label>
+        <textarea
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          rows={3}
+          placeholder="Prazo pretendido, morada de entrega, referências…"
+          className="w-full border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors mb-6"
+        />
+
+        {error && <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 mb-6">{error}</div>}
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={confirm}
+            disabled={pending}
+            className="inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-8 py-4 hover:bg-red-600 transition-colors disabled:opacity-50 group"
+          >
+            {pending ? "A enviar..." : "Confirmar encomenda"}
+            {!pending && <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />}
+          </button>
+          <Link href="/carrinho" className="text-sm text-gray-500 hover:text-black transition-colors">Voltar ao carrinho</Link>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,49 +1,73 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { z } from "zod";
+import { revalidatePath } from "next/cache";
+import { getCustomer } from "@/lib/customer-auth";
+import {
+  loadCustomerDiscountContext,
+  customerDiscountFor,
+  quantityDiscount,
+  effectiveDiscountPct,
+  applyDiscount,
+} from "@/lib/discounts";
 
-const schema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  phone: z.string().min(9),
-  company: z.string().optional(),
-  address: z.string().min(5),
-  city: z.string().min(2),
-  postalCode: z.string().min(7),
-  notes: z.string().optional(),
-  items: z.string().min(2),
-  subtotal: z.number().positive(),
-  shipping: z.number().min(0),
-  total: z.number().positive(),
-});
-
-function orderNum() {
-  const ts = Date.now().toString(36).toUpperCase();
-  const rand = Math.random().toString(36).slice(2, 5).toUpperCase();
-  return `GMP-${ts}-${rand}`;
+export interface OrderLineInput {
+  sku: string;
+  qty: number;
 }
 
-export async function submitOrder(data: {
-  name: string; email: string; phone: string; company?: string;
-  address: string; city: string; postalCode: string; notes?: string;
-  items: string; subtotal: number; shipping: number; total: number;
-}) {
-  const parsed = schema.safeParse(data);
-  if (!parsed.success) return { success: false, error: "Dados inválidos." };
+// Server recomputes all prices/discounts from the DB — client cart prices are never trusted.
+export async function submitOrder(rawItems: OrderLineInput[], notes?: string) {
+  const customer = await getCustomer();
+  if (!customer) return { success: false as const, error: "A sessão expirou. Inicie sessão novamente." };
+
+  const items = (rawItems || []).filter((i) => i && i.sku && i.qty > 0);
+  if (!items.length) return { success: false as const, error: "O carrinho está vazio." };
+
+  const ctx = await loadCustomerDiscountContext(customer.id);
 
   try {
-    const order = await db.order.create({
+    const products = await db.product.findMany({
+      where: { sku: { in: items.map((i) => i.sku) }, isActive: true },
+      include: { quantityTiers: true },
+    });
+    const bySku = new Map(products.map((p) => [p.sku, p]));
+
+    const lines: {
+      productId: string; sku: string; name: string; qty: number;
+      unitPrice: number; discountPct: number; lineTotal: number;
+    }[] = [];
+    let subtotal = 0;
+
+    for (const it of items) {
+      const p = bySku.get(it.sku);
+      if (!p || p.quoteOnly || p.price == null) continue;
+      const qty = Math.max(1, Math.floor(it.qty));
+      const custPct = customerDiscountFor(ctx, p.categoryId);
+      const qtyPct = quantityDiscount(p.quantityTiers, qty);
+      const pct = effectiveDiscountPct(custPct, qtyPct);
+      const lineTotal = Math.round(applyDiscount(p.price, pct) * qty * 100) / 100;
+      subtotal += lineTotal;
+      lines.push({ productId: p.id, sku: p.sku, name: p.name, qty, unitPrice: p.price, discountPct: pct, lineTotal });
+    }
+
+    if (!lines.length) return { success: false as const, error: "Nenhum artigo válido para encomendar." };
+    subtotal = Math.round(subtotal * 100) / 100;
+
+    const order = await db.customerOrder.create({
       data: {
-        orderNumber: orderNum(),
-        ...parsed.data,
-        company: parsed.data.company || null,
-        notes: parsed.data.notes || null,
+        customerId: customer.id,
+        subtotal,
+        notes: notes?.trim() || null,
+        items: { create: lines },
       },
     });
-    return { success: true, orderNumber: order.orderNumber };
+
+    revalidatePath("/gmp-panel-admin/encomendas");
+    revalidatePath("/conta");
+    return { success: true as const, orderId: order.id };
   } catch (e) {
     console.error(e);
-    return { success: false, error: "Erro ao processar encomenda." };
+    return { success: false as const, error: "Erro ao registar a encomenda." };
   }
 }

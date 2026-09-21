@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { CheckoutPage } from "@/components/pages/checkout-page";
-import { SHOP_ENABLED } from "@/lib/site";
+import { CustomerCheckout } from "@/components/pages/customer-checkout";
+import { getCustomer } from "@/lib/customer-auth";
 
-export const metadata: Metadata = { title: "Finalizar Encomenda" };
+export const metadata: Metadata = { title: "Finalizar encomenda" };
 
-export default function Page() {
-  if (!SHOP_ENABLED) redirect("/produtos");
-  return <CheckoutPage />;
+export default async function Page() {
+  if (!(await getCustomer())) redirect("/entrar");
+  return <CustomerCheckout />;
 }

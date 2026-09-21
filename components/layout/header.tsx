@@ -3,13 +3,15 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
+import { ShoppingCart, Menu, X, ChevronDown, User } from "lucide-react";
 import { FacebookIcon, InstagramIcon } from "@/components/icons/social";
 import { AnimatePresence, motion } from "framer-motion";
 import { Logo } from "./logo";
 import { useCart } from "@/lib/cart";
 import { useLang, LOCALES, type Locale } from "@/lib/i18n";
-import { SITE, SHOP_ENABLED } from "@/lib/site";
+import { SITE } from "@/lib/site";
+
+export interface HeaderCustomer { name: string }
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -24,12 +26,13 @@ const MENU_LINKS = [
   { key: "nav.contact", href: "/contactos" },
 ];
 
-export function Header() {
+export function Header({ customer = null }: { customer?: HeaderCustomer | null }) {
   const pathname = usePathname();
   const [open, setOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const { count } = useCart();
   const { t } = useLang();
+  const loggedIn = !!customer;
 
   const isHome = pathname === "/";
 
@@ -80,6 +83,31 @@ export function Header() {
                   <InlineLink href="/sobre" light={light}>{t("nav.about")}</InlineLink>
                   <InlineLink href="/servicos" light={light}>{t("nav.services")}</InlineLink>
                 </nav>
+              )}
+
+              {/* Account + cart */}
+              {!open && (
+                <div className="flex items-center gap-4">
+                  {loggedIn && (
+                    <Link
+                      href="/carrinho"
+                      aria-label="Carrinho"
+                      className={`relative transition-colors ${light ? "text-white hover:text-red-500" : "text-black hover:text-red-600"}`}
+                    >
+                      <ShoppingCart className="h-5 w-5" />
+                      {count > 0 && (
+                        <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[9px] font-semibold rounded-full h-4 min-w-4 px-1 grid place-items-center">{count}</span>
+                      )}
+                    </Link>
+                  )}
+                  <Link
+                    href={loggedIn ? "/conta" : "/entrar"}
+                    aria-label={loggedIn ? "A minha conta" : "Entrar"}
+                    className={`transition-colors ${light ? "text-white hover:text-red-500" : "text-black hover:text-red-600"}`}
+                  >
+                    <User className="h-5 w-5" />
+                  </Link>
+                </div>
               )}
 
               {/* Language selector */}
@@ -174,13 +202,19 @@ export function Header() {
                 <MenuInfo title={t("menu.hours")}>
                   <p className="text-sm text-gray-500">{SITE.hours}</p>
                 </MenuInfo>
-                <div className="flex items-center gap-6 pt-2">
-                  {SHOP_ENABLED && (
+                <div className="flex flex-col gap-3 pt-2">
+                  <Link href={loggedIn ? "/conta" : "/entrar"} className="inline-flex items-center gap-2 text-sm text-gray-700 hover:text-red-600 transition-colors">
+                    <User className="h-4 w-4" />
+                    {loggedIn ? "A minha conta" : "Entrar / Área de cliente"}
+                  </Link>
+                  {loggedIn && (
                     <Link href="/carrinho" className="inline-flex items-center gap-2 text-sm text-gray-700 hover:text-red-600 transition-colors">
                       <ShoppingCart className="h-4 w-4" />
                       {t("nav.cart")}{count > 0 ? ` (${count})` : ""}
                     </Link>
                   )}
+                </div>
+                <div className="flex items-center gap-6 pt-2">
                   <a href={SITE.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-gray-500 hover:text-red-600 transition-colors">
                     <FacebookIcon className="h-5 w-5" />
                   </a>

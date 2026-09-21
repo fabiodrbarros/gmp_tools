@@ -2,9 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ShoppingCart, ArrowRight, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { ShoppingCart, ArrowRight, Search, ChevronLeft, ChevronRight, Lock } from "lucide-react";
 import { useCart } from "@/lib/cart";
-import { SHOP_ENABLED } from "@/lib/site";
 
 export interface CatalogCategory {
   slug: string;
@@ -42,9 +41,10 @@ interface CatalogProps {
   items: CatalogItem[];
   searchable?: boolean;
   pageSize?: number;
+  pricesVisible?: boolean;
 }
 
-export function Catalog({ eyebrow, title, allLabel = "Todos", categories, items, searchable = false, pageSize }: CatalogProps) {
+export function Catalog({ eyebrow, title, allLabel = "Todos", categories, items, searchable = false, pageSize, pricesVisible = false }: CatalogProps) {
   const [cat, setCat] = React.useState("todos");
   const [search, setSearch] = React.useState("");
   const [page, setPage] = React.useState(1);
@@ -147,7 +147,7 @@ export function Catalog({ eyebrow, title, allLabel = "Todos", categories, items,
                   {it.badge && (
                     <span className="absolute top-3 left-3 bg-red-600 text-white text-[9px] font-medium px-2 py-1 uppercase tracking-wider">{it.badge}</span>
                   )}
-                  {it.comparePrice && it.price && it.comparePrice > it.price && (
+                  {pricesVisible && it.comparePrice && it.price && it.comparePrice > it.price && (
                     <span className="absolute top-3 right-3 bg-black text-white text-[9px] font-medium px-2 py-1">
                       -{Math.round((1 - it.price / it.comparePrice) * 100)}%
                     </span>
@@ -167,13 +167,17 @@ export function Catalog({ eyebrow, title, allLabel = "Todos", categories, items,
                   <div className="flex items-center justify-between gap-2 pt-5 border-t border-gray-50">
                     {it.quoteOnly || it.price == null ? (
                       <span className="text-xs text-gray-400 italic">Sob consulta</span>
+                    ) : !pricesVisible ? (
+                      <span className="inline-flex items-center gap-1.5 text-[11px] text-gray-400">
+                        <Lock className="h-3 w-3" /> Inicie sessão p/ ver preço
+                      </span>
                     ) : (
                       <div className="flex items-baseline gap-1.5">
                         <span className="text-lg font-medium">{fmt(it.price)}</span>
                         {it.comparePrice && it.comparePrice > it.price && <span className="text-[10px] text-gray-400 line-through">{fmt(it.comparePrice)}</span>}
                       </div>
                     )}
-                    {SHOP_ENABLED && it.cart ? (
+                    {pricesVisible && it.cart ? (
                       <button
                         onClick={(e) => { e.preventDefault(); add(it.cart!); }}
                         className="p-2 bg-gray-100 hover:bg-black hover:text-white text-gray-600 transition-all shrink-0"

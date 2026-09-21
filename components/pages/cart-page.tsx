@@ -4,17 +4,12 @@ import Link from "next/link";
 import { Trash2, Plus, Minus, ShoppingCart, ArrowRight } from "lucide-react";
 import { useCart } from "@/lib/cart";
 
-const FREE_SHIPPING = 300;
-const SHIPPING = 8.50;
-
 function fmt(n: number) {
   return new Intl.NumberFormat("pt-PT", { style: "currency", currency: "EUR" }).format(n);
 }
 
 export function CartPage() {
   const { items, remove, update, subtotal } = useCart();
-  const shipping = subtotal >= FREE_SHIPPING ? 0 : SHIPPING;
-  const total = subtotal + shipping;
 
   if (items.length === 0) {
     return (
@@ -97,24 +92,13 @@ export function CartPage() {
             <h2 className="text-base font-medium text-black">Resumo da encomenda</h2>
 
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between text-gray-600">
-                <span>Subtotal</span>
+              <div className="flex justify-between font-medium text-black text-base">
+                <span>Subtotal estimado</span>
                 <span>{fmt(subtotal)}</span>
               </div>
-              <div className="flex justify-between text-gray-600">
-                <span>Envio</span>
-                <span>{shipping === 0 ? <span className="text-green-600 font-semibold">Grátis</span> : fmt(shipping)}</span>
+              <div className="text-[11px] text-gray-400">
+                Valores sem IVA. Os descontos por quantidade são aplicados ao registar a encomenda; o valor final é confirmado pela GMP.
               </div>
-              {subtotal < FREE_SHIPPING && (
-                <div className="text-xs text-gray-400 bg-gray-50 p-2">
-                  Faltam {fmt(FREE_SHIPPING - subtotal)} para envio grátis
-                </div>
-              )}
-              <div className="border-t border-gray-100 pt-3 flex justify-between font-medium text-black text-base">
-                <span>Total</span>
-                <span>{fmt(total)}</span>
-              </div>
-              <div className="text-[10px] text-gray-400">+ IVA 23% · Valores sem IVA</div>
             </div>
 
             <Link
@@ -128,9 +112,9 @@ export function CartPage() {
           {/* Reassurance */}
           <div className="bg-white p-5 space-y-3">
             {[
-              "Pagamento por transferência bancária",
-              "Entrega 24–48h em Portugal Continental",
-              "Devoluções em 14 dias",
+              "Encomenda sem pagamento online",
+              "A GMP confirma stock, prazo e valor final",
+              "Preços com as suas condições de cliente",
             ].map((t) => (
               <div key={t} className="flex items-center gap-2 text-xs text-gray-500">
                 <span className="h-px w-3 bg-red-600 shrink-0" />

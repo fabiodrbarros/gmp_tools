@@ -4,16 +4,21 @@ import { notFound } from "next/navigation";
 import { ChevronRight, Phone, Mail, FileDown } from "lucide-react";
 import { QuoteForm } from "@/components/forms/quote-form";
 import { AddToCart } from "@/components/forms/add-to-cart";
-import { SITE, SHOP_ENABLED } from "@/lib/site";
+import { SITE } from "@/lib/site";
 import { db } from "@/lib/db";
 import { parseImages } from "@/lib/upload";
+import { getCustomer } from "@/lib/customer-auth";
+import { loadCustomerDiscountContext, customerDiscountFor, applyDiscount } from "@/lib/discounts";
+import { Lock } from "lucide-react";
 
 interface Spec { key: string; value: string; }
+interface Tier { minQty: number; discountPct: number; }
 interface ViewProduct {
   name: string;
   sku: string;
   brand: string;
   category: string;
+  categoryId: string | null;
   price: number | null;
   comparePrice: number | null;
   shortDescription: string;
@@ -22,6 +27,7 @@ interface ViewProduct {
   materials: string[];
   images: string[];
   datasheet: string | null;
+  tiers: Tier[];
 }
 
 function parseList(raw: string | null | undefined): string[] {
@@ -46,7 +52,7 @@ async function getProduct(slug: string): Promise<ViewProduct | null> {
   try {
     const p = await db.product.findFirst({
       where: { OR: [{ slug }, { sku: slug.toUpperCase() }], isActive: true },
-      include: { category: true, brand: true },
+      include: { category: true, brand: true, quantityTiers: true },
     });
     if (!p) return null;
     return {
@@ -54,6 +60,7 @@ async function getProduct(slug: string): Promise<ViewProduct | null> {
       sku: p.sku,
       brand: p.brand?.name ?? "GMP Tools",
       category: p.category?.name ?? "Catálogo",
+      categoryId: p.categoryId,
       price: p.quoteOnly ? null : p.price,
       comparePrice: p.comparePrice,
       shortDescription: p.shortDescription ?? "",
@@ -62,6 +69,7 @@ async function getProduct(slug: string): Promise<ViewProduct | null> {
       materials: parseList(p.materials),
       images: parseImages(p.images),
       datasheet: p.datasheet ?? null,
+      tiers: [...p.quantityTiers].sort((a, b) => a.minQty - b.minQty).map((t) => ({ minQty: t.minQty, discountPct: t.discountPct })),
     };
   } catch {
     return null;
@@ -83,6 +91,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   const p = await getProduct(slug);
   if (!p) notFound();
+
+  const customer = await getCustomer();
+  const pricesVisible = !!customer;
+  const discountCtx = await loadCustomerDiscountContext(customer?.id ?? null);
+  const custPct = customerDiscountFor(discountCtx, p.categoryId);
+  const listPrice = p.price;
+  const custPrice = listPrice != null && custPct > 0 ? applyDiscount(listPrice, custPct) : listPrice;
 
   return (
     <div className="min-h-screen bg-white">
@@ -138,25 +153,44 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {p.shortDescription && <p className="text-gray-500 leading-relaxed mb-8">{p.shortDescription}</p>}
 
             {/* Price */}
-            {p.price != null ? (
-              <div className="flex items-baseline gap-3 mb-8">
-                <span className="text-4xl font-medium text-black">{fmt(p.price)}</span>
-                {p.comparePrice && p.comparePrice > p.price && (
-                  <>
-                    <span className="text-lg text-gray-400 line-through">{fmt(p.comparePrice)}</span>
-                    <span className="text-sm font-medium text-red-600 bg-red-50 px-2 py-0.5">
-                      -{Math.round((1 - p.price / p.comparePrice) * 100)}%
-                    </span>
-                  </>
+            {!pricesVisible ? (
+              <Link href="/entrar" className="inline-flex items-center gap-2 mb-8 border border-gray-200 px-4 py-3 text-sm text-gray-600 hover:border-black transition-colors">
+                <Lock className="h-4 w-4" /> Inicie sessão para ver o preço
+              </Link>
+            ) : custPrice != null ? (
+              <>
+                <div className="flex items-baseline gap-3 mb-2">
+                  <span className="text-4xl font-medium text-black">{fmt(custPrice)}</span>
+                  {listPrice != null && custPrice < listPrice && (
+                    <>
+                      <span className="text-lg text-gray-400 line-through">{fmt(listPrice)}</span>
+                      <span className="text-sm font-medium text-red-600 bg-red-50 px-2 py-0.5">-{Math.round((1 - custPrice / listPrice) * 100)}%</span>
+                    </>
+                  )}
+                </div>
+                <div className="text-xs text-gray-400 mb-6">Preço sem IVA{custPct > 0 ? " · já com o seu desconto" : ""}</div>
+                {p.tiers.length > 0 && (
+                  <div className="mb-8 border border-gray-100">
+                    <div className="text-[11px] font-medium tracking-wider text-gray-400 uppercase px-4 py-2 border-b border-gray-100">Descontos por quantidade</div>
+                    <div className="divide-y divide-gray-100">
+                      {p.tiers.map((t) => (
+                        <div key={t.minQty} className="flex justify-between px-4 py-2 text-sm">
+                          <span className="text-gray-500">A partir de {t.minQty} un.</span>
+                          <span className="font-semibold text-black">−{t.discountPct}%</span>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-[11px] text-gray-400 px-4 py-2">Somam-se ao seu desconto e aplicam-se no carrinho.</p>
+                  </div>
                 )}
-              </div>
+              </>
             ) : (
               <div className="text-2xl font-medium text-black mb-8">Sob consulta</div>
             )}
 
             {/* Actions */}
             <div className="flex flex-col gap-3 mb-10">
-              {SHOP_ENABLED && p.price != null && <AddToCart sku={p.sku} name={p.name} price={p.price} />}
+              {pricesVisible && custPrice != null && <AddToCart sku={p.sku} name={p.name} price={custPrice} />}
               <QuoteForm productName={p.name} productSku={p.sku} />
               {p.datasheet && (
                 <a

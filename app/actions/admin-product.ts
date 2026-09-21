@@ -52,19 +52,6 @@ function buildList(raw: string): string | null {
   return arr.length ? JSON.stringify(arr) : null;
 }
 
-// parallel tierQty[]/tierPct[] inputs -> valid quantity tiers
-function collectTiers(formData: FormData): { minQty: number; discountPct: number }[] {
-  const qtys = formData.getAll("tierQty").map((v) => Math.floor(Number(v)));
-  const pcts = formData.getAll("tierPct").map((v) => Number(v));
-  const tiers: { minQty: number; discountPct: number }[] = [];
-  for (let i = 0; i < qtys.length; i++) {
-    const minQty = qtys[i];
-    const discountPct = Math.min(90, Math.max(0, pcts[i] || 0));
-    if (minQty >= 1 && discountPct > 0) tiers.push({ minQty, discountPct });
-  }
-  return tiers;
-}
-
 const schema = z.object({
   name: z.string().min(2, "Nome obrigatório"),
   sku: z.string().min(1, "SKU obrigatório"),
@@ -135,7 +122,6 @@ export async function createProduct(formData: FormData) {
     const datasheet = await collectDatasheet(formData);
     const specifications = buildSpecs((formData.get("specs") as string) || "");
     const materials = buildList((formData.get("materials") as string) || "");
-    const tiers = collectTiers(formData);
 
     await db.product.create({
       data: {
@@ -150,7 +136,6 @@ export async function createProduct(formData: FormData) {
         specifications,
         materials,
         datasheet,
-        quantityTiers: { create: tiers },
         images,
         isActive: p.isActive,
         isFeatured: p.isFeatured,
@@ -214,8 +199,6 @@ export async function updateProduct(id: string, formData: FormData) {
     const datasheet = await collectDatasheet(formData);
     const specifications = buildSpecs((formData.get("specs") as string) || "");
     const materials = buildList((formData.get("materials") as string) || "");
-    const tiers = collectTiers(formData);
-    await db.quantityTier.deleteMany({ where: { productId: id } });
 
     await db.product.update({
       where: { id },
@@ -231,7 +214,6 @@ export async function updateProduct(id: string, formData: FormData) {
         specifications,
         materials,
         datasheet,
-        quantityTiers: { create: tiers },
         images,
         isActive: p.isActive,
         isFeatured: p.isFeatured,

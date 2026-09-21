@@ -29,7 +29,7 @@ function listToText(raw: string | null): string {
 export default async function EditProdutoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const [p, categories] = await Promise.all([
-    db.product.findUnique({ where: { id }, include: { category: true, brand: true, quantityTiers: true } }).catch(() => null),
+    db.product.findUnique({ where: { id }, include: { category: true, brand: true } }).catch(() => null),
     db.category.findMany({ where: { kind: "PRODUCT" }, orderBy: { name: "asc" }, select: { name: true } }).catch(() => []),
   ]);
   if (!p) notFound();
@@ -55,7 +55,6 @@ export default async function EditProdutoPage({ params }: { params: Promise<{ id
           specsText: specsToText(p.specifications),
           images: parseImages(p.images),
           datasheet: p.datasheet,
-          tiers: [...p.quantityTiers].sort((a, b) => a.minQty - b.minQty).map((t) => ({ minQty: t.minQty, discountPct: t.discountPct })),
           isActive: p.isActive,
           isFeatured: p.isFeatured,
           quoteOnly: p.quoteOnly,

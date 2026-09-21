@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Editar cliente" };
 export default async function EditClientePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const [c, categories] = await Promise.all([
-    db.customer.findUnique({ where: { id }, include: { categoryDiscounts: true } }).catch(() => null),
+    db.customer.findUnique({ where: { id }, include: { categoryDiscounts: true, quantityTiers: true } }).catch(() => null),
     db.category.findMany({ where: { kind: "PRODUCT" }, orderBy: { name: "asc" }, select: { id: true, name: true } }).catch(() => []),
   ]);
   if (!c) notFound();
@@ -32,6 +32,7 @@ export default async function EditClientePage({ params }: { params: Promise<{ id
           discountPct: c.discountPct,
           isActive: c.isActive,
           categoryDiscounts: c.categoryDiscounts.map((d) => ({ categoryId: d.categoryId, discountPct: d.discountPct })),
+          quantityTiers: [...c.quantityTiers].sort((a, b) => a.minQty - b.minQty).map((t) => ({ minQty: t.minQty, discountPct: t.discountPct })),
         }}
       />
     </div>

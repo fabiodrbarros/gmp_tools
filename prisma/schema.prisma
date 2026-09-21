@@ -160,7 +160,16 @@ model Customer {
   createdAt         DateTime                   @default(now())
   updatedAt         DateTime                   @updatedAt
   categoryDiscounts CustomerCategoryDiscount[]
+  quantityTiers     CustomerQuantityTier[]
   orders            CustomerOrder[]
+}
+
+model CustomerQuantityTier {
+  id          String   @id @default(cuid())
+  customerId  String
+  minQty      Int
+  discountPct Float
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 }
 
 model CustomerCategoryDiscount {

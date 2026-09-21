@@ -7,7 +7,6 @@ import { CheckCircle2, ArrowLeft } from "lucide-react";
 import { createProduct, updateProduct } from "@/app/actions/admin-product";
 import { ImagesField } from "@/components/admin/images-field";
 import { DatasheetField } from "@/components/admin/datasheet-field";
-import { QuantityTiersField, type Tier } from "@/components/admin/quantity-tiers-field";
 
 export interface ProductInitial {
   id: string;
@@ -24,7 +23,6 @@ export interface ProductInitial {
   specsText: string;
   images: string[];
   datasheet: string | null;
-  tiers: Tier[];
   isActive: boolean;
   isFeatured: boolean;
   quoteOnly: boolean;
@@ -103,10 +101,6 @@ export function ProductForm({ product, categories = [] }: { product?: ProductIni
           <input name="materials" defaultValue={product?.materials ?? ""} placeholder="Granito, Quartzite, Gneiss, Pedra dura" />
         </Field>
         <p className="text-[11px] text-gray-400">Separados por vírgula. Aparecem como etiquetas na página do produto.</p>
-      </Section>
-
-      <Section title="Descontos por quantidade">
-        <QuantityTiersField initial={product?.tiers ?? []} />
       </Section>
 
       <Section title="Preço & stock">

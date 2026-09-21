@@ -29,7 +29,6 @@ export async function submitOrder(rawItems: OrderLineInput[], notes?: string) {
   try {
     const products = await db.product.findMany({
       where: { sku: { in: items.map((i) => i.sku) }, isActive: true },
-      include: { quantityTiers: true },
     });
     const bySku = new Map(products.map((p) => [p.sku, p]));
 
@@ -44,7 +43,7 @@ export async function submitOrder(rawItems: OrderLineInput[], notes?: string) {
       if (!p || p.quoteOnly || p.price == null) continue;
       const qty = Math.max(1, Math.floor(it.qty));
       const custPct = customerDiscountFor(ctx, p.categoryId);
-      const qtyPct = quantityDiscount(p.quantityTiers, qty);
+      const qtyPct = quantityDiscount(ctx?.quantityTiers ?? [], qty);
       const pct = effectiveDiscountPct(custPct, qtyPct);
       const lineTotal = Math.round(applyDiscount(p.price, pct) * qty * 100) / 100;
       subtotal += lineTotal;

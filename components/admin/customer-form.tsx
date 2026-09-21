@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, ArrowLeft } from "lucide-react";
 import { createCustomer, updateCustomer } from "@/app/actions/admin-customer";
+import { QuantityTiersField, type Tier } from "@/components/admin/quantity-tiers-field";
 
 export interface CustomerInitial {
   id: string;
@@ -19,6 +20,7 @@ export interface CustomerInitial {
   discountPct: number;
   isActive: boolean;
   categoryDiscounts: { categoryId: string; discountPct: number }[];
+  quantityTiers: Tier[];
 }
 
 export function CustomerForm({
@@ -112,9 +114,13 @@ export function CustomerForm({
                 </div>
               ))}
             </div>
-            <p className="text-[11px] text-gray-400 mt-2">Vazio = usa o desconto geral. Os descontos por quantidade (definidos em cada produto) somam-se a estes.</p>
+            <p className="text-[11px] text-gray-400 mt-2">Vazio = usa o desconto geral.</p>
           </div>
         )}
+        <div>
+          <label className="block text-xs font-semibold text-gray-600 mb-2">Desconto por quantidade (soma-se ao desconto acima)</label>
+          <QuantityTiersField initial={customer?.quantityTiers ?? []} />
+        </div>
       </Section>
 
       <Section title="Estado">

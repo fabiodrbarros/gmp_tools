@@ -36,11 +36,23 @@ function readForm(formData: FormData) {
       .filter(([k]) => k.startsWith("catDisc_"))
       .map(([k, v]) => ({ categoryId: k.slice("catDisc_".length), discountPct: num(v) }))
       .filter((d) => d.categoryId && d.discountPct > 0),
+    // per-customer quantity tiers: parallel tierQty[]/tierPct[]
+    quantityTiers: (() => {
+      const qtys = formData.getAll("tierQty").map((v) => Math.floor(Number(v)));
+      const pcts = formData.getAll("tierPct").map((v) => Number(v));
+      const tiers: { minQty: number; discountPct: number }[] = [];
+      for (let i = 0; i < qtys.length; i++) {
+        const minQty = qtys[i];
+        const discountPct = Math.min(90, Math.max(0, pcts[i] || 0));
+        if (minQty >= 1 && discountPct > 0) tiers.push({ minQty, discountPct });
+      }
+      return tiers;
+    })(),
   };
 }
 
 export async function createCustomer(formData: FormData) {
-  const { base, address, password, categoryDiscounts } = readForm(formData);
+  const { base, address, password, categoryDiscounts, quantityTiers } = readForm(formData);
   if (!base.success) return { success: false, error: base.error.issues[0]?.message ?? "Dados inválidos." };
   if (password.length < 6) return { success: false, error: "A palavra-passe tem de ter pelo menos 6 caracteres." };
 
@@ -56,6 +68,7 @@ export async function createCustomer(formData: FormData) {
         isActive: base.data.isActive,
         passwordHash: await hashPassword(password),
         categoryDiscounts: { create: categoryDiscounts },
+        quantityTiers: { create: quantityTiers },
       },
     });
     revalidatePath("/gmp-panel-admin/clientes");
@@ -69,12 +82,13 @@ export async function createCustomer(formData: FormData) {
 }
 
 export async function updateCustomer(id: string, formData: FormData) {
-  const { base, address, password, categoryDiscounts } = readForm(formData);
+  const { base, address, password, categoryDiscounts, quantityTiers } = readForm(formData);
   if (!base.success) return { success: false, error: base.error.issues[0]?.message ?? "Dados inválidos." };
   if (password && password.length < 6) return { success: false, error: "A nova palavra-passe tem de ter pelo menos 6 caracteres." };
 
   try {
     await db.customerCategoryDiscount.deleteMany({ where: { customerId: id } });
+    await db.customerQuantityTier.deleteMany({ where: { customerId: id } });
     await db.customer.update({
       where: { id },
       data: {
@@ -87,6 +101,7 @@ export async function updateCustomer(id: string, formData: FormData) {
         isActive: base.data.isActive,
         ...(password ? { passwordHash: await hashPassword(password) } : {}),
         categoryDiscounts: { create: categoryDiscounts },
+        quantityTiers: { create: quantityTiers },
       },
     });
     revalidatePath("/gmp-panel-admin/clientes");

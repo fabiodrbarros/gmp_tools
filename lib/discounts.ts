@@ -3,17 +3,22 @@ import { db } from "@/lib/db";
 export interface CustomerDiscountContext {
   generalPct: number;
   byCategoryId: Record<string, number>; // categoryId -> pct (overrides general)
+  quantityTiers: { minQty: number; discountPct: number }[]; // per-customer, summed on top
 }
 
-/** Loads a customer's general + per-category discounts. Null if no/invalid customer. */
+/** Loads a customer's general + per-category + quantity discounts. Null if no/invalid customer. */
 export async function loadCustomerDiscountContext(customerId: string | null): Promise<CustomerDiscountContext | null> {
   if (!customerId) return null;
   try {
-    const c = await db.customer.findUnique({ where: { id: customerId }, include: { categoryDiscounts: true } });
+    const c = await db.customer.findUnique({
+      where: { id: customerId },
+      include: { categoryDiscounts: true, quantityTiers: true },
+    });
     if (!c || !c.isActive) return null;
     const byCategoryId: Record<string, number> = {};
     for (const d of c.categoryDiscounts) byCategoryId[d.categoryId] = d.discountPct;
-    return { generalPct: c.discountPct, byCategoryId };
+    const quantityTiers = c.quantityTiers.map((t) => ({ minQty: t.minQty, discountPct: t.discountPct }));
+    return { generalPct: c.discountPct, byCategoryId, quantityTiers };
   } catch {
     return null;
   }

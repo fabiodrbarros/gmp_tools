@@ -11,7 +11,6 @@ import { getCustomer } from "@/lib/customer-auth";
 import { loadCustomerDiscountContext, customerDiscountFor, applyDiscount } from "@/lib/discounts";
 
 interface Spec { key: string; value: string; }
-interface Tier { minQty: number; discountPct: number; }
 interface ViewProduct {
   name: string;
   sku: string;
@@ -26,7 +25,6 @@ interface ViewProduct {
   materials: string[];
   images: string[];
   datasheet: string | null;
-  tiers: Tier[];
 }
 
 function parseList(raw: string | null | undefined): string[] {
@@ -51,7 +49,7 @@ async function getProduct(slug: string): Promise<ViewProduct | null> {
   try {
     const p = await db.product.findFirst({
       where: { OR: [{ slug }, { sku: slug.toUpperCase() }], isActive: true },
-      include: { category: true, brand: true, quantityTiers: true },
+      include: { category: true, brand: true },
     });
     if (!p) return null;
     return {
@@ -68,7 +66,6 @@ async function getProduct(slug: string): Promise<ViewProduct | null> {
       materials: parseList(p.materials),
       images: parseImages(p.images),
       datasheet: p.datasheet ?? null,
-      tiers: [...p.quantityTiers].sort((a, b) => a.minQty - b.minQty).map((t) => ({ minQty: t.minQty, discountPct: t.discountPct })),
     };
   } catch {
     return null;
@@ -159,21 +156,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 <div className="flex items-baseline gap-3 mb-2">
                   <span className="text-4xl font-medium text-black">{fmt(custPrice)}</span>
                 </div>
-                <div className="text-xs text-gray-400 mb-6">Preço sem IVA</div>
-                {p.tiers.length > 0 && (
-                  <div className="mb-8 border border-gray-100">
-                    <div className="text-[11px] font-medium tracking-wider text-gray-400 uppercase px-4 py-2 border-b border-gray-100">Descontos por quantidade</div>
-                    <div className="divide-y divide-gray-100">
-                      {p.tiers.map((t) => (
-                        <div key={t.minQty} className="flex justify-between px-4 py-2 text-sm">
-                          <span className="text-gray-500">A partir de {t.minQty} un.</span>
-                          <span className="font-semibold text-black">−{t.discountPct}%</span>
-                        </div>
-                      ))}
-                    </div>
-                    <p className="text-[11px] text-gray-400 px-4 py-2">Aplicam-se automaticamente no carrinho.</p>
-                  </div>
-                )}
+                <div className="text-xs text-gray-400 mb-8">Preço sem IVA</div>
               </>
             )}
 

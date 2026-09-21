@@ -7,6 +7,7 @@ import { CheckCircle2, ArrowLeft } from "lucide-react";
 import { createProduct, updateProduct } from "@/app/actions/admin-product";
 import { ImagesField } from "@/components/admin/images-field";
 import { DatasheetField } from "@/components/admin/datasheet-field";
+import { useConfirm } from "@/components/ui/confirm";
 
 export interface ProductInitial {
   id: string;
@@ -35,12 +36,19 @@ export function ProductForm({ product, categories = [] }: { product?: ProductIni
   const [done, setDone] = React.useState(false);
   const [error, setError] = React.useState("");
   const formRef = React.useRef<HTMLFormElement>(null);
+  const confirm = useConfirm();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const ok = await confirm({
+      title: editing ? "Guardar alterações" : "Criar produto",
+      message: editing ? "Guardar as alterações a este produto?" : "Criar este produto?",
+      confirmLabel: editing ? "Guardar" : "Criar",
+    });
+    if (!ok) return;
     setPending(true);
     setError("");
-    const fd = new FormData(e.currentTarget);
     const res = editing ? await updateProduct(product!.id, fd) : await createProduct(fd);
     setPending(false);
     if (res.success) {

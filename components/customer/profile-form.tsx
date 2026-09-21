@@ -3,6 +3,7 @@
 import * as React from "react";
 import { CheckCircle2 } from "lucide-react";
 import { updateProfile } from "@/app/actions/customer-profile";
+import { useConfirm } from "@/components/ui/confirm";
 
 export interface ProfileInitial {
   name: string;
@@ -19,13 +20,16 @@ export function ProfileForm({ initial }: { initial: ProfileInitial }) {
   const [pending, setPending] = React.useState(false);
   const [done, setDone] = React.useState(false);
   const [error, setError] = React.useState("");
+  const confirm = useConfirm();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    if (!(await confirm({ title: "Guardar dados", message: "Guardar as alterações aos seus dados?", confirmLabel: "Guardar" }))) return;
     setPending(true);
     setError("");
     setDone(false);
-    const res = await updateProfile(new FormData(e.currentTarget));
+    const res = await updateProfile(fd);
     setPending(false);
     if (res.success) { setDone(true); setTimeout(() => setDone(false), 4000); }
     else setError(res.error ?? "Erro inesperado.");

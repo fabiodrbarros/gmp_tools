@@ -7,6 +7,7 @@ import { CheckCircle2, ArrowLeft } from "lucide-react";
 import { createMachine, updateMachine } from "@/app/actions/admin-machine";
 import { ImagesField } from "@/components/admin/images-field";
 import { DatasheetField } from "@/components/admin/datasheet-field";
+import { useConfirm } from "@/components/ui/confirm";
 
 export interface MachineInitial {
   id: string;
@@ -33,12 +34,19 @@ export function MachineForm({ machine, categories = [] }: { machine?: MachineIni
   const [done, setDone] = React.useState(false);
   const [error, setError] = React.useState("");
   const formRef = React.useRef<HTMLFormElement>(null);
+  const confirm = useConfirm();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const ok = await confirm({
+      title: editing ? "Guardar alterações" : "Criar máquina",
+      message: editing ? "Guardar as alterações a esta máquina?" : "Criar esta máquina?",
+      confirmLabel: editing ? "Guardar" : "Criar",
+    });
+    if (!ok) return;
     setPending(true);
     setError("");
-    const fd = new FormData(e.currentTarget);
     const res = editing ? await updateMachine(machine!.id, fd) : await createMachine(fd);
     setPending(false);
     if (res.success) {

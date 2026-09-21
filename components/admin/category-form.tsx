@@ -4,18 +4,22 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { createCategory } from "@/app/actions/admin-category";
+import { useConfirm } from "@/components/ui/confirm";
 
 export function CategoryForm() {
   const router = useRouter();
   const [pending, setPending] = React.useState(false);
   const [error, setError] = React.useState("");
   const formRef = React.useRef<HTMLFormElement>(null);
+  const confirm = useConfirm();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    if (!(await confirm({ title: "Criar categoria", message: "Criar esta categoria?", confirmLabel: "Criar" }))) return;
     setPending(true);
     setError("");
-    const res = await createCategory(new FormData(e.currentTarget));
+    const res = await createCategory(fd);
     setPending(false);
     if (res.success) {
       formRef.current?.reset();

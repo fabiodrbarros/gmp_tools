@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { CartProvider } from "@/lib/cart";
 import { LanguageProvider } from "@/lib/i18n";
+import { ConfirmProvider } from "@/components/ui/confirm";
 import { getCustomer } from "@/lib/customer-auth";
 import "./globals.css";
 
@@ -55,9 +56,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="font-sans antialiased">
         <LanguageProvider>
           <CartProvider>
-            <Header customer={customer ? { name: customer.name } : null} />
-            <main>{children}</main>
-            <Footer />
+            <ConfirmProvider>
+              <Header customer={customer ? { name: customer.name } : null} />
+              <main>{children}</main>
+              <Footer />
+            </ConfirmProvider>
           </CartProvider>
         </LanguageProvider>
       </body>

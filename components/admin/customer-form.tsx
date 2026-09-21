@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { CheckCircle2, ArrowLeft } from "lucide-react";
 import { createCustomer, updateCustomer } from "@/app/actions/admin-customer";
 import { QuantityTiersField, type Tier } from "@/components/admin/quantity-tiers-field";
+import { useConfirm } from "@/components/ui/confirm";
 
 export interface CustomerInitial {
   id: string;
@@ -36,14 +37,21 @@ export function CustomerForm({
   const [done, setDone] = React.useState(false);
   const [error, setError] = React.useState("");
   const formRef = React.useRef<HTMLFormElement>(null);
+  const confirm = useConfirm();
 
   const catMap = new Map((customer?.categoryDiscounts ?? []).map((d) => [d.categoryId, d.discountPct]));
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const ok = await confirm({
+      title: editing ? "Guardar alterações" : "Criar cliente",
+      message: editing ? "Guardar as alterações a este cliente?" : "Criar esta conta de cliente?",
+      confirmLabel: editing ? "Guardar" : "Criar",
+    });
+    if (!ok) return;
     setPending(true);
     setError("");
-    const fd = new FormData(e.currentTarget);
     const res = editing ? await updateCustomer(customer!.id, fd) : await createCustomer(fd);
     setPending(false);
     if (res.success) {

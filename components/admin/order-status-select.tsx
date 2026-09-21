@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { setOrderStatus } from "@/app/actions/admin-order";
+import { useConfirm } from "@/components/ui/confirm";
 
 const OPTIONS = [
   { value: "PENDING", label: "Pendente" },
@@ -13,14 +14,18 @@ const OPTIONS = [
 export function OrderStatusSelect({ id, value }: { id: string; value: string }) {
   const [pending, start] = React.useTransition();
   const router = useRouter();
+  const confirm = useConfirm();
 
   return (
     <select
-      defaultValue={value}
+      value={value}
       disabled={pending}
       onChange={(e) => {
         const status = e.target.value;
+        const label = OPTIONS.find((o) => o.value === status)?.label ?? status;
         start(async () => {
+          const ok = await confirm({ title: "Alterar estado", message: `Marcar a encomenda como "${label}"?`, confirmLabel: "Alterar" });
+          if (!ok) { router.refresh(); return; }
           await setOrderStatus(id, status);
           router.refresh();
         });

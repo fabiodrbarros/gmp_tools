@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { CheckCircle2, ArrowLeft } from "lucide-react";
 import { createNews, updateNews } from "@/app/actions/admin-news";
 import { ImagesField } from "@/components/admin/images-field";
+import { useConfirm } from "@/components/ui/confirm";
 
 export interface NewsInitial {
   id: string;
@@ -26,12 +27,19 @@ export function NewsForm({ news }: { news?: NewsInitial }) {
   const [done, setDone] = React.useState(false);
   const [error, setError] = React.useState("");
   const formRef = React.useRef<HTMLFormElement>(null);
+  const confirm = useConfirm();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const ok = await confirm({
+      title: editing ? "Guardar alterações" : "Criar notícia",
+      message: editing ? "Guardar as alterações a esta notícia?" : "Publicar esta notícia?",
+      confirmLabel: editing ? "Guardar" : "Criar",
+    });
+    if (!ok) return;
     setPending(true);
     setError("");
-    const fd = new FormData(e.currentTarget);
     const res = editing ? await updateNews(news!.id, fd) : await createNews(fd);
     setPending(false);
     if (res.success) {

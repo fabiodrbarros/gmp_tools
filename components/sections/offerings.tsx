@@ -37,12 +37,12 @@ export function Offerings() {
 
       {/* Columns */}
       <div className="relative max-w-screen-2xl mx-auto px-6 lg:px-12 pb-20 lg:pb-24">
-      <div className="grid grid-cols-2 lg:grid-cols-4 border border-white/10">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         {items.map((s, i) => (
           <Link
             key={s.num}
             href="/servicos"
-            className="group relative flex flex-col min-h-[340px] lg:min-h-[460px] border-t border-white/10 lg:border-t-0 lg:border-l border-white/10 first:border-l-0 lg:[&:nth-child(1)]:border-l-0 overflow-hidden"
+            className="group relative flex flex-col min-h-[340px] lg:min-h-[460px] overflow-hidden"
           >
             {/* Photo / placeholder */}
             {IMAGES[s.num] ? (

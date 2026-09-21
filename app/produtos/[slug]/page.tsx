@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, Phone, Mail } from "lucide-react";
+import { ChevronRight, Phone, Mail, FileDown } from "lucide-react";
 import { QuoteForm } from "@/components/forms/quote-form";
 import { AddToCart } from "@/components/forms/add-to-cart";
 import { SITE, SHOP_ENABLED } from "@/lib/site";
@@ -21,6 +21,7 @@ interface ViewProduct {
   specs: Spec[];
   materials: string[];
   images: string[];
+  datasheet: string | null;
 }
 
 function parseList(raw: string | null | undefined): string[] {
@@ -60,6 +61,7 @@ async function getProduct(slug: string): Promise<ViewProduct | null> {
       specs: parseSpecs(p.specifications),
       materials: parseList(p.materials),
       images: parseImages(p.images),
+      datasheet: p.datasheet ?? null,
     };
   } catch {
     return null;
@@ -156,6 +158,16 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <div className="flex flex-col gap-3 mb-10">
               {SHOP_ENABLED && p.price != null && <AddToCart sku={p.sku} name={p.name} price={p.price} />}
               <QuoteForm productName={p.name} productSku={p.sku} />
+              {p.datasheet && (
+                <a
+                  href={p.datasheet}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 border border-gray-200 text-black text-sm font-semibold py-3.5 hover:border-black transition-colors"
+                >
+                  <FileDown className="h-4 w-4" /> Ficha técnica (PDF)
+                </a>
+              )}
             </div>
 
             {/* Tags */}

@@ -22,6 +22,27 @@ export async function saveImages(files: File[]): Promise<string[]> {
   return urls;
 }
 
+const DOC_EXTS = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "odt", "ods"];
+
+/**
+ * Saves a single uploaded document (e.g. a technical datasheet) to /public/uploads
+ * and returns its public URL. Returns null for empty/invalid files.
+ */
+export async function saveFile(file: File | null): Promise<string | null> {
+  if (!file || file.size === 0) return null;
+  const rawExt = (file.name.split(".").pop() || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const isDoc = DOC_EXTS.includes(rawExt);
+  const isPdfType = file.type === "application/pdf";
+  if (!isDoc && !isPdfType) return null;
+  const ext = rawExt || "pdf";
+  const dir = path.join(process.cwd(), "public", "uploads");
+  await mkdir(dir, { recursive: true });
+  const name = `ficha-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const buffer = Buffer.from(await file.arrayBuffer());
+  await writeFile(path.join(dir, name), buffer);
+  return `/uploads/${name}`;
+}
+
 export function parseImages(raw: string | null | undefined): string[] {
   if (!raw) return [];
   try {

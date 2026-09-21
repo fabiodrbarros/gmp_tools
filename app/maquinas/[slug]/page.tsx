@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, ArrowRight, Check } from "lucide-react";
+import { ChevronRight, ArrowRight, Check, FileDown } from "lucide-react";
 import { db } from "@/lib/db";
 import { parseImages } from "@/lib/upload";
 import { Gallery } from "@/components/gallery";
@@ -125,6 +125,18 @@ export default async function MachinePage({ params }: { params: Promise<{ slug: 
                   ))}
                 </ul>
               </div>
+            )}
+
+            {/* Ficha técnica (ficheiro) */}
+            {m.datasheet && (
+              <a
+                href={m.datasheet}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 border border-gray-200 text-black text-sm font-semibold px-5 py-3 mb-10 hover:border-black transition-colors"
+              >
+                <FileDown className="h-4 w-4" /> Ficha técnica (PDF)
+              </a>
             )}
 
             {/* Quote */}

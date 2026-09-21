@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { saveImages } from "@/lib/upload";
+import { saveImages, saveFile } from "@/lib/upload";
 
 async function collectImages(formData: FormData): Promise<string | null> {
   const kept = formData.getAll("existingImages").filter((v): v is string => typeof v === "string");
@@ -11,6 +11,15 @@ async function collectImages(formData: FormData): Promise<string | null> {
   const uploaded = await saveImages(files);
   const all = [...kept, ...uploaded];
   return all.length ? JSON.stringify(all) : null;
+}
+
+// A new uploaded file replaces the existing one; otherwise keep the existing (unless removed).
+async function collectDatasheet(formData: FormData): Promise<string | null> {
+  const file = formData.get("datasheet");
+  const uploaded = file instanceof File ? await saveFile(file) : null;
+  if (uploaded) return uploaded;
+  const kept = formData.get("existingDatasheet");
+  return typeof kept === "string" && kept.trim() ? kept : null;
 }
 
 function slugify(s: string) {
@@ -110,6 +119,7 @@ export async function createProduct(formData: FormData) {
     }
 
     const images = await collectImages(formData);
+    const datasheet = await collectDatasheet(formData);
     const specifications = buildSpecs((formData.get("specs") as string) || "");
     const materials = buildList((formData.get("materials") as string) || "");
 
@@ -125,6 +135,7 @@ export async function createProduct(formData: FormData) {
         stock: p.stock,
         specifications,
         materials,
+        datasheet,
         images,
         isActive: p.isActive,
         isFeatured: p.isFeatured,
@@ -185,6 +196,7 @@ export async function updateProduct(id: string, formData: FormData) {
     const categoryId = await resolveRef("category", p.category);
     const brandId = await resolveRef("brand", p.brand);
     const images = await collectImages(formData);
+    const datasheet = await collectDatasheet(formData);
     const specifications = buildSpecs((formData.get("specs") as string) || "");
     const materials = buildList((formData.get("materials") as string) || "");
 
@@ -201,6 +213,7 @@ export async function updateProduct(id: string, formData: FormData) {
         stock: p.stock,
         specifications,
         materials,
+        datasheet,
         images,
         isActive: p.isActive,
         isFeatured: p.isFeatured,

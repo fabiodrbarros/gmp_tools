@@ -54,6 +54,7 @@ export default async function EditProdutoPage({ params }: { params: Promise<{ id
           materials: listToText(p.materials),
           specsText: specsToText(p.specifications),
           images: parseImages(p.images),
+          datasheet: p.datasheet,
           isActive: p.isActive,
           isFeatured: p.isFeatured,
           quoteOnly: p.quoteOnly,

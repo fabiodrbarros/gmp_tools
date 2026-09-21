@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { CheckCircle2, ArrowLeft } from "lucide-react";
 import { createProduct, updateProduct } from "@/app/actions/admin-product";
 import { ImagesField } from "@/components/admin/images-field";
+import { DatasheetField } from "@/components/admin/datasheet-field";
 
 export interface ProductInitial {
   id: string;
@@ -21,6 +22,7 @@ export interface ProductInitial {
   materials: string;
   specsText: string;
   images: string[];
+  datasheet: string | null;
   isActive: boolean;
   isFeatured: boolean;
   quoteOnly: boolean;
@@ -76,6 +78,10 @@ export function ProductForm({ product, categories = [] }: { product?: ProductIni
 
       <Section title="Imagens">
         <ImagesField initial={product?.images ?? []} />
+      </Section>
+
+      <Section title="Ficha técnica">
+        <DatasheetField initial={product?.datasheet ?? null} />
       </Section>
 
       <Section title="Descrição">

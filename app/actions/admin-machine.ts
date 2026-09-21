@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { saveImages } from "@/lib/upload";
+import { saveImages, saveFile } from "@/lib/upload";
 
 async function collectImages(formData: FormData): Promise<string | null> {
   const kept = formData.getAll("existingImages").filter((v): v is string => typeof v === "string");
@@ -11,6 +11,15 @@ async function collectImages(formData: FormData): Promise<string | null> {
   const uploaded = await saveImages(files);
   const all = [...kept, ...uploaded];
   return all.length ? JSON.stringify(all) : null;
+}
+
+// A new uploaded file replaces the existing one; otherwise keep the existing (unless removed).
+async function collectDatasheet(formData: FormData): Promise<string | null> {
+  const file = formData.get("datasheet");
+  const uploaded = file instanceof File ? await saveFile(file) : null;
+  if (uploaded) return uploaded;
+  const kept = formData.get("existingDatasheet");
+  return typeof kept === "string" && kept.trim() ? kept : null;
 }
 
 function slugify(s: string) {
@@ -97,7 +106,8 @@ export async function createMachine(formData: FormData) {
   try {
     const brandId = await resolveBrand(parsed.data.brand);
     const images = await collectImages(formData);
-    await db.machine.create({ data: { ...buildData(parsed.data, brandId), images } });
+    const datasheet = await collectDatasheet(formData);
+    await db.machine.create({ data: { ...buildData(parsed.data, brandId), images, datasheet } });
     revalidate();
     return { success: true };
   } catch (e: unknown) {
@@ -114,7 +124,8 @@ export async function updateMachine(id: string, formData: FormData) {
   try {
     const brandId = await resolveBrand(parsed.data.brand);
     const images = await collectImages(formData);
-    await db.machine.update({ where: { id }, data: { ...buildData(parsed.data, brandId), images } });
+    const datasheet = await collectDatasheet(formData);
+    await db.machine.update({ where: { id }, data: { ...buildData(parsed.data, brandId), images, datasheet } });
     revalidate();
     return { success: true };
   } catch (e: unknown) {

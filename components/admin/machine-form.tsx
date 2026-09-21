@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { CheckCircle2, ArrowLeft } from "lucide-react";
 import { createMachine, updateMachine } from "@/app/actions/admin-machine";
 import { ImagesField } from "@/components/admin/images-field";
+import { DatasheetField } from "@/components/admin/datasheet-field";
 
 export interface MachineInitial {
   id: string;
@@ -20,6 +21,7 @@ export interface MachineInitial {
   description: string | null;
   specs: string[];
   images: string[];
+  datasheet: string | null;
   isActive: boolean;
   isFeatured: boolean;
 }
@@ -85,6 +87,10 @@ export function MachineForm({ machine, categories = [] }: { machine?: MachineIni
 
       <Section title="Imagens">
         <ImagesField initial={machine?.images ?? []} />
+      </Section>
+
+      <Section title="Ficha técnica">
+        <DatasheetField initial={machine?.datasheet ?? null} />
       </Section>
 
       <Section title="Descrição">

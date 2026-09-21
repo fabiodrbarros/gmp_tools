@@ -43,6 +43,7 @@ export default async function EditMaquinaPage({ params }: { params: Promise<{ id
           description: m.description,
           specs: parseSpecs(m.specifications),
           images: parseImages(m.images),
+          datasheet: m.datasheet,
           isActive: m.isActive,
           isFeatured: m.isFeatured,
         }}

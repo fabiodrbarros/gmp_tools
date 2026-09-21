@@ -38,37 +38,35 @@ export function Offerings() {
       {/* Columns */}
       <div className="relative max-w-screen-2xl mx-auto px-6 lg:px-12 pb-20 lg:pb-24">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        {items.map((s, i) => (
+        {items.map((s) => (
           <Link
             key={s.num}
             href="/servicos"
-            className="group relative flex flex-col min-h-[340px] lg:min-h-[460px] overflow-hidden"
+            className="group flex flex-col overflow-hidden"
           >
+            {/* Label */}
+            <div className="mb-3">
+              <span className="block text-[13px] font-medium tracking-widest text-white/40 mb-3 group-hover:text-red-500 transition-colors">{s.num}</span>
+              <h3 className="font-display uppercase font-medium text-white leading-[1.05] tracking-tight text-xl lg:text-2xl min-h-[2.4em]">
+                {s.title}
+              </h3>
+            </div>
+
             {/* Photo / placeholder */}
             {IMAGES[s.num] ? (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img
                 src={IMAGES[s.num]}
                 alt={s.title}
-                className="absolute inset-0 h-full w-full object-contain object-bottom transition-transform duration-700 group-hover:scale-[1.03]"
+                className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-[1.03]"
               />
             ) : (
-              <div className="absolute inset-0 bg-gradient-to-b from-white/[0.04] to-transparent">
-                <svg viewBox="0 0 32 32" className="absolute bottom-8 left-1/2 -translate-x-1/2 h-16 w-16 opacity-[0.06]" fill="none" aria-hidden>
+              <div className="aspect-[4/3] w-full bg-white/[0.04] flex items-center justify-center">
+                <svg viewBox="0 0 32 32" className="h-16 w-16 opacity-[0.06]" fill="none" aria-hidden>
                   <path d="M16 3L29 16L16 29L3 16Z" fill="#1878b6" />
                 </svg>
               </div>
             )}
-            {/* Legibility gradient (top only, keeps labels readable) */}
-            <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#0a0a0a] to-transparent" />
-
-            {/* Label */}
-            <div className="relative z-10 p-7 lg:p-8">
-              <span className="block text-[13px] font-medium tracking-widest text-white/40 mb-4 group-hover:text-red-500 transition-colors">{s.num}</span>
-              <h3 className="font-display uppercase font-medium text-white leading-[1.05] tracking-tight text-xl lg:text-2xl">
-                {s.title}
-              </h3>
-            </div>
           </Link>
         ))}
       </div>

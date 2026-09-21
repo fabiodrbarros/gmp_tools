@@ -85,31 +85,6 @@ export function Header({ customer = null }: { customer?: HeaderCustomer | null }
                 </nav>
               )}
 
-              {/* Account + cart */}
-              {!open && (
-                <div className="flex items-center gap-4">
-                  {loggedIn && (
-                    <Link
-                      href="/carrinho"
-                      aria-label="Carrinho"
-                      className={`relative transition-colors ${light ? "text-white hover:text-red-500" : "text-black hover:text-red-600"}`}
-                    >
-                      <ShoppingCart className="h-5 w-5" />
-                      {count > 0 && (
-                        <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[9px] font-semibold rounded-full h-4 min-w-4 px-1 grid place-items-center">{count}</span>
-                      )}
-                    </Link>
-                  )}
-                  <Link
-                    href={loggedIn ? "/conta" : "/entrar"}
-                    aria-label={loggedIn ? "A minha conta" : "Entrar"}
-                    className={`transition-colors ${light ? "text-white hover:text-red-500" : "text-black hover:text-red-600"}`}
-                  >
-                    <User className="h-5 w-5" />
-                  </Link>
-                </div>
-              )}
-
               {/* Language selector */}
               <LanguageSelector light={light} />
 

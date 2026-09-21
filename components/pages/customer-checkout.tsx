@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CheckCircle2, ArrowRight, ShoppingCart } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { submitOrder } from "@/app/actions/order";
+import { useConfirm } from "@/components/ui/confirm";
 
 function fmt(n: number) {
   return new Intl.NumberFormat("pt-PT", { style: "currency", currency: "EUR" }).format(n);
@@ -16,8 +17,15 @@ export function CustomerCheckout() {
   const [pending, setPending] = React.useState(false);
   const [error, setError] = React.useState("");
   const [orderId, setOrderId] = React.useState<string | null>(null);
+  const askConfirm = useConfirm();
 
   async function confirm() {
+    const ok = await askConfirm({
+      title: "Confirmar encomenda",
+      message: "Enviar esta encomenda à GMP?",
+      confirmLabel: "Enviar encomenda",
+    });
+    if (!ok) return;
     setPending(true);
     setError("");
     const res = await submitOrder(items.map((i) => ({ sku: i.sku, qty: i.qty })), notes);

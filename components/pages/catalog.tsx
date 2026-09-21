@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ShoppingCart, ArrowRight, Search, ChevronLeft, ChevronRight, Lock } from "lucide-react";
+import { ShoppingCart, ArrowRight, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCart } from "@/lib/cart";
 
 export interface CatalogCategory {
@@ -165,12 +165,8 @@ export function Catalog({ eyebrow, title, allLabel = "Todos", categories, items,
                     {it.name}
                   </h3>
                   <div className="flex items-center justify-between gap-2 pt-5 border-t border-gray-50">
-                    {it.quoteOnly || it.price == null ? (
+                    {it.quoteOnly || it.price == null || !pricesVisible ? (
                       <span className="text-xs text-gray-400 italic">Sob consulta</span>
-                    ) : !pricesVisible ? (
-                      <span className="inline-flex items-center gap-1.5 text-[11px] text-gray-400">
-                        <Lock className="h-3 w-3" /> Entrar para ver preço
-                      </span>
                     ) : (
                       <div className="flex items-baseline gap-1.5">
                         <span className="text-lg font-medium">{fmt(it.price)}</span>

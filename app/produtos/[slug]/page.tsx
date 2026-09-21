@@ -9,7 +9,6 @@ import { db } from "@/lib/db";
 import { parseImages } from "@/lib/upload";
 import { getCustomer } from "@/lib/customer-auth";
 import { loadCustomerDiscountContext, customerDiscountFor, applyDiscount } from "@/lib/discounts";
-import { Lock } from "lucide-react";
 
 interface Spec { key: string; value: string; }
 interface Tier { minQty: number; discountPct: number; }
@@ -153,11 +152,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {p.shortDescription && <p className="text-gray-500 leading-relaxed mb-8">{p.shortDescription}</p>}
 
             {/* Price */}
-            {!pricesVisible ? (
-              <Link href="/entrar" className="inline-flex items-center gap-2 mb-8 border border-gray-200 px-4 py-3 text-sm text-gray-600 hover:border-black transition-colors">
-                <Lock className="h-4 w-4" /> Entrar para ver preço
-              </Link>
-            ) : custPrice != null ? (
+            {!pricesVisible || custPrice == null ? (
+              <div className="text-2xl font-medium text-black mb-8">Sob consulta</div>
+            ) : (
               <>
                 <div className="flex items-baseline gap-3 mb-2">
                   <span className="text-4xl font-medium text-black">{fmt(custPrice)}</span>
@@ -178,8 +175,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   </div>
                 )}
               </>
-            ) : (
-              <div className="text-2xl font-medium text-black mb-8">Sob consulta</div>
             )}
 
             {/* Actions */}

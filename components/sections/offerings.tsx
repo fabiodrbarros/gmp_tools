@@ -36,7 +36,8 @@ export function Offerings() {
       </div>
 
       {/* Columns */}
-      <div className="relative grid grid-cols-2 lg:grid-cols-4">
+      <div className="relative max-w-screen-2xl mx-auto px-6 lg:px-12 pb-20 lg:pb-24">
+      <div className="grid grid-cols-2 lg:grid-cols-4 border border-white/10">
         {items.map((s, i) => (
           <Link
             key={s.num}
@@ -70,6 +71,7 @@ export function Offerings() {
             </div>
           </Link>
         ))}
+      </div>
       </div>
     </section>
   );

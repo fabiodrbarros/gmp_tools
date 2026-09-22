@@ -71,6 +71,16 @@ export default async function ContaEncomendaPage({ params }: { params: Promise<{
           </table>
         </div>
 
+        {order.address && (
+          <div className="border border-gray-100 p-6 mb-6">
+            <h2 className="text-[11px] font-medium tracking-widest text-gray-400 uppercase mb-2">Morada de entrega</h2>
+            <p className="text-sm text-gray-700">
+              {order.address}
+              {(order.postalCode || order.city) && <span className="block">{[order.postalCode, order.city].filter(Boolean).join(" ")}</span>}
+            </p>
+          </div>
+        )}
+
         {order.notes && (
           <div className="border border-gray-100 p-6">
             <h2 className="text-[11px] font-medium tracking-widest text-gray-400 uppercase mb-2">Notas</h2>

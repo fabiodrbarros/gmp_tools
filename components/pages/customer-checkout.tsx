@@ -11,24 +11,34 @@ function fmt(n: number) {
   return new Intl.NumberFormat("pt-PT", { style: "currency", currency: "EUR" }).format(n);
 }
 
-export function CustomerCheckout() {
+export interface CheckoutAddress {
+  address: string;
+  postalCode: string;
+  city: string;
+}
+
+export function CustomerCheckout({ initialAddress }: { initialAddress?: CheckoutAddress }) {
   const { items, subtotal, clear } = useCart();
   const [notes, setNotes] = React.useState("");
+  const [address, setAddress] = React.useState(initialAddress?.address ?? "");
+  const [postalCode, setPostalCode] = React.useState(initialAddress?.postalCode ?? "");
+  const [city, setCity] = React.useState(initialAddress?.city ?? "");
   const [pending, setPending] = React.useState(false);
   const [error, setError] = React.useState("");
   const [orderId, setOrderId] = React.useState<string | null>(null);
   const askConfirm = useConfirm();
 
   async function confirm() {
+    if (!address.trim()) { setError("Confirme a morada de entrega."); return; }
     const ok = await askConfirm({
       title: "Confirmar encomenda",
-      message: "Enviar esta encomenda à GMP?",
+      message: `Entregar em: ${[address, postalCode, city].filter(Boolean).join(", ")}. Enviar a encomenda à GMP?`,
       confirmLabel: "Enviar encomenda",
     });
     if (!ok) return;
     setPending(true);
     setError("");
-    const res = await submitOrder(items.map((i) => ({ sku: i.sku, qty: i.qty })), notes);
+    const res = await submitOrder(items.map((i) => ({ sku: i.sku, qty: i.qty })), notes, { address, postalCode, city });
     setPending(false);
     if (res.success) {
       setOrderId(res.orderId);
@@ -89,6 +99,19 @@ export function CustomerCheckout() {
         <div className="flex justify-between text-sm mb-8">
           <span className="text-gray-500">Subtotal (sem IVA)</span>
           <span className="font-semibold text-black">{fmt(subtotal)}</span>
+        </div>
+
+        <h2 className="text-sm font-medium text-black mb-3">Morada de entrega</h2>
+        <p className="text-[12px] text-gray-400 mb-3">Confirme (ou ajuste) a morada para esta encomenda.</p>
+        <input
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          placeholder="Morada (rua, número) *"
+          className="w-full border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors mb-3"
+        />
+        <div className="grid sm:grid-cols-2 gap-3 mb-8">
+          <input value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="Código postal" className="w-full border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors" />
+          <input value={city} onChange={(e) => setCity(e.target.value)} placeholder="Localidade" className="w-full border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors" />
         </div>
 
         <label className="block text-xs font-semibold text-gray-600 mb-1.5">Notas (opcional)</label>

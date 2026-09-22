@@ -16,13 +16,22 @@ export interface OrderLineInput {
   qty: number;
 }
 
+export interface OrderAddress {
+  address?: string;
+  postalCode?: string;
+  city?: string;
+}
+
 // Server recomputes all prices/discounts from the DB — client cart prices are never trusted.
-export async function submitOrder(rawItems: OrderLineInput[], notes?: string) {
+export async function submitOrder(rawItems: OrderLineInput[], notes?: string, address?: OrderAddress) {
   const customer = await getCustomer();
   if (!customer) return { success: false as const, error: "A sessão expirou. Inicie sessão novamente." };
 
   const items = (rawItems || []).filter((i) => i && i.sku && i.qty > 0);
   if (!items.length) return { success: false as const, error: "O carrinho está vazio." };
+
+  const addr = (address?.address ?? "").trim();
+  if (!addr) return { success: false as const, error: "Confirme a morada de entrega." };
 
   const ctx = await loadCustomerDiscountContext(customer.id);
 
@@ -58,6 +67,9 @@ export async function submitOrder(rawItems: OrderLineInput[], notes?: string) {
         customerId: customer.id,
         subtotal,
         notes: notes?.trim() || null,
+        address: addr,
+        postalCode: (address?.postalCode ?? "").trim() || null,
+        city: (address?.city ?? "").trim() || null,
         items: { create: lines },
       },
     });

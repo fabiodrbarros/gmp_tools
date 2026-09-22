@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LayoutDashboard, Package, Cpu, Tag, Newspaper, FileText, MessageSquare, Users, ShoppingCart, LifeBuoy, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, Cpu, Tag, Newspaper, Users, ShoppingCart, LifeBuoy, LogOut } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import { Logo } from "@/components/layout/logo";
 
@@ -15,8 +15,6 @@ const nav = [
   { href: "/gmp-panel-admin/clientes", label: "Clientes", Icon: Users },
   { href: "/gmp-panel-admin/encomendas", label: "Encomendas", Icon: ShoppingCart },
   { href: "/gmp-panel-admin/suporte", label: "Suporte", Icon: LifeBuoy },
-  { href: "/gmp-panel-admin/pedidos", label: "Pedidos", Icon: FileText },
-  { href: "/gmp-panel-admin/mensagens", label: "Mensagens", Icon: MessageSquare },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

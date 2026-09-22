@@ -43,6 +43,16 @@ export default async function AdminEncomendaPage({ params }: { params: Promise<{
         </div>
       </div>
 
+      {o.address && (
+        <div className="bg-white border border-gray-100 p-6 mb-5">
+          <h2 className="text-[11px] font-medium tracking-widest text-gray-400 uppercase mb-3">Morada de entrega</h2>
+          <div className="text-sm text-gray-700">
+            {o.address}
+            {(o.postalCode || o.city) && <div>{[o.postalCode, o.city].filter(Boolean).join(" ")}</div>}
+          </div>
+        </div>
+      )}
+
       {/* Items */}
       <div className="bg-white border border-gray-100 overflow-hidden mb-5">
         <table className="w-full text-sm">

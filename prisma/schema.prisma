@@ -155,6 +155,7 @@ model Customer {
   postalCode        String?
   city              String?
   passwordHash      String
+  mustChangePassword Boolean                   @default(true) // force a new password after admin creates/resets it
   discountPct       Float                      @default(0) // general per-customer discount (internal, never shown to the customer)
   isActive          Boolean                    @default(true)
   createdAt         DateTime                   @default(now())

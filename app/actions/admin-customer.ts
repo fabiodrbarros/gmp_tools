@@ -99,7 +99,7 @@ export async function updateCustomer(id: string, formData: FormData) {
         ...address,
         discountPct: base.data.discountPct,
         isActive: base.data.isActive,
-        ...(password ? { passwordHash: await hashPassword(password) } : {}),
+        ...(password ? { passwordHash: await hashPassword(password), mustChangePassword: true } : {}),
         categoryDiscounts: { create: categoryDiscounts },
         quantityTiers: { create: quantityTiers },
       },

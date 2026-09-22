@@ -15,7 +15,7 @@ export async function customerLogin(_prev: { error?: string } | null, formData: 
   }
 
   await setCustomerSession(c.id);
-  redirect("/conta");
+  redirect(c.mustChangePassword ? "/definir-password" : "/conta");
 }
 
 export async function customerLogout() {

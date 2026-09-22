@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { getCustomer } from "@/lib/customer-auth";
 import { customerLogout } from "@/app/actions/customer-auth";
 import { ProfileForm } from "@/components/customer/profile-form";
+import { PasswordForm } from "@/components/customer/password-form";
 import { orderStatus } from "@/lib/order-status";
 
 export const metadata: Metadata = { title: "A minha conta" };
@@ -20,6 +21,7 @@ function fmtDate(d: Date) {
 export default async function ContaPage() {
   const session = await getCustomer();
   if (!session) redirect("/entrar");
+  if (session.mustChangePassword) redirect("/definir-password");
 
   const [customer, orders] = await Promise.all([
     db.customer.findUnique({ where: { id: session.id } }),
@@ -94,6 +96,9 @@ export default async function ContaPage() {
               city: customer.city,
             }}
           />
+
+          <h2 className="text-sm font-medium text-black uppercase tracking-wider mt-10 mb-4">Palavra-passe</h2>
+          <PasswordForm />
         </div>
       </div>
     </div>

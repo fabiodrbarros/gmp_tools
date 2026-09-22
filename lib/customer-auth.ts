@@ -48,6 +48,7 @@ export type SessionCustomer = {
   email: string;
   company: string | null;
   discountPct: number;
+  mustChangePassword: boolean;
 };
 
 /** Reads and validates the customer session cookie; returns the active customer or null. */
@@ -59,7 +60,7 @@ export async function getCustomer(): Promise<SessionCustomer | null> {
     if (!id) return null;
     const c = await db.customer.findUnique({ where: { id } });
     if (!c || !c.isActive) return null;
-    return { id: c.id, name: c.name, email: c.email, company: c.company, discountPct: c.discountPct };
+    return { id: c.id, name: c.name, email: c.email, company: c.company, discountPct: c.discountPct, mustChangePassword: c.mustChangePassword };
   } catch {
     return null;
   }

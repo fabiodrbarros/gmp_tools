@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CustomerLoginForm } from "@/components/customer/login-form";
 import { getCustomer } from "@/lib/customer-auth";
@@ -18,9 +17,6 @@ export default async function EntrarPage() {
         <div className="bg-white border border-gray-100 p-8 shadow-sm">
           <CustomerLoginForm />
         </div>
-        <p className="text-center text-[12px] text-gray-400 mt-6">
-          <Link href="/contactos" className="hover:text-black transition-colors">Contacte a GMP</Link>
-        </p>
       </div>
     </div>
   );

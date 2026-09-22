@@ -88,18 +88,6 @@ export function Header({ customer = null }: { customer?: HeaderCustomer | null }
               {/* Language selector */}
               <LanguageSelector light={light} />
 
-              {/* Quick account access */}
-              {!open && (
-                <Link
-                  href={loggedIn ? "/conta" : "/entrar"}
-                  aria-label={loggedIn ? "A minha conta" : "Entrar"}
-                  title={loggedIn ? "A minha conta" : "Entrar"}
-                  className={`grid place-items-center h-11 w-9 transition-colors ${light ? "text-white hover:text-red-500" : "text-black hover:text-red-600"}`}
-                >
-                  <User className="h-[22px] w-[22px]" />
-                </Link>
-              )}
-
               {/* Menu toggle */}
               <button
                 onClick={() => setOpen((v) => !v)}
@@ -121,6 +109,18 @@ export function Header({ customer = null }: { customer?: HeaderCustomer | null }
                   )}
                 </AnimatePresence>
               </button>
+
+              {/* Quick account access — right of the menu icon */}
+              {!open && (
+                <Link
+                  href={loggedIn ? "/conta" : "/entrar"}
+                  aria-label={loggedIn ? "A minha conta" : "Entrar"}
+                  title={loggedIn ? "A minha conta" : "Entrar"}
+                  className={`grid place-items-center h-11 w-9 -ml-1 transition-colors ${light ? "text-white hover:text-red-500" : "text-black hover:text-red-600"}`}
+                >
+                  <User className="h-[22px] w-[22px]" />
+                </Link>
+              )}
             </div>
           </div>
         </div>

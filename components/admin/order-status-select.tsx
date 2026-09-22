@@ -22,17 +22,17 @@ export function OrderStatusSelect({ id, value }: { id: string; value: string }) 
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  function pick(status: string) {
+  async function pick(status: string) {
     setOpen(false);
     if (status === value) return;
     const label = orderStatus(status).label;
+    const ok = await askConfirm({
+      title: "Alterar estado",
+      message: `Marcar esta encomenda como "${label}"?`,
+      confirmLabel: "Alterar",
+    });
+    if (!ok) return;
     start(async () => {
-      const ok = await askConfirm({
-        title: "Alterar estado",
-        message: `Marcar esta encomenda como "${label}"?`,
-        confirmLabel: "Alterar",
-      });
-      if (!ok) return;
       await setOrderStatus(id, status);
       router.refresh();
     });

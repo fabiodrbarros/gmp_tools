@@ -67,7 +67,7 @@ export default async function ContaPage() {
               {orders.map((o) => {
                 const st = STATUS[o.status] ?? STATUS.PENDING;
                 return (
-                  <div key={o.id} className="px-5 py-4 flex flex-wrap items-center justify-between gap-3">
+                  <Link key={o.id} href={`/conta/encomendas/${o.id}`} className="px-5 py-4 flex flex-wrap items-center justify-between gap-3 hover:bg-gray-50 transition-colors">
                     <div>
                       <div className="font-medium text-gray-900 text-sm">Encomenda #{o.id.slice(-6).toUpperCase()}</div>
                       <div className="text-xs text-gray-400">{fmtDate(o.createdAt)} · {o.items.length} artigo{o.items.length !== 1 ? "s" : ""}</div>
@@ -76,7 +76,7 @@ export default async function ContaPage() {
                       <span className={`text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 ${st.cls}`}>{st.label}</span>
                       <span className="font-semibold text-black text-sm">{fmt(o.subtotal)}</span>
                     </div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>

@@ -43,6 +43,28 @@ export async function saveFile(file: File | null): Promise<string | null> {
   return `/uploads/${name}`;
 }
 
+const ATTACH_EXTS = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "odt", "ods", "txt", "csv", "zip", "jpg", "jpeg", "png", "gif", "webp", "heic"];
+
+/** Saves several attachments (images or documents) to /public/uploads; returns their URLs. */
+export async function saveAttachments(files: File[]): Promise<string[]> {
+  const dir = path.join(process.cwd(), "public", "uploads");
+  await mkdir(dir, { recursive: true });
+  const urls: string[] = [];
+  for (const file of files) {
+    if (!file || file.size === 0) continue;
+    if (file.size > 15 * 1024 * 1024) continue; // 15MB cap
+    const ext = (file.name.split(".").pop() || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    const isImg = file.type.startsWith("image/");
+    if (!ATTACH_EXTS.includes(ext) && !isImg) continue;
+    const safeExt = ext || "bin";
+    const name = `anexo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${safeExt}`;
+    const buffer = Buffer.from(await file.arrayBuffer());
+    await writeFile(path.join(dir, name), buffer);
+    urls.push(`/uploads/${name}`);
+  }
+  return urls;
+}
+
 export function parseImages(raw: string | null | undefined): string[] {
   if (!raw) return [];
   try {

@@ -163,6 +163,28 @@ model Customer {
   categoryDiscounts CustomerCategoryDiscount[]
   quantityTiers     CustomerQuantityTier[]
   orders            CustomerOrder[]
+  tickets           SupportTicket[]
+}
+
+model SupportTicket {
+  id         String          @id @default(cuid())
+  customerId String
+  subject    String
+  status     String          @default("OPEN") // OPEN | ANSWERED | CLOSED
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  customer   Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  messages   TicketMessage[]
+}
+
+model TicketMessage {
+  id          String        @id @default(cuid())
+  ticketId    String
+  author      String // CUSTOMER | ADMIN
+  body        String
+  attachments String? // JSON array of file URLs
+  createdAt   DateTime      @default(now())
+  ticket      SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
 }
 
 model CustomerQuantityTier {

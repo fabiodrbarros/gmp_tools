@@ -27,10 +27,10 @@ export default async function ContaEncomendaPage({ params }: { params: Promise<{
   const st = orderStatus(order.status);
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-3xl mx-auto px-6 py-12">
-        <Link href="/conta" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black transition-colors mb-6">
-          <ArrowLeft className="h-4 w-4" /> A minha conta
+    <div>
+      <div>
+        <Link href="/conta/encomendas" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black transition-colors mb-6">
+          <ArrowLeft className="h-4 w-4" /> Encomendas
         </Link>
 
         <div className="flex flex-wrap items-start justify-between gap-4 mb-8">

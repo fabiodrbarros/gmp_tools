@@ -4,6 +4,7 @@ import { redirect, notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { db } from "@/lib/db";
 import { getCustomer } from "@/lib/customer-auth";
+import { orderStatus } from "@/lib/order-status";
 
 export const metadata: Metadata = { title: "Encomenda" };
 
@@ -13,11 +14,6 @@ function fmt(n: number) {
 function fmtDate(d: Date) {
   return new Date(d).toLocaleString("pt-PT", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
 }
-const STATUS: Record<string, { label: string; cls: string }> = {
-  PENDING: { label: "Pendente", cls: "bg-amber-50 text-amber-600" },
-  CONFIRMED: { label: "Confirmada", cls: "bg-green-50 text-green-600" },
-  CANCELLED: { label: "Cancelada", cls: "bg-gray-100 text-gray-400" },
-};
 
 export default async function ContaEncomendaPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await getCustomer();
@@ -28,7 +24,7 @@ export default async function ContaEncomendaPage({ params }: { params: Promise<{
   // only the owner may see it
   if (!order || order.customerId !== session.id) notFound();
 
-  const st = STATUS[order.status] ?? STATUS.PENDING;
+  const st = orderStatus(order.status);
 
   return (
     <div className="min-h-screen bg-white">

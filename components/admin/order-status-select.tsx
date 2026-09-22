@@ -5,18 +5,15 @@ import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { setOrderStatus } from "@/app/actions/admin-order";
-
-const OPTIONS = [
-  { value: "PENDING", label: "Pendente", cls: "bg-amber-50 text-amber-600" },
-  { value: "CONFIRMED", label: "Confirmada", cls: "bg-green-50 text-green-600" },
-  { value: "CANCELLED", label: "Cancelada", cls: "bg-gray-100 text-gray-400" },
-];
+import { ORDER_STATUSES, orderStatus } from "@/lib/order-status";
+import { useConfirm } from "@/components/ui/confirm";
 
 export function OrderStatusSelect({ id, value }: { id: string; value: string }) {
   const [open, setOpen] = React.useState(false);
   const [pending, start] = React.useTransition();
   const router = useRouter();
-  const current = OPTIONS.find((o) => o.value === value) ?? OPTIONS[0];
+  const askConfirm = useConfirm();
+  const current = orderStatus(value);
 
   React.useEffect(() => {
     if (!open) return;
@@ -25,10 +22,17 @@ export function OrderStatusSelect({ id, value }: { id: string; value: string }) 
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  function apply(status: string) {
+  function pick(status: string) {
     setOpen(false);
     if (status === value) return;
+    const label = orderStatus(status).label;
     start(async () => {
+      const ok = await askConfirm({
+        title: "Alterar estado",
+        message: `Marcar esta encomenda como "${label}"?`,
+        confirmLabel: "Alterar",
+      });
+      if (!ok) return;
       await setOrderStatus(id, status);
       router.refresh();
     });
@@ -49,7 +53,7 @@ export function OrderStatusSelect({ id, value }: { id: string; value: string }) 
       <AnimatePresence>
         {open && (
           <motion.div
-            className="fixed inset-0 z-[200] flex items-center justify-center p-6"
+            className="fixed inset-0 z-[190] flex items-center justify-center p-6"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }}
           >
             <div className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} />
@@ -62,11 +66,11 @@ export function OrderStatusSelect({ id, value }: { id: string; value: string }) 
               <h2 className="font-display text-xl font-medium text-black tracking-tight mb-1">Alterar estado</h2>
               <p className="text-sm text-gray-500 mb-5">Escolha o novo estado da encomenda.</p>
               <div className="space-y-2 mb-5">
-                {OPTIONS.map((o) => (
+                {ORDER_STATUSES.map((o) => (
                   <button
                     key={o.value}
                     type="button"
-                    onClick={() => apply(o.value)}
+                    onClick={() => pick(o.value)}
                     className={`w-full flex items-center justify-between border px-4 py-3 text-sm transition-colors ${o.value === value ? "border-black" : "border-gray-200 hover:border-black"}`}
                   >
                     <span className="font-medium text-black">{o.label}</span>

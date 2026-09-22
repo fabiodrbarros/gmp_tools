@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { getCustomer } from "@/lib/customer-auth";
 import { customerLogout } from "@/app/actions/customer-auth";
 import { ProfileForm } from "@/components/customer/profile-form";
+import { orderStatus } from "@/lib/order-status";
 
 export const metadata: Metadata = { title: "A minha conta" };
 
@@ -15,11 +16,6 @@ function fmt(n: number) {
 function fmtDate(d: Date) {
   return new Date(d).toLocaleDateString("pt-PT", { day: "2-digit", month: "short", year: "numeric" });
 }
-const STATUS: Record<string, { label: string; cls: string }> = {
-  PENDING: { label: "Pendente", cls: "bg-amber-50 text-amber-600" },
-  CONFIRMED: { label: "Confirmada", cls: "bg-green-50 text-green-600" },
-  CANCELLED: { label: "Cancelada", cls: "bg-gray-100 text-gray-400" },
-};
 
 export default async function ContaPage() {
   const session = await getCustomer();
@@ -65,7 +61,7 @@ export default async function ContaPage() {
           ) : (
             <div className="border border-gray-100 divide-y divide-gray-100">
               {orders.map((o) => {
-                const st = STATUS[o.status] ?? STATUS.PENDING;
+                const st = orderStatus(o.status);
                 return (
                   <Link key={o.id} href={`/conta/encomendas/${o.id}`} className="px-5 py-4 flex flex-wrap items-center justify-between gap-3 hover:bg-gray-50 transition-colors">
                     <div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { listArticles, formatDate } from "@/lib/news";
+import { getT } from "@/lib/i18n-server";
 
 export const metadata: Metadata = {
   title: "Notícias",
@@ -11,19 +12,20 @@ export const metadata: Metadata = {
 export default async function NoticiasPage() {
   const articles = await listArticles();
   const [featured, ...rest] = articles;
+  const { t } = await getT();
 
   return (
     <div className="bg-white min-h-screen">
       {/* Header */}
       <div className="border-b border-gray-100 py-12 lg:py-14">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
-          <h1 className="font-display text-4xl lg:text-5xl font-medium text-black tracking-tight">Notícias.</h1>
+          <h1 className="font-display text-4xl lg:text-5xl font-medium text-black tracking-tight">{t("news.title")}</h1>
         </div>
       </div>
 
       <div className="max-w-screen-xl mx-auto px-6 lg:px-10 py-12 lg:py-16">
         {articles.length === 0 && (
-          <p className="text-gray-400 text-sm">Ainda não há notícias publicadas.</p>
+          <p className="text-gray-400 text-sm">{t("news.none")}</p>
         )}
         {/* Featured */}
         {featured && (
@@ -44,14 +46,14 @@ export default async function NoticiasPage() {
             <div className="flex items-center gap-3 text-[11px] text-gray-400 uppercase tracking-widest mb-4">
               <span>{formatDate(featured.date)}</span>
               <span className="h-px w-4 bg-gray-200" />
-              <span>{featured.readMin} min de leitura</span>
+              <span>{featured.readMin} {t("news.readMinLong")}</span>
             </div>
             <h2 className="font-display text-3xl lg:text-4xl font-medium text-black leading-tight tracking-tight mb-4 group-hover:text-red-600 transition-colors">
               {featured.title}
             </h2>
             <p className="text-gray-500 text-lg font-light leading-relaxed mb-6">{featured.excerpt}</p>
             <span className="inline-flex items-center gap-2 text-sm font-semibold text-black group-hover:text-red-600 transition-colors">
-              Ler artigo <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              {t("news.readArticle")} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </span>
           </div>
         </Link>
@@ -81,14 +83,14 @@ export default async function NoticiasPage() {
                 <div className="flex items-center gap-2 text-[10px] text-gray-400 uppercase tracking-widest mb-4">
                   <span>{formatDate(a.date)}</span>
                   <span className="h-px w-3 bg-gray-200" />
-                  <span>{a.readMin} min</span>
+                  <span>{a.readMin} {t("news.readMin")}</span>
                 </div>
                 <h3 className="font-display text-lg font-medium text-black leading-snug tracking-tight mb-4 group-hover:text-red-600 transition-colors">
                   {a.title}
                 </h3>
                 <p className="text-sm text-gray-500 leading-relaxed font-light flex-1">{a.excerpt}</p>
                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-400 group-hover:text-red-600 transition-colors mt-6 pt-5 border-t border-gray-50">
-                  Ler mais <ArrowRight className="h-3.5 w-3.5" />
+                  {t("news.readMore")} <ArrowRight className="h-3.5 w-3.5" />
                 </span>
               </div>
             </Link>

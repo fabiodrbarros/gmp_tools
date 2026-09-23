@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, ChevronRight } from "lucide-react";
 import { listArticles, getArticle, formatDate } from "@/lib/news";
+import { getT } from "@/lib/i18n-server";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -15,6 +16,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   const article = await getArticle(slug);
   if (!article) notFound();
+  const { t } = await getT();
 
   const related = (await listArticles()).filter((a) => a.slug !== article.slug).slice(0, 2);
 
@@ -23,9 +25,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       <article className="max-w-3xl mx-auto px-6 py-16 lg:py-20">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 text-xs text-gray-400 mb-10">
-          <Link href="/" className="hover:text-black transition-colors">Início</Link>
+          <Link href="/" className="hover:text-black transition-colors">{t("pd.home")}</Link>
           <ChevronRight className="h-3 w-3" />
-          <Link href="/noticias" className="hover:text-black transition-colors">Notícias</Link>
+          <Link href="/noticias" className="hover:text-black transition-colors">{t("nav.news")}</Link>
           <ChevronRight className="h-3 w-3" />
           <span className="text-gray-600 truncate">{article.title}</span>
         </nav>
@@ -33,7 +35,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         {/* Meta */}
         <div className="flex items-center gap-3 mb-5">
           <span className="bg-red-600 text-white text-[10px] font-medium px-2 py-1 uppercase tracking-wider">{article.category}</span>
-          <span className="text-[11px] text-gray-400 uppercase tracking-widest">{formatDate(article.date)} · {article.readMin} min</span>
+          <span className="text-[11px] text-gray-400 uppercase tracking-widest">{formatDate(article.date)} · {article.readMin} {t("news.readMin")}</span>
         </div>
 
         {/* Title */}
@@ -64,10 +66,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         {/* CTA */}
         <div className="mt-12 pt-10 border-t border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
           <Link href="/noticias" className="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-black transition-colors">
-            <ArrowLeft className="h-4 w-4" /> Todas as notícias
+            <ArrowLeft className="h-4 w-4" /> {t("news.allNews")}
           </Link>
           <Link href="/contactos" className="inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-6 py-3 hover:bg-red-600 transition-colors group">
-            Falar com a equipa <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            {t("news.talkTeam")} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </article>
@@ -75,7 +77,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       {/* Related */}
       <div className="border-t border-gray-100 bg-[#fafafa] py-16">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
-          <div className="text-[11px] font-semibold tracking-[0.2em] text-gray-400 uppercase mb-6">Continuar a ler</div>
+          <div className="text-[11px] font-semibold tracking-[0.2em] text-gray-400 uppercase mb-6">{t("news.continue")}</div>
           <div className="grid sm:grid-cols-2 gap-6">
             {related.map((a) => (
               <Link key={a.slug} href={`/noticias/${a.slug}`} className="bg-white border border-gray-100 p-8 group hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300">

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SERVICES } from "@/lib/services";
+import { getT } from "@/lib/i18n-server";
 
 // Optional photo per service (drop files in /public/images/servicos/ and map here).
 // Falls back to a dark placeholder until real images are provided.
@@ -10,8 +11,9 @@ const IMAGES: Record<string, string | undefined> = {
   "04": "/images/servicos/04-formacao.jpg",
 };
 
-export function Offerings() {
+export async function Offerings() {
   const items = SERVICES;
+  const { t } = await getT();
 
   return (
     <section className="relative bg-[#0a0a0a] overflow-hidden">
@@ -22,14 +24,14 @@ export function Offerings() {
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-8 mb-14 lg:mb-20">
           <div>
-            <span className="block text-[11px] font-medium tracking-[0.35em] text-red-500 uppercase mb-5">O que oferecemos</span>
+            <span className="block text-[11px] font-medium tracking-[0.35em] text-red-500 uppercase mb-5">{t("off.eyebrow")}</span>
             <h2 className="font-display uppercase font-medium tracking-tight leading-[0.9] text-white text-[clamp(2.4rem,6vw,5rem)]">
-              Os nossos <span className="text-red-500">serviços.</span>
+              {t("off.t1")} <span className="text-red-500">{t("off.t2")}</span>
             </h2>
           </div>
           <div className="lg:pl-8 lg:border-l border-white/15 lg:max-w-xs">
             <p className="text-white/60 text-[15px] leading-relaxed font-light">
-              Quatro áreas. Uma só missão: fornecer soluções que fazem a diferença na sua produção.
+              {t("off.mission")}
             </p>
           </div>
         </div>
@@ -48,7 +50,7 @@ export function Offerings() {
             <div className="mb-3">
               <span className="block text-[13px] font-medium tracking-widest text-white/40 mb-3 group-hover:text-red-500 transition-colors">{s.num}</span>
               <h3 className="font-display uppercase font-medium text-white leading-[1.05] tracking-tight text-xl lg:text-2xl min-h-[2.4em]">
-                {s.title}
+                {t(`svc.${s.num}.title`)}
               </h3>
             </div>
 

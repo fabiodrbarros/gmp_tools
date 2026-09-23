@@ -6,6 +6,7 @@ import { CartProvider } from "@/lib/cart";
 import { LanguageProvider } from "@/lib/i18n";
 import { ConfirmProvider } from "@/components/ui/confirm";
 import { getCustomer } from "@/lib/customer-auth";
+import { getLocale } from "@/lib/i18n-server";
 import "./globals.css";
 
 // Display: industrial grotesque echoing the GMP wordmark — heavy, squared, wide
@@ -50,11 +51,11 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const customer = await getCustomer();
+  const [customer, locale] = await Promise.all([getCustomer(), getLocale()]);
   return (
-    <html lang="pt" className={`${saira.variable} ${inter.variable}`}>
+    <html lang={locale} className={`${saira.variable} ${inter.variable}`}>
       <body className="font-sans antialiased">
-        <LanguageProvider>
+        <LanguageProvider initialLocale={locale}>
           <CartProvider>
             <ConfirmProvider>
               <Header customer={customer ? { name: customer.name } : null} />

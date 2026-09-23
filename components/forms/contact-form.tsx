@@ -3,18 +3,18 @@
 import * as React from "react";
 import { submitContact } from "@/app/actions/contact";
 import { CheckCircle2, ChevronDown } from "lucide-react";
-
-const SUBJECTS = [
-  "Pedido de orçamento",
-  "Assistência técnica",
-  "Avaria urgente (máquina parada)",
-  "Informações sobre produtos",
-  "Máquinas Thibaut",
-  "Parceria comercial",
-  "Outro assunto",
-];
+import { useLang } from "@/lib/i18n";
 
 export function ContactForm() {
+  const { t } = useLang();
+  const SUBJECTS = [
+    t("contacts.subj.quote"),
+    t("contacts.subj.assist"),
+    t("contacts.subj.urgent"),
+    t("contacts.subj.info"),
+    t("contacts.subj.partner"),
+    t("contacts.subj.other"),
+  ];
   const [pending, setPending] = React.useState(false);
   const [done, setDone] = React.useState(false);
   const [error, setError] = React.useState("");
@@ -33,8 +33,8 @@ export function ContactForm() {
     return (
       <div className="py-16 text-center">
         <CheckCircle2 className="h-10 w-10 text-green-500 mx-auto mb-4" />
-        <h3 className="text-xl font-medium text-black mb-2">Mensagem enviada</h3>
-        <p className="text-gray-500">Respondemos em menos de 24 horas. Obrigado pelo contacto.</p>
+        <h3 className="text-xl font-medium text-black mb-2">{t("contacts.sentTitle")}</h3>
+        <p className="text-gray-500">{t("contacts.sent")}</p>
       </div>
     );
   }
@@ -42,34 +42,34 @@ export function ContactForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid sm:grid-cols-2 gap-4">
-        <Field label="Nome *">
-          <input required name="name" placeholder="O seu nome" className="input" />
+        <Field label={`${t("contacts.name")} *`}>
+          <input required name="name" placeholder={t("contacts.namePh")} className="input" />
         </Field>
-        <Field label="Email *">
+        <Field label={`${t("contacts.email")} *`}>
           <input required name="email" type="email" placeholder="email@empresa.pt" className="input" />
         </Field>
       </div>
       <div className="grid sm:grid-cols-2 gap-4">
-        <Field label="Telefone">
+        <Field label={t("contacts.phone")}>
           <input name="phone" type="tel" placeholder="+351 000 000 000" className="input" />
         </Field>
         <div>
-          <label className="block text-xs font-medium tracking-wider text-gray-500 uppercase mb-2">Assunto *</label>
+          <label className="block text-xs font-medium tracking-wider text-gray-500 uppercase mb-2">{t("contacts.subject")} *</label>
           <div className="relative">
             <select
               required
               name="subject"
               className="w-full appearance-none rounded-none border border-gray-200 bg-white px-4 py-2.5 pr-10 text-sm text-gray-900 focus:outline-none focus:border-black transition-colors"
             >
-              <option value="">Seleccionar...</option>
+              <option value="">{t("contacts.subjPlaceholder")}</option>
               {SUBJECTS.map((s) => <option key={s}>{s}</option>)}
             </select>
             <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           </div>
         </div>
       </div>
-      <Field label="Mensagem *">
-        <textarea required name="message" rows={5} placeholder="Como podemos ajudar?" className="input resize-none" />
+      <Field label={`${t("contacts.message")} *`}>
+        <textarea required name="message" rows={5} placeholder={t("contacts.msgPh")} className="input resize-none" />
       </Field>
       {error && <p className="text-sm text-red-600">{error}</p>}
       <button
@@ -77,7 +77,7 @@ export function ContactForm() {
         disabled={pending}
         className="w-full bg-black text-white text-sm font-semibold py-4 hover:bg-red-600 transition-colors disabled:opacity-50"
       >
-        {pending ? "A enviar..." : "Enviar mensagem"}
+        {pending ? t("contacts.sending") : t("contacts.send")}
       </button>
     </form>
   );

@@ -1,11 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLang } from "@/lib/i18n";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
-const HEADLINE = ["Para", "quem", "transforma", "a", "pedra."];
 
 export function AboutHero() {
+  const { t } = useLang();
+  const HEADLINE = t("about.heroHeadline").split(" ");
   return (
     <section className="relative min-h-screen flex items-end bg-[#0a0a0a] overflow-hidden">
       {/* Brand watermark */}
@@ -30,7 +32,7 @@ export function AboutHero() {
           transition={{ duration: 0.5 }}
           className="block text-[11px] font-semibold tracking-[0.3em] text-red-500 uppercase mb-7"
         >
-          Sobre nós
+          {t("about.eyebrow")}
         </motion.span>
 
         <h1 className="font-display uppercase font-medium text-white leading-[0.95] tracking-tight text-[clamp(2.6rem,7vw,6rem)] flex flex-wrap gap-x-[0.28em] mb-8 max-w-5xl">
@@ -54,7 +56,7 @@ export function AboutHero() {
           transition={{ duration: 0.6, delay: 0.55 }}
           className="text-lg text-white/55 max-w-2xl font-light leading-relaxed"
         >
-          Somos o parceiro técnico para a transformação de granitos, mármores, quartzo e cerâmicos em Portugal, prestando serviços de venda de máquinas, ferramentas, suporte técnico e formação.
+          {t("about.heroBody")}
         </motion.p>
       </div>
 
@@ -68,7 +70,7 @@ export function AboutHero() {
           />
         </div>
         <span className="text-[9px] text-red-500/70 tracking-[0.25em] [writing-mode:vertical-rl] rotate-180 uppercase font-medium">
-          Deslizar para descobrir
+          {t("about.scroll")}
         </span>
       </div>
     </section>

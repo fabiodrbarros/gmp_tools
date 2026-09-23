@@ -5,11 +5,13 @@ import Link from "next/link";
 import { ArrowRight, ArrowDown } from "lucide-react";
 import { useScroll, useMotionValueEvent } from "framer-motion";
 import { SERVICES } from "@/lib/services";
+import { useLang } from "@/lib/i18n";
 
 const PANELS = SERVICES.length + 1; // intro + services
 const STEP_EASE = "cubic-bezier(0.16,1,0.3,1)";
 
 export function ServicesMethod() {
+  const { t } = useLang();
   const ref = React.useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const [index, setIndex] = React.useState(0);
@@ -31,18 +33,18 @@ export function ServicesMethod() {
           <div className="w-screen h-full shrink-0 flex items-center px-6 sm:px-[8vw]">
             <div className="max-w-screen-xl w-full mx-auto grid lg:grid-cols-12 gap-10 items-center">
               <div className="lg:col-span-7">
-                <span className="block text-[11px] font-medium tracking-[0.3em] text-red-600 uppercase mb-6">O que fazemos</span>
+                <span className="block text-[11px] font-medium tracking-[0.3em] text-red-600 uppercase mb-6">{t("svc.eyebrow")}</span>
                 <h2 className="font-display uppercase font-medium text-black leading-[0.92] tracking-tight text-[clamp(2.8rem,7vw,6.5rem)]">
-                  Os Nossos<br /><span className="text-red-600">Serviços.</span>
+                  {t("svc.title1")}<br /><span className="text-red-600">{t("svc.title2")}</span>
                 </h2>
               </div>
               <div className="lg:col-span-5 lg:pl-12 lg:border-l border-gray-200">
                 <span className="block text-[11px] font-medium tracking-[0.2em] text-gray-400 uppercase mb-4">01 / {String(PANELS).padStart(2, "0")}</span>
                 <p className="text-gray-500 text-lg leading-relaxed font-light max-w-[40ch] mb-8">
-                  Do fornecimento à assistência técnica, somos o parceiro completo para ferramentas diamantadas e máquinas CNC. Quatro serviços, um compromisso: manter a sua produção a funcionar.
+                  {t("svc.intro")}
                 </p>
                 <div className="flex items-center gap-3 text-[11px] tracking-[0.2em] text-gray-400 uppercase">
-                  <span>Deslize para explorar</span>
+                  <span>{t("svc.explore")}</span>
                   <ArrowDown className="h-4 w-4 animate-bounce text-red-600" />
                 </div>
               </div>
@@ -64,16 +66,16 @@ export function ServicesMethod() {
 
                 <div className="relative z-10 grid lg:grid-cols-12 gap-10 items-center">
                   <div className="lg:col-span-7">
-                    <span className="block text-[11px] font-medium tracking-[0.3em] text-red-600 uppercase mb-5">{s.eyebrow}</span>
+                    <span className="block text-[11px] font-medium tracking-[0.3em] text-red-600 uppercase mb-5">{t("svc.word")} {s.num}</span>
                     <h3 className="font-display uppercase font-medium text-black leading-[0.95] tracking-tight text-[clamp(2.2rem,5.5vw,5rem)] mb-6">
-                      {s.title}
+                      {t(`svc.${s.num}.title`)}
                     </h3>
-                    <p className="text-gray-500 text-base lg:text-lg leading-relaxed font-light max-w-[44ch] mb-8">{s.desc}</p>
+                    <p className="text-gray-500 text-base lg:text-lg leading-relaxed font-light max-w-[44ch] mb-8">{t(`svc.${s.num}.desc`)}</p>
                     <Link
                       href={s.cta.href}
                       className="inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-7 py-3.5 hover:bg-red-600 transition-colors group"
                     >
-                      {s.cta.label}
+                      {t(`svc.${s.num}.cta`)}
                       <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </Link>
                   </div>

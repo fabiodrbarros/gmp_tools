@@ -3,19 +3,21 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { AboutHero } from "@/components/sections/about-hero";
 import { SERVICES } from "@/lib/services";
+import { getT } from "@/lib/i18n-server";
 
 export const metadata: Metadata = {
   title: "A GMP",
   description: "Parceiro técnico para a transformação de granitos, mármores, quartzo e cerâmicos em Portugal — máquinas, ferramentas diamantadas, suporte técnico e formação. Representantes Thibaut e Aquafill.",
 };
 
-const VALUES = [
-  { title: "Precisão", desc: "Cada ferramenta, máquina e conselho técnico com o máximo rigor." },
-  { title: "Fiabilidade", desc: "Stock disponível, entregas rápidas e assistência técnica quando precisa." },
-  { title: "Expertise", desc: "Conhecimento aplicado ao terreno. Conhecemos o processo como ninguém." },
-];
+export default async function SobrePage() {
+  const { t } = await getT();
+  const VALUES = [
+    { title: t("about.v1.title"), desc: t("about.v1.desc") },
+    { title: t("about.v2.title"), desc: t("about.v2.desc") },
+    { title: t("about.v3.title"), desc: t("about.v3.desc") },
+  ];
 
-export default function SobrePage() {
   return (
     <div className="bg-white">
       <AboutHero />
@@ -25,18 +27,14 @@ export default function SobrePage() {
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           <div className="lg:col-span-5">
             <h2 className="font-display text-4xl lg:text-5xl font-medium text-black tracking-tight leading-none mb-8">
-              Quem somos?
+              {t("about.whoTitle")}
             </h2>
             <div className="space-y-5 text-gray-500 font-light leading-relaxed">
-              <p>
-                A GMP Tools é uma empresa dedicada ao fornecimento de maquinaria nova e usada, ferramentas diamantadas, apoio técnico e formação para quem atua no sector da transformação de granitos, mármores, quartzo e cerâmicos.
-              </p>
-              <p>
-                Somos representantes Thibaut e Aquafill, unindo tecnologia comprovada a um acompanhamento técnico de proximidade em todo o território nacional.
-              </p>
+              <p>{t("about.whoP1")}</p>
+              <p>{t("about.whoP2")}</p>
             </div>
             <div className="pt-8">
-              <span className="block text-[11px] font-semibold tracking-[0.25em] text-gray-400 uppercase mb-4">Representamos</span>
+              <span className="block text-[11px] font-semibold tracking-[0.25em] text-gray-400 uppercase mb-4">{t("about.represent")}</span>
               <div className="flex flex-wrap items-center gap-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/logos/partners/thibaut.jpg" alt="Thibaut" className="h-12 w-auto object-contain" />
@@ -53,8 +51,8 @@ export default function SobrePage() {
                 <div key={s.num} className="grid grid-cols-[56px_1fr] gap-5 p-6 hover:bg-gray-50 transition-colors">
                   <div className="font-display text-2xl font-medium text-gray-300">{s.num}</div>
                   <div>
-                    <h3 className="font-display text-lg font-medium text-black tracking-tight mb-1">{s.title}</h3>
-                    <p className="text-sm text-gray-500 leading-relaxed font-light">{s.desc}</p>
+                    <h3 className="font-display text-lg font-medium text-black tracking-tight mb-1">{t(`svc.${s.num}.title`)}</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed font-light">{t(`svc.${s.num}.desc`)}</p>
                   </div>
                 </div>
               ))}
@@ -67,12 +65,12 @@ export default function SobrePage() {
       <section className="bg-[#fafafa] border-y border-gray-100 py-24 lg:py-32">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-16">
           <div className="mb-16">
-            <span className="block text-[11px] font-semibold tracking-[0.3em] text-red-600 uppercase mb-5">O que nos guia</span>
+            <span className="block text-[11px] font-semibold tracking-[0.3em] text-red-600 uppercase mb-5">{t("about.guides")}</span>
             <h2 className="font-display text-4xl lg:text-5xl font-medium text-black tracking-tight leading-tight mb-6">
-              Valores & Missão
+              {t("about.valuesTitle")}
             </h2>
             <p className="text-gray-500 text-lg font-light leading-relaxed lg:whitespace-nowrap">
-              A nossa conduta é guiada por três pilares que garantem a excelência para quem transforma a pedra.
+              {t("about.valuesIntro")}
             </p>
           </div>
 
@@ -93,9 +91,9 @@ export default function SobrePage() {
       <section className="bg-[#0a0a0a] py-24 lg:py-32 relative overflow-hidden">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-16 relative">
           <div className="max-w-3xl">
-            <span className="block text-[11px] font-semibold tracking-[0.3em] text-red-500 uppercase mb-5">O nosso compromisso</span>
+            <span className="block text-[11px] font-semibold tracking-[0.3em] text-red-500 uppercase mb-5">{t("about.commitmentEyebrow")}</span>
             <h2 className="font-display text-3xl lg:text-5xl font-medium text-white tracking-tight leading-[1.05]">
-              Manter a sua produção a funcionar, fornecendo soluções que fazem a diferença!
+              {t("about.commitment")}
             </h2>
           </div>
         </div>
@@ -104,13 +102,13 @@ export default function SobrePage() {
       {/* CTA */}
       <section className="max-w-screen-xl mx-auto px-6 lg:px-16 py-24 text-center">
         <h2 className="font-display text-3xl lg:text-5xl font-medium text-black tracking-tight mb-4">
-          Precisa de ajuda?
+          {t("about.ctaTitle")}
         </h2>
         <p className="text-gray-500 text-lg mb-10 max-w-xl mx-auto font-light">
-          Contacte a nossa equipa e descubra como podemos apoiar o seu negócio.
+          {t("about.ctaBody")}
         </p>
         <Link href="/contactos" className="inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-8 py-4 hover:bg-red-600 transition-colors group">
-          Falar connosco <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+          {t("about.ctaButton")} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
         </Link>
       </section>
     </div>

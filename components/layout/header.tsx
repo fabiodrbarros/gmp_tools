@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ShoppingCart, Menu, X, ChevronDown, User } from "lucide-react";
 import { FacebookIcon, InstagramIcon } from "@/components/icons/social";
 import { AnimatePresence, motion } from "framer-motion";
@@ -245,6 +245,7 @@ function InlineLink({ href, light, children }: { href: string; light: boolean; c
 
 function LanguageSelector({ light }: { light: boolean }) {
   const { locale, setLocale } = useLang();
+  const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
 
@@ -284,7 +285,7 @@ function LanguageSelector({ light }: { light: boolean }) {
             {LOCALES.map((l) => (
               <li key={l}>
                 <button
-                  onClick={() => { setLocale(l as Locale); setOpen(false); }}
+                  onClick={() => { setLocale(l as Locale); setOpen(false); router.refresh(); }}
                   className={`w-full text-left px-4 py-2 text-[11px] font-semibold uppercase tracking-wider transition-colors ${
                     l === locale ? "text-red-600" : "text-gray-600 hover:text-black hover:bg-gray-50"
                   }`}

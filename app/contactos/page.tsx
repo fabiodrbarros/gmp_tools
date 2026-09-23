@@ -2,20 +2,21 @@ import type { Metadata } from "next";
 import { ContactForm } from "@/components/forms/contact-form";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { SITE } from "@/lib/site";
+import { getT } from "@/lib/i18n-server";
 
 export const metadata: Metadata = {
   title: "Contactos",
   description: "Fale com a GMP Tools — orçamentos, assistência técnica e avarias urgentes. Telefone, email, morada e formulário de contacto.",
 };
 
-const ITEMS = [
-  { icon: MapPin, label: "Morada", value: `${SITE.address.street}, ${SITE.address.postal}` },
-  { icon: Phone, label: "Telemóvel", value: SITE.phone, href: `tel:${SITE.phoneHref}`, note: SITE.phoneNote },
-  { icon: Mail, label: "Email", value: SITE.email, href: `mailto:${SITE.email}` },
-  { icon: Clock, label: "Horário", value: SITE.hours },
-];
-
-export default function ContactosPage() {
+export default async function ContactosPage() {
+  const { t } = await getT();
+  const ITEMS = [
+    { icon: MapPin, label: t("contacts.addressLabel"), value: `${SITE.address.street}, ${SITE.address.postal}` },
+    { icon: Phone, label: t("contacts.phoneLabel"), value: SITE.phone, href: `tel:${SITE.phoneHref}`, note: t("common.callcost") },
+    { icon: Mail, label: t("contacts.emailLabel"), value: SITE.email, href: `mailto:${SITE.email}` },
+    { icon: Clock, label: t("contacts.hoursLabel"), value: SITE.hours },
+  ];
   return (
     <div className="bg-white">
       <div className="max-w-screen-xl mx-auto px-6 lg:px-16 py-20 lg:py-28">
@@ -23,7 +24,7 @@ export default function ContactosPage() {
           {/* Left — heading + details + assistance */}
           <div className="lg:sticky lg:top-28 self-start">
             <h1 className="font-display uppercase font-medium text-black tracking-tight leading-[0.95] text-[clamp(2.4rem,5vw,4rem)] mb-6">
-              Fale com a<br /><span className="text-red-600">nossa equipa.</span>
+              {t("contacts.h1")}<br /><span className="text-red-600">{t("contacts.h2")}</span>
             </h1>
             <div className="w-16 h-0.5 bg-red-600 mb-8 mt-8" />
 
@@ -53,7 +54,7 @@ export default function ContactosPage() {
 
           {/* Right — form */}
           <div>
-            <div className="text-[11px] font-semibold tracking-[0.2em] text-gray-400 uppercase mb-6">Enviar mensagem</div>
+            <div className="text-[11px] font-semibold tracking-[0.2em] text-gray-400 uppercase mb-6">{t("contacts.formTitle")}</div>
             <ContactForm />
           </div>
         </div>

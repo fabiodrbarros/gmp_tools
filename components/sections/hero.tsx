@@ -1,10 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLang } from "@/lib/i18n";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 export function Hero() {
+  const { t } = useLang();
   return (
     <section className="relative h-screen min-h-[600px] w-full overflow-hidden bg-[#0a0a0a]">
       {/* Background video */}
@@ -29,9 +31,9 @@ export function Hero() {
       <div className="relative z-10 h-full flex items-center">
         <div className="w-full max-w-screen-xl mx-auto px-6 lg:px-16">
           <h1 className="font-display font-medium tracking-tight text-white leading-[0.9] text-[clamp(3rem,8.5vw,8rem)]">
-            <Line delay={0.15}>Precisão</Line>
-            <Line delay={0.28} className="text-red-500">que transforma</Line>
-            <Line delay={0.41}>a indústria.</Line>
+            <Line delay={0.15}>{t("hero.l1")}</Line>
+            <Line delay={0.28} className="text-red-500">{t("hero.l2")}</Line>
+            <Line delay={0.41}>{t("hero.l3")}</Line>
           </h1>
         </div>
       </div>
@@ -43,7 +45,7 @@ export function Hero() {
         transition={{ duration: 0.6, delay: 0.9 }}
         className="absolute bottom-9 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3 pointer-events-none"
       >
-        <span className="text-[10px] tracking-[0.3em] text-white/60 uppercase font-medium">Scroll</span>
+        <span className="text-[10px] tracking-[0.3em] text-white/60 uppercase font-medium">{t("hero.scroll")}</span>
         <span className="block w-px h-12 bg-white/20 relative overflow-hidden">
           <motion.span
             animate={{ y: ["-100%", "200%"] }}

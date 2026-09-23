@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { listArticles, formatDate } from "@/lib/news";
+import { getT } from "@/lib/i18n-server";
 
 export async function HomeNews() {
   const articles = await listArticles();
   if (articles.length === 0) return null;
+  const { t } = await getT();
   const [featured, ...rest] = articles;
   const others = rest.slice(0, 3);
 
@@ -13,10 +15,10 @@ export async function HomeNews() {
       <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
           <h2 className="font-display uppercase font-medium text-black tracking-tight leading-[0.95] text-[clamp(2rem,4.5vw,3.5rem)]">
-            Notícias.
+            {t("news.title")}
           </h2>
           <Link href="/noticias" className="inline-flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-black transition-colors">
-            Ver todas <ArrowRight className="h-3.5 w-3.5" />
+            {t("news.all")} <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
 

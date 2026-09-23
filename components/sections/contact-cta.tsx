@@ -1,23 +1,25 @@
 import Link from "next/link";
 import { Phone, Mail, ArrowRight } from "lucide-react";
 import { SITE } from "@/lib/site";
+import { getT } from "@/lib/i18n-server";
 
-export function ContactCTA() {
+export async function ContactCTA() {
+  const { t } = await getT();
   return (
     <section className="py-28 bg-gray-50 border-t border-gray-100">
       <div className="max-w-screen-xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <div className="text-xs font-medium tracking-[0.2em] text-red-600 uppercase mb-3">Contacte-nos</div>
+            <div className="text-xs font-medium tracking-[0.2em] text-red-600 uppercase mb-3">{t("cta.eyebrow")}</div>
             <h2 className="text-5xl font-medium text-black leading-tight mb-6">
-              Precisa de uma<br />solução?
+              {t("cta.h1")}<br />{t("cta.h2")}
             </h2>
             <p className="text-gray-500 text-lg leading-relaxed mb-10">
-              Máquinas, ferramentas, suporte técnico e formação para a transformação de granitos, mármores, quartzo e cerâmicos. Diga-nos o que precisa e encontramos a solução certa.
+              {t("cta.body")}
             </p>
             <div>
               <Link href="/contactos" className="inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-8 py-4 hover:bg-red-600 transition-colors group">
-                Contacte-nos
+                {t("cta.button")}
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -29,7 +31,7 @@ export function ContactCTA() {
                 <Phone className="h-5 w-5 text-white" />
               </div>
               <div>
-                <div className="text-[10px] font-medium tracking-widest text-gray-400 uppercase mb-0.5">Telemóvel</div>
+                <div className="text-[10px] font-medium tracking-widest text-gray-400 uppercase mb-0.5">{t("contact.phoneLabel")}</div>
                 <div className="text-base font-medium text-black">{SITE.phone}</div>
                 <div className="text-xs text-gray-400">{SITE.hours}</div>
               </div>
@@ -39,7 +41,7 @@ export function ContactCTA() {
                 <Mail className="h-5 w-5 text-white" />
               </div>
               <div>
-                <div className="text-[10px] font-medium tracking-widest text-gray-400 uppercase mb-0.5">Email</div>
+                <div className="text-[10px] font-medium tracking-widest text-gray-400 uppercase mb-0.5">{t("contact.emailLabel")}</div>
                 <div className="text-base font-medium text-black">{SITE.email}</div>
               </div>
             </a>

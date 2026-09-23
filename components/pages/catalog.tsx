@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { ShoppingCart, ArrowRight, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCart } from "@/lib/cart";
+import { useLang } from "@/lib/i18n";
 
 export interface CatalogCategory {
   slug: string;
@@ -49,6 +50,7 @@ export function Catalog({ eyebrow, title, allLabel = "Todos", categories, items,
   const [search, setSearch] = React.useState("");
   const [page, setPage] = React.useState(1);
   const { add } = useCart();
+  const { t } = useLang();
 
   const q = search.trim().toLowerCase();
   const filtered = items.filter((i) => {
@@ -85,7 +87,7 @@ export function Catalog({ eyebrow, title, allLabel = "Todos", categories, items,
       <div className="max-w-screen-xl mx-auto px-6 lg:px-10 py-12 grid lg:grid-cols-[220px_1fr] gap-10 lg:gap-14">
         {/* Categories sidebar */}
         <aside className="lg:sticky lg:top-24 self-start">
-          <div className="text-[11px] font-semibold tracking-[0.2em] text-gray-400 uppercase mb-5">Categorias</div>
+          <div className="text-[11px] font-semibold tracking-[0.2em] text-gray-400 uppercase mb-5">{t("cat.categories")}</div>
           <ul className="flex flex-col">
             {cats.map((c) => {
               const active = cat === c.slug;
@@ -111,7 +113,7 @@ export function Catalog({ eyebrow, title, allLabel = "Todos", categories, items,
           {/* Top bar: count + search */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div className="text-xs text-gray-400 font-medium">
-              {filtered.length} resultado{filtered.length !== 1 ? "s" : ""}
+              {filtered.length} {filtered.length !== 1 ? t("cat.results") : t("cat.result")}
             </div>
             {searchable && (
               <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 px-4 py-2.5 w-full sm:w-72 focus-within:border-black transition-colors">
@@ -119,7 +121,7 @@ export function Catalog({ eyebrow, title, allLabel = "Todos", categories, items,
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Pesquisar..."
+                  placeholder={t("cat.search")}
                   className="flex-1 text-sm bg-transparent outline-none placeholder:text-gray-400"
                 />
               </div>
@@ -166,7 +168,7 @@ export function Catalog({ eyebrow, title, allLabel = "Todos", categories, items,
                   </h3>
                   <div className="flex items-center justify-between gap-2 pt-5 border-t border-gray-50">
                     {it.quoteOnly || it.price == null || !pricesVisible ? (
-                      <span className="text-xs text-gray-400 italic">Sob consulta</span>
+                      <span className="text-xs text-gray-400 italic">{t("cat.quote")}</span>
                     ) : (
                       <div className="flex items-baseline gap-1.5">
                         <span className="text-lg font-medium">{fmt(it.price)}</span>
@@ -177,7 +179,7 @@ export function Catalog({ eyebrow, title, allLabel = "Todos", categories, items,
                       <button
                         onClick={(e) => { e.preventDefault(); add(it.cart!); }}
                         className="p-2 bg-gray-100 hover:bg-black hover:text-white text-gray-600 transition-all shrink-0"
-                        title="Adicionar ao carrinho"
+                        title={t("cart.add")}
                       >
                         <ShoppingCart className="h-4 w-4" />
                       </button>
@@ -191,7 +193,7 @@ export function Catalog({ eyebrow, title, allLabel = "Todos", categories, items,
           </div>
 
           {filtered.length === 0 && (
-            <div className="py-24 text-center text-gray-400">Sem resultados{q ? ` para "${search}"` : " nesta categoria"}.</div>
+            <div className="py-24 text-center text-gray-400">{t("cat.noResults")}</div>
           )}
 
           {/* Pagination */}

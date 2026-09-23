@@ -19,7 +19,7 @@ function fileName(url: string) {
 
 const IMG = /\.(jpe?g|png|gif|webp|heic)$/i;
 
-export function TicketThread({ messages, viewer }: { messages: ThreadMessage[]; viewer: "CUSTOMER" | "ADMIN" }) {
+export function TicketThread({ messages, viewer, customerLabel = "Cliente" }: { messages: ThreadMessage[]; viewer: "CUSTOMER" | "ADMIN"; customerLabel?: string }) {
   return (
     <div className="space-y-4">
       {messages.map((m) => {
@@ -29,7 +29,7 @@ export function TicketThread({ messages, viewer }: { messages: ThreadMessage[]; 
           <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
             <div className={`max-w-[85%] ${mine ? "items-end" : "items-start"} flex flex-col`}>
               <div className={`text-[10px] uppercase tracking-wider mb-1 ${mine ? "text-right text-gray-400" : "text-gray-400"}`}>
-                {m.author === "ADMIN" ? "GMP" : "Cliente"} · {fmt(m.createdAt)}
+                {m.author === "ADMIN" ? "GMP" : customerLabel} · {fmt(m.createdAt)}
               </div>
               <div className={`px-4 py-3 text-sm leading-relaxed whitespace-pre-line ${mine ? "bg-black text-white" : "bg-gray-100 text-gray-800"}`}>
                 {m.body}

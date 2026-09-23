@@ -2,14 +2,16 @@
 
 import { useActionState } from "react";
 import { customerLogin } from "@/app/actions/customer-auth";
+import { useLang } from "@/lib/i18n";
 
 export function CustomerLoginForm() {
+  const { t } = useLang();
   const [state, action, pending] = useActionState(customerLogin, null);
 
   return (
     <form action={action} className="space-y-4">
       <div>
-        <label className="block text-xs font-semibold text-gray-600 mb-1.5">Email</label>
+        <label className="block text-xs font-semibold text-gray-600 mb-1.5">{t("acct.loginEmail")}</label>
         <input
           name="email"
           type="email"
@@ -20,7 +22,7 @@ export function CustomerLoginForm() {
         />
       </div>
       <div>
-        <label className="block text-xs font-semibold text-gray-600 mb-1.5">Palavra-passe</label>
+        <label className="block text-xs font-semibold text-gray-600 mb-1.5">{t("acct.loginPass")}</label>
         <input
           name="password"
           type="password"
@@ -37,7 +39,7 @@ export function CustomerLoginForm() {
         disabled={pending}
         className="w-full bg-black text-white text-sm font-semibold py-3.5 hover:bg-red-600 transition-colors disabled:opacity-50"
       >
-        {pending ? "A entrar..." : "Entrar"}
+        {pending ? t("acct.loggingIn") : t("acct.loginBtn")}
       </button>
     </form>
   );

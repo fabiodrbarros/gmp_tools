@@ -8,11 +8,12 @@ import { Gallery } from "@/components/gallery";
 import { QuoteForm } from "@/components/forms/quote-form";
 import { SITE } from "@/lib/site";
 import { getCustomer } from "@/lib/customer-auth";
+import { getT } from "@/lib/i18n-server";
 
-const COND: Record<string, { label: string; cls: string }> = {
-  NEW: { label: "Nova", cls: "bg-green-50 text-green-600" },
-  REFURBISHED: { label: "Recondicionada", cls: "bg-blue-50 text-blue-600" },
-  USED: { label: "Usada", cls: "bg-gray-100 text-gray-500" },
+const COND_CLS: Record<string, string> = {
+  NEW: "bg-green-50 text-green-600",
+  REFURBISHED: "bg-blue-50 text-blue-600",
+  USED: "bg-gray-100 text-gray-500",
 };
 
 function parseSpecs(raw: string | null): string[] {
@@ -44,18 +45,19 @@ export default async function MachinePage({ params }: { params: Promise<{ slug: 
   const m = await getMachine(slug);
   if (!m) notFound();
 
+  const { t } = await getT();
   const specs = parseSpecs(m.specifications);
   const images = parseImages(m.images);
-  const cond = COND[m.condition] ?? COND.NEW;
+  const cond = { label: t(`md.cond${m.condition}`), cls: COND_CLS[m.condition] ?? COND_CLS.NEW };
   const used = m.condition !== "NEW";
   const pricesVisible = !!(await getCustomer());
 
   // Meta rows (only the ones that exist)
   const meta: { k: string; v: string }[] = [
-    m.brand?.name ? { k: "Marca", v: m.brand.name } : null,
-    m.label ? { k: "Tipo", v: m.label } : null,
-    { k: "Estado", v: cond.label },
-    m.year ? { k: "Ano", v: m.year } : null,
+    m.brand?.name ? { k: t("md.brand"), v: m.brand.name } : null,
+    m.label ? { k: t("md.type"), v: m.label } : null,
+    { k: t("md.state"), v: cond.label },
+    m.year ? { k: t("md.year"), v: m.year } : null,
   ].filter(Boolean) as { k: string; v: string }[];
 
   return (
@@ -63,10 +65,10 @@ export default async function MachinePage({ params }: { params: Promise<{ slug: 
       {/* Breadcrumb */}
       <div className="border-b border-gray-100 bg-gray-50">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10 py-4 flex items-center gap-1.5 text-xs text-gray-400">
-          <Link href="/" className="hover:text-black transition-colors">Início</Link>
+          <Link href="/" className="hover:text-black transition-colors">{t("pd.home")}</Link>
           <ChevronRight className="h-3 w-3" />
           <Link href={used ? "/maquinas/usadas" : "/maquinas"} className="hover:text-black transition-colors">
-            {used ? "Máquinas usadas" : "Máquinas"}
+            {used ? t("md.usedMachines") : t("md.machines")}
           </Link>
           <ChevronRight className="h-3 w-3" />
           <span className="text-gray-600">{m.name}</span>
@@ -97,7 +99,7 @@ export default async function MachinePage({ params }: { params: Promise<{ slug: 
             <div className="flex items-center gap-3 mb-6">
               <span className={`text-[10px] font-medium uppercase px-2 py-1 tracking-widest ${cond.cls}`}>{cond.label}</span>
               <span className="text-3xl font-medium text-black">
-                {pricesVisible && m.price != null ? <>{fmt(m.price)}<span className="text-gray-400 font-normal text-base ml-1">+ IVA</span></> : "Sob consulta"}
+                {pricesVisible && m.price != null ? <>{fmt(m.price)}<span className="text-gray-400 font-normal text-base ml-1">+ IVA</span></> : t("pd.quote")}
               </span>
             </div>
 
@@ -118,7 +120,7 @@ export default async function MachinePage({ params }: { params: Promise<{ slug: 
             {/* Características */}
             {specs.length > 0 && (
               <div className="mb-10">
-                <h2 className="text-sm font-medium text-black uppercase tracking-wider mb-4">Características</h2>
+                <h2 className="text-sm font-medium text-black uppercase tracking-wider mb-4">{t("md.features")}</h2>
                 <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-3">
                   {specs.map((s) => (
                     <li key={s} className="flex items-start gap-2.5 text-sm text-gray-700">
@@ -137,19 +139,19 @@ export default async function MachinePage({ params }: { params: Promise<{ slug: 
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 border border-gray-200 text-black text-sm font-semibold px-5 py-3 mb-10 hover:border-black transition-colors"
               >
-                <FileDown className="h-4 w-4" /> Ficha técnica (PDF)
+                <FileDown className="h-4 w-4" /> {t("pd.datasheet")}
               </a>
             )}
 
             {/* Quote */}
             <div className="border-t border-gray-100 pt-8">
-              <h2 className="text-sm font-medium text-black uppercase tracking-wider mb-1">Interessado nesta máquina?</h2>
-              <p className="text-sm text-gray-400 mb-5">Deixe o seu contacto e a nossa equipa fala consigo sobre esta máquina.</p>
+              <h2 className="text-sm font-medium text-black uppercase tracking-wider mb-1">{t("md.interested")}</h2>
+              <p className="text-sm text-gray-400 mb-5">{t("md.interestedBody")}</p>
               <QuoteForm productName={`${m.name}${m.year ? ` (${m.year})` : ""}`} productSku={`MAQ-${m.id.slice(-6).toUpperCase()}`} />
             </div>
 
             <a href={`tel:${SITE.phoneHref}`} className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-black transition-colors">
-              Ou ligue-nos: {SITE.phone} <ArrowRight className="h-4 w-4" />
+              {t("md.callUs")} {SITE.phone} <ArrowRight className="h-4 w-4" />
             </a>
           </div>
         </div>

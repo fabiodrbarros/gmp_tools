@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { db } from "@/lib/db";
 import { getCustomer } from "@/lib/customer-auth";
 import { orderStatus } from "@/lib/order-status";
+import { getT } from "@/lib/i18n-server";
 
 export const metadata: Metadata = { title: "Encomenda" };
 
@@ -25,29 +26,30 @@ export default async function ContaEncomendaPage({ params }: { params: Promise<{
   if (!order || order.customerId !== session.id) notFound();
 
   const st = orderStatus(order.status);
+  const { t } = await getT();
 
   return (
     <div>
       <div>
         <Link href="/conta/encomendas" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black transition-colors mb-6">
-          <ArrowLeft className="h-4 w-4" /> Encomendas
+          <ArrowLeft className="h-4 w-4" /> {t("acct.orders")}
         </Link>
 
         <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
           <div>
-            <h1 className="font-display text-3xl font-medium text-black tracking-tight">Encomenda #{order.id.slice(-6).toUpperCase()}</h1>
+            <h1 className="font-display text-3xl font-medium text-black tracking-tight">{t("acct.order")} #{order.id.slice(-6).toUpperCase()}</h1>
             <p className="text-sm text-gray-500 mt-1">{fmtDate(order.createdAt)}</p>
           </div>
-          <span className={`text-[11px] font-medium uppercase tracking-wider px-2.5 py-1 ${st.cls}`}>{st.label}</span>
+          <span className={`text-[11px] font-medium uppercase tracking-wider px-2.5 py-1 ${st.cls}`}>{t(`order.st.${order.status}`)}</span>
         </div>
 
         <div className="border border-gray-100 overflow-hidden mb-6">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 text-left text-[11px] uppercase tracking-wider text-gray-400">
-                <th className="px-5 py-3 font-semibold">Artigo</th>
-                <th className="px-5 py-3 font-semibold text-center">Qt.</th>
-                <th className="px-5 py-3 font-semibold text-right">Total</th>
+                <th className="px-5 py-3 font-semibold">{t("acct.article")}</th>
+                <th className="px-5 py-3 font-semibold text-center">{t("acct.qty")}</th>
+                <th className="px-5 py-3 font-semibold text-right">{t("acct.total")}</th>
               </tr>
             </thead>
             <tbody>
@@ -64,7 +66,7 @@ export default async function ContaEncomendaPage({ params }: { params: Promise<{
             </tbody>
             <tfoot>
               <tr className="border-t border-gray-100">
-                <td colSpan={2} className="px-5 py-3 text-right font-medium text-gray-500">Subtotal (sem IVA)</td>
+                <td colSpan={2} className="px-5 py-3 text-right font-medium text-gray-500">{t("acct.subtotalNoVat")}</td>
                 <td className="px-5 py-3 text-right font-semibold text-black">{fmt(order.subtotal)}</td>
               </tr>
             </tfoot>
@@ -73,7 +75,7 @@ export default async function ContaEncomendaPage({ params }: { params: Promise<{
 
         {order.address && (
           <div className="border border-gray-100 p-6 mb-6">
-            <h2 className="text-[11px] font-medium tracking-widest text-gray-400 uppercase mb-2">Morada de entrega</h2>
+            <h2 className="text-[11px] font-medium tracking-widest text-gray-400 uppercase mb-2">{t("acct.deliveryAddress")}</h2>
             <p className="text-sm text-gray-700">
               {order.address}
               {(order.postalCode || order.city) && <span className="block">{[order.postalCode, order.city].filter(Boolean).join(" ")}</span>}
@@ -83,7 +85,7 @@ export default async function ContaEncomendaPage({ params }: { params: Promise<{
 
         {order.notes && (
           <div className="border border-gray-100 p-6">
-            <h2 className="text-[11px] font-medium tracking-widest text-gray-400 uppercase mb-2">Notas</h2>
+            <h2 className="text-[11px] font-medium tracking-widest text-gray-400 uppercase mb-2">{t("acct.notes")}</h2>
             <p className="text-sm text-gray-700 whitespace-pre-line">{order.notes}</p>
           </div>
         )}

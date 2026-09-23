@@ -3,6 +3,7 @@ import { parseImages } from "@/lib/upload";
 import { Catalog, type CatalogCategory, type CatalogItem } from "@/components/pages/catalog";
 import { getCustomer } from "@/lib/customer-auth";
 import { loadCustomerDiscountContext, customerDiscountFor, applyDiscount } from "@/lib/discounts";
+import { getT } from "@/lib/i18n-server";
 
 async function load(pricesVisible: boolean, discountCtx: Awaited<ReturnType<typeof loadCustomerDiscountContext>>): Promise<{ categories: CatalogCategory[]; items: CatalogItem[] }> {
   try {
@@ -51,11 +52,12 @@ export async function ProductsPage() {
   const customer = await getCustomer();
   const pricesVisible = !!customer;
   const discountCtx = await loadCustomerDiscountContext(customer?.id ?? null);
+  const { t } = await getT();
   const { categories, items } = await load(pricesVisible, discountCtx);
   return (
     <Catalog
-      eyebrow="— Catálogo"
-      allLabel="Todos"
+      eyebrow={t("cat.eyebrowProducts")}
+      allLabel={t("cat.allProducts")}
       categories={categories}
       items={items}
       searchable

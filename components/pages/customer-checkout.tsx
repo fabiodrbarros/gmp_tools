@@ -6,6 +6,7 @@ import { CheckCircle2, ArrowRight, ShoppingCart } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { submitOrder } from "@/app/actions/order";
 import { useConfirm } from "@/components/ui/confirm";
+import { useLang } from "@/lib/i18n";
 
 function fmt(n: number) {
   return new Intl.NumberFormat("pt-PT", { style: "currency", currency: "EUR" }).format(n);
@@ -27,13 +28,14 @@ export function CustomerCheckout({ initialAddress }: { initialAddress?: Checkout
   const [error, setError] = React.useState("");
   const [orderId, setOrderId] = React.useState<string | null>(null);
   const askConfirm = useConfirm();
+  const { t } = useLang();
 
   async function confirm() {
-    if (!address.trim()) { setError("Confirme a morada de entrega."); return; }
+    if (!address.trim()) { setError(t("co.addrError")); return; }
     const ok = await askConfirm({
-      title: "Confirmar encomenda",
-      message: `Entregar em: ${[address, postalCode, city].filter(Boolean).join(", ")}. Enviar a encomenda à GMP?`,
-      confirmLabel: "Enviar encomenda",
+      title: t("co.confirmTitle"),
+      message: `${[address, postalCode, city].filter(Boolean).join(", ")}`,
+      confirmLabel: t("co.confirm"),
     });
     if (!ok) return;
     setPending(true);
@@ -52,11 +54,11 @@ export function CustomerCheckout({ initialAddress }: { initialAddress?: Checkout
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center px-6 text-center">
         <CheckCircle2 className="h-14 w-14 text-green-500 mb-6" />
-        <h1 className="text-3xl font-medium text-black mb-2">Encomenda enviada!</h1>
-        <p className="text-gray-500 mb-1">Referência #{orderId.slice(-6).toUpperCase()}</p>
-        <p className="text-gray-500 mb-8 max-w-md">Recebemos a sua encomenda e a nossa equipa entra em contacto para confirmar os detalhes.</p>
+        <h1 className="text-3xl font-medium text-black mb-2">{t("co.sentTitle")}</h1>
+        <p className="text-gray-500 mb-1">{t("co.ref")} #{orderId.slice(-6).toUpperCase()}</p>
+        <p className="text-gray-500 mb-8 max-w-md">{t("co.sentBody")}</p>
         <Link href="/conta" className="inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-8 py-4 hover:bg-red-600 transition-colors group">
-          Ver as minhas encomendas <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+          {t("co.viewOrders")} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
     );
@@ -66,9 +68,9 @@ export function CustomerCheckout({ initialAddress }: { initialAddress?: Checkout
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center px-6 text-center">
         <ShoppingCart className="h-14 w-14 text-gray-100 mb-6" />
-        <h1 className="text-3xl font-medium text-black mb-3">O carrinho está vazio.</h1>
+        <h1 className="text-3xl font-medium text-black mb-3">{t("cartp.empty")}</h1>
         <Link href="/produtos" className="inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-8 py-4 hover:bg-red-600 transition-colors">
-          Ver catálogo
+          {t("acct.viewCatalog")}
         </Link>
       </div>
     );
@@ -78,8 +80,8 @@ export function CustomerCheckout({ initialAddress }: { initialAddress?: Checkout
     <div className="min-h-screen bg-white">
       <div className="border-b border-gray-100 bg-gray-50">
         <div className="max-w-3xl mx-auto px-6 py-10">
-          <h1 className="text-4xl font-medium text-black">Finalizar encomenda</h1>
-          <p className="text-gray-500 mt-1">Confirme os artigos e envie o pedido.</p>
+          <h1 className="text-4xl font-medium text-black">{t("co.title")}</h1>
+          <p className="text-gray-500 mt-1">{t("co.subtitle")}</p>
         </div>
       </div>
 
@@ -97,29 +99,29 @@ export function CustomerCheckout({ initialAddress }: { initialAddress?: Checkout
         </div>
 
         <div className="flex justify-between text-sm mb-8">
-          <span className="text-gray-500">Subtotal (sem IVA)</span>
+          <span className="text-gray-500">{t("co.subtotalNoVat")}</span>
           <span className="font-semibold text-black">{fmt(subtotal)}</span>
         </div>
 
-        <h2 className="text-sm font-medium text-black mb-3">Morada de entrega</h2>
-        <p className="text-[12px] text-gray-400 mb-3">Confirme (ou ajuste) a morada para esta encomenda.</p>
+        <h2 className="text-sm font-medium text-black mb-3">{t("co.delivery")}</h2>
+        <p className="text-[12px] text-gray-400 mb-3">{t("co.deliveryHint")}</p>
         <input
           value={address}
           onChange={(e) => setAddress(e.target.value)}
-          placeholder="Morada (rua, número) *"
+          placeholder={t("co.addrPh")}
           className="w-full border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors mb-3"
         />
         <div className="grid sm:grid-cols-2 gap-3 mb-8">
-          <input value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="Código postal" className="w-full border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors" />
-          <input value={city} onChange={(e) => setCity(e.target.value)} placeholder="Localidade" className="w-full border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors" />
+          <input value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder={t("co.postalPh")} className="w-full border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors" />
+          <input value={city} onChange={(e) => setCity(e.target.value)} placeholder={t("co.cityPh")} className="w-full border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors" />
         </div>
 
-        <label className="block text-xs font-semibold text-gray-600 mb-1.5">Notas (opcional)</label>
+        <label className="block text-xs font-semibold text-gray-600 mb-1.5">{t("co.notes")}</label>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
-          placeholder="Prazo pretendido, morada de entrega, referências…"
+          placeholder={t("co.notesPh")}
           className="w-full border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors mb-6"
         />
 
@@ -131,10 +133,10 @@ export function CustomerCheckout({ initialAddress }: { initialAddress?: Checkout
             disabled={pending}
             className="inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-8 py-4 hover:bg-red-600 transition-colors disabled:opacity-50 group"
           >
-            {pending ? "A enviar..." : "Confirmar encomenda"}
+            {pending ? t("co.confirming") : t("co.confirm")}
             {!pending && <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />}
           </button>
-          <Link href="/carrinho" className="text-sm text-gray-500 hover:text-black transition-colors">Voltar ao carrinho</Link>
+          <Link href="/carrinho" className="text-sm text-gray-500 hover:text-black transition-colors">{t("co.back")}</Link>
         </div>
       </div>
     </div>

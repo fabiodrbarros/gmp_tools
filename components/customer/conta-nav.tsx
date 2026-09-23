@@ -3,16 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Package, User, KeyRound, LifeBuoy } from "lucide-react";
-
-const LINKS = [
-  { href: "/conta/encomendas", label: "Encomendas", Icon: Package },
-  { href: "/conta/suporte", label: "Suporte", Icon: LifeBuoy },
-  { href: "/conta/dados", label: "Os meus dados", Icon: User },
-  { href: "/conta/palavra-passe", label: "Palavra-passe", Icon: KeyRound },
-];
+import { useLang } from "@/lib/i18n";
 
 export function ContaNav() {
   const pathname = usePathname();
+  const { t } = useLang();
+  const LINKS = [
+    { href: "/conta/encomendas", label: t("acct.orders"), Icon: Package },
+    { href: "/conta/suporte", label: t("acct.support"), Icon: LifeBuoy },
+    { href: "/conta/dados", label: t("acct.myData"), Icon: User },
+    { href: "/conta/palavra-passe", label: t("acct.password"), Icon: KeyRound },
+  ];
   return (
     <nav className="flex lg:flex-col gap-1 overflow-x-auto">
       {LINKS.map(({ href, label, Icon }) => {

@@ -3,6 +3,7 @@
 import * as React from "react";
 import { ShoppingCart, Check } from "lucide-react";
 import { useCart } from "@/lib/cart";
+import { useLang } from "@/lib/i18n";
 
 interface Props {
   sku: string;
@@ -12,6 +13,7 @@ interface Props {
 
 export function AddToCart({ sku, name, price }: Props) {
   const { add, items } = useCart();
+  const { t } = useLang();
   const [added, setAdded] = React.useState(false);
   const inCart = items.some((i) => i.sku === sku);
 
@@ -31,9 +33,9 @@ export function AddToCart({ sku, name, price }: Props) {
       }`}
     >
       {added ? (
-        <><Check className="h-4 w-4" /> Adicionado ao carrinho</>
+        <><Check className="h-4 w-4" /> {t("cart.added")}</>
       ) : (
-        <><ShoppingCart className="h-4 w-4" /> {inCart ? "Adicionar mais" : "Adicionar ao carrinho"}</>
+        <><ShoppingCart className="h-4 w-4" /> {inCart ? t("cart.addMore") : t("cart.add")}</>
       )}
     </button>
   );

@@ -9,6 +9,7 @@ import { db } from "@/lib/db";
 import { parseImages } from "@/lib/upload";
 import { getCustomer } from "@/lib/customer-auth";
 import { loadCustomerDiscountContext, customerDiscountFor, applyDiscount } from "@/lib/discounts";
+import { getT } from "@/lib/i18n-server";
 
 interface Spec { key: string; value: string; }
 interface ViewProduct {
@@ -94,15 +95,16 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const custPct = customerDiscountFor(discountCtx, p.categoryId);
   const listPrice = p.price;
   const custPrice = listPrice != null && custPct > 0 ? applyDiscount(listPrice, custPct) : listPrice;
+  const { t } = await getT();
 
   return (
     <div className="min-h-screen bg-white">
       {/* Breadcrumb */}
       <div className="border-b border-gray-100 bg-gray-50">
         <div className="max-w-screen-xl mx-auto px-6 py-4 flex items-center gap-1.5 text-xs text-gray-400">
-          <Link href="/" className="hover:text-black transition-colors">Início</Link>
+          <Link href="/" className="hover:text-black transition-colors">{t("pd.home")}</Link>
           <ChevronRight className="h-3 w-3" />
-          <Link href="/produtos" className="hover:text-black transition-colors">Produtos</Link>
+          <Link href="/produtos" className="hover:text-black transition-colors">{t("pd.products")}</Link>
           <ChevronRight className="h-3 w-3" />
           <span className="text-gray-600">{p.sku}</span>
         </div>
@@ -150,13 +152,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
             {/* Price */}
             {!pricesVisible || custPrice == null ? (
-              <div className="text-2xl font-medium text-black mb-8">Sob consulta</div>
+              <div className="text-2xl font-medium text-black mb-8">{t("pd.quote")}</div>
             ) : (
               <>
                 <div className="flex items-baseline gap-3 mb-2">
                   <span className="text-4xl font-medium text-black">{fmt(custPrice)}</span>
                 </div>
-                <div className="text-xs text-gray-400 mb-8">Preço sem IVA</div>
+                <div className="text-xs text-gray-400 mb-8">{t("pd.noVat")}</div>
               </>
             )}
 
@@ -171,7 +173,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 border border-gray-200 text-black text-sm font-semibold py-3.5 hover:border-black transition-colors"
                 >
-                  <FileDown className="h-4 w-4" /> Ficha técnica (PDF)
+                  <FileDown className="h-4 w-4" /> {t("pd.datasheet")}
                 </a>
               )}
             </div>
@@ -193,7 +195,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {/* Specs */}
             {p.specs.length > 0 && (
               <div>
-                <h2 className="text-xl font-medium mb-6">Especificações técnicas</h2>
+                <h2 className="text-xl font-medium mb-6">{t("pd.specs")}</h2>
                 <div className="divide-y divide-gray-100">
                   {p.specs.map((s) => (
                     <div key={s.key} className="flex justify-between py-3 text-sm">
@@ -209,22 +211,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <div className={p.specs.length === 0 ? "lg:col-span-2 max-w-2xl" : ""}>
               {p.description && (
                 <>
-                  <h2 className="text-xl font-medium mb-6">Descrição</h2>
+                  <h2 className="text-xl font-medium mb-6">{t("pd.desc")}</h2>
                   <div className="prose prose-sm text-gray-600 leading-relaxed whitespace-pre-line">{p.description}</div>
                 </>
               )}
               <div className="mt-8 p-5 bg-gray-50 border-l-2 border-red-600">
                 <div className="flex items-center gap-2 text-sm font-medium text-black mb-1">
                   <Phone className="h-4 w-4 text-red-600" />
-                  Precisa de ajuda na escolha?
+                  {t("pd.helpTitle")}
                 </div>
-                <p className="text-xs text-gray-500 mb-4">Fale connosco e ajudamos a encontrar a solução certa para o seu trabalho.</p>
+                <p className="text-xs text-gray-500 mb-4">{t("pd.helpBody")}</p>
                 <div className="flex flex-wrap gap-3">
                   <a href={`tel:${SITE.phoneHref}`} className="inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-5 py-2.5 hover:bg-red-600 transition-colors">
-                    <Phone className="h-4 w-4" /> Ligar {SITE.phone}
+                    <Phone className="h-4 w-4" /> {t("pd.call")} {SITE.phone}
                   </a>
                   <a href={`mailto:${SITE.email}`} className="inline-flex items-center gap-2 border border-gray-300 text-black text-sm font-semibold px-5 py-2.5 hover:border-black transition-colors">
-                    <Mail className="h-4 w-4" /> Enviar mensagem
+                    <Mail className="h-4 w-4" /> {t("pd.message")}
                   </a>
                 </div>
               </div>

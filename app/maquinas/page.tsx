@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { db } from "@/lib/db";
 import { parseImages } from "@/lib/upload";
 import { Catalog, type CatalogCategory, type CatalogItem } from "@/components/pages/catalog";
+import { getT } from "@/lib/i18n-server";
 
 export const metadata: Metadata = {
   title: "Máquinas",
@@ -53,19 +54,20 @@ async function load(): Promise<{ categories: CatalogCategory[]; items: CatalogIt
 
 export default async function MaquinasPage() {
   const { categories, items } = await load();
+  const { t } = await getT();
   return (
     <>
-      <Catalog eyebrow="— Maquinaria Nova" allLabel="Todas" categories={categories} items={items} searchable pageSize={9} />
+      <Catalog eyebrow={t("cat.eyebrowNew")} allLabel={t("cat.allMachines")} categories={categories} items={items} searchable pageSize={9} />
 
       {/* CTA — não encontra a máquina? */}
       <div className="max-w-screen-xl mx-auto px-6 lg:px-10 pb-20">
         <div className="bg-[#0a0a0a] p-10 lg:p-12 flex flex-col lg:flex-row items-center justify-between gap-6">
           <div>
-            <h3 className="font-display text-2xl font-medium text-white mb-2">Não encontra a máquina que precisa?</h3>
-            <p className="text-gray-400">Trabalhamos com vários fabricantes. Diga-nos o que procura e tratamos de tudo.</p>
+            <h3 className="font-display text-2xl font-medium text-white mb-2">{t("machn.ctaTitle")}</h3>
+            <p className="text-gray-400">{t("machn.ctaBody")}</p>
           </div>
           <Link href="/contactos" className="inline-flex items-center gap-2 bg-red-600 text-white text-sm font-semibold px-7 py-3.5 hover:bg-red-700 transition-colors group shrink-0">
-            Contacte-nos <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            {t("machn.ctaButton")} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>

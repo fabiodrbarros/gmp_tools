@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { db } from "@/lib/db";
 import { parseImages } from "@/lib/upload";
 import { Catalog, type CatalogCategory, type CatalogItem } from "@/components/pages/catalog";
+import { getT } from "@/lib/i18n-server";
 
 export const metadata: Metadata = {
   title: "Máquinas Usadas e Recondicionadas",
@@ -45,25 +46,26 @@ async function load(): Promise<CatalogItem[]> {
 
 export default async function UsedMachinesPage() {
   const items = await load();
+  const { t } = await getT();
 
   return (
     <>
-      <Catalog eyebrow="— Maquinaria Usada & Recondicionada" allLabel="Todas" categories={CATEGORIES} items={items} searchable pageSize={9} />
+      <Catalog eyebrow={t("cat.eyebrowUsed")} allLabel={t("cat.allMachines")} categories={CATEGORIES} items={items} searchable pageSize={9} />
 
       {/* CTA */}
       <div className="max-w-screen-xl mx-auto px-6 lg:px-10 pb-20">
         <div className="bg-[#0a0a0a] p-10 lg:p-12">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div>
-              <h3 className="font-display text-2xl font-medium text-white mb-2">Procura outra máquina?</h3>
-              <p className="text-gray-400">Temos acesso a equipamento usado de vários fabricantes. Diga-nos o que precisa.</p>
+              <h3 className="font-display text-2xl font-medium text-white mb-2">{t("machu.ctaTitle")}</h3>
+              <p className="text-gray-400">{t("machu.ctaBody")}</p>
             </div>
             <div className="flex gap-3 shrink-0">
               <Link href="/maquinas" className="inline-flex items-center gap-2 border border-white/20 text-white text-sm font-semibold px-6 py-3 hover:bg-white/10 transition-colors">
-                Máquinas novas
+                {t("machu.newBtn")}
               </Link>
               <Link href="/contactos" className="inline-flex items-center gap-2 bg-red-600 text-white text-sm font-semibold px-6 py-3 hover:bg-red-700 transition-colors group">
-                Contacte-nos <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                {t("machn.ctaButton")} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>

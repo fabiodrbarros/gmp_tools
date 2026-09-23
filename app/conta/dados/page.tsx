@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { getCustomer } from "@/lib/customer-auth";
 import { ProfileForm } from "@/components/customer/profile-form";
+import { getT } from "@/lib/i18n-server";
 
 export const metadata: Metadata = { title: "Os meus dados" };
 
@@ -11,10 +12,11 @@ export default async function ContaDadosPage() {
   if (!session) redirect("/entrar");
   const customer = await db.customer.findUnique({ where: { id: session.id } });
   if (!customer) redirect("/entrar");
+  const { t } = await getT();
 
   return (
     <div className="max-w-xl">
-      <h2 className="text-sm font-medium text-black uppercase tracking-wider mb-5">Os meus dados</h2>
+      <h2 className="text-sm font-medium text-black uppercase tracking-wider mb-5">{t("acct.myData")}</h2>
       <ProfileForm
         initial={{
           name: customer.name,

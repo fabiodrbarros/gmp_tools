@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Trash2, Plus, Minus, ShoppingCart, ArrowRight } from "lucide-react";
 import { useCart } from "@/lib/cart";
+import { useLang } from "@/lib/i18n";
 
 function fmt(n: number) {
   return new Intl.NumberFormat("pt-PT", { style: "currency", currency: "EUR" }).format(n);
@@ -10,15 +11,16 @@ function fmt(n: number) {
 
 export function CartPage() {
   const { items, remove, update, subtotal } = useCart();
+  const { t } = useLang();
 
   if (items.length === 0) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center px-6 text-center">
         <ShoppingCart className="h-16 w-16 text-gray-100 mb-6" />
-        <h1 className="text-3xl font-medium text-black mb-3">O carrinho está vazio.</h1>
-        <p className="text-gray-500 mb-8">Explore o nosso catálogo e adicione produtos.</p>
+        <h1 className="text-3xl font-medium text-black mb-3">{t("cartp.empty")}</h1>
+        <p className="text-gray-500 mb-8">{t("cartp.emptyBody")}</p>
         <Link href="/produtos" className="inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-8 py-4 hover:bg-red-600 transition-colors group">
-          Ver catálogo <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+          {t("acct.viewCatalog")} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
     );
@@ -28,8 +30,8 @@ export function CartPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="border-b border-gray-100 bg-white">
         <div className="max-w-screen-xl mx-auto px-6 py-10">
-          <h1 className="text-4xl font-medium text-black">Carrinho.</h1>
-          <p className="text-gray-500 mt-1">{items.length} produto{items.length !== 1 ? "s" : ""}</p>
+          <h1 className="text-4xl font-medium text-black">{t("cartp.title")}</h1>
+          <p className="text-gray-500 mt-1">{items.length} {items.length !== 1 ? t("cartp.products") : t("cartp.product")}</p>
         </div>
       </div>
 
@@ -89,21 +91,21 @@ export function CartPage() {
         {/* Summary */}
         <div className="space-y-4">
           <div className="bg-white p-6 space-y-4">
-            <h2 className="text-base font-medium text-black">Resumo da encomenda</h2>
+            <h2 className="text-base font-medium text-black">{t("cartp.summary")}</h2>
 
             <div className="space-y-2 text-sm">
               <div className="flex justify-between font-medium text-black text-base">
-                <span>Subtotal</span>
+                <span>{t("cartp.subtotal")}</span>
                 <span>{fmt(subtotal)}</span>
               </div>
-              <div className="text-[11px] text-gray-400">Valores sem IVA.</div>
+              <div className="text-[11px] text-gray-400">{t("cartp.novat")}</div>
             </div>
 
             <Link
               href="/checkout"
               className="flex items-center justify-center gap-2 w-full bg-black text-white text-sm font-semibold py-4 hover:bg-red-600 transition-colors group"
             >
-              Finalizar encomenda <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              {t("cartp.checkout")} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>

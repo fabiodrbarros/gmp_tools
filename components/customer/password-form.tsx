@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 import { changePassword } from "@/app/actions/customer-password";
 import { useConfirm } from "@/components/ui/confirm";
+import { useLang } from "@/lib/i18n";
 
 export function PasswordForm({ redirectTo }: { redirectTo?: string }) {
+  const { t } = useLang();
   const router = useRouter();
   const [pending, setPending] = React.useState(false);
   const [done, setDone] = React.useState(false);
@@ -17,7 +19,7 @@ export function PasswordForm({ redirectTo }: { redirectTo?: string }) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    if (!(await confirm({ title: "Alterar palavra-passe", message: "Confirmar a nova palavra-passe?", confirmLabel: "Alterar" }))) return;
+    if (!(await confirm({ title: t("pw.title"), message: t("pw.confirmMsg"), confirmLabel: t("pw.title") }))) return;
     setPending(true);
     setError("");
     setDone(false);
@@ -36,17 +38,17 @@ export function PasswordForm({ redirectTo }: { redirectTo?: string }) {
     <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
       {done && (
         <div className="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3">
-          <CheckCircle2 className="h-4 w-4" /> Palavra-passe alterada.
+          <CheckCircle2 className="h-4 w-4" /> {t("pw.changed")}
         </div>
       )}
       {error && <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3">{error}</div>}
 
-      <Field label="Palavra-passe atual"><input required name="current" type="password" autoComplete="current-password" /></Field>
-      <Field label="Nova palavra-passe"><input required name="next" type="password" autoComplete="new-password" placeholder="mínimo 6 caracteres" /></Field>
-      <Field label="Confirmar nova palavra-passe"><input required name="confirm" type="password" autoComplete="new-password" /></Field>
+      <Field label={t("pw.current")}><input required name="current" type="password" autoComplete="current-password" /></Field>
+      <Field label={t("pw.new")}><input required name="next" type="password" autoComplete="new-password" placeholder={t("pw.newPh")} /></Field>
+      <Field label={t("pw.confirm")}><input required name="confirm" type="password" autoComplete="new-password" /></Field>
 
       <button type="submit" disabled={pending} className="bg-black text-white text-sm font-semibold px-7 py-3 hover:bg-red-600 transition-colors disabled:opacity-50">
-        {pending ? "A guardar..." : "Alterar palavra-passe"}
+        {pending ? t("pw.saving") : t("pw.title")}
       </button>
     </form>
   );

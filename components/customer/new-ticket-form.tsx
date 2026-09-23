@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import { Paperclip } from "lucide-react";
 import { createTicket } from "@/app/actions/support";
 import { useConfirm } from "@/components/ui/confirm";
+import { useLang } from "@/lib/i18n";
 
 export function NewTicketForm() {
+  const { t } = useLang();
   const router = useRouter();
   const [pending, setPending] = React.useState(false);
   const [error, setError] = React.useState("");
@@ -17,7 +19,7 @@ export function NewTicketForm() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    if (!(await confirm({ title: "Abrir ticket", message: "Enviar este pedido de suporte à GMP?", confirmLabel: "Abrir ticket" }))) return;
+    if (!(await confirm({ title: t("sup.open"), message: t("sup.confirmMsg"), confirmLabel: t("sup.open") }))) return;
     setPending(true);
     setError("");
     const res = await createTicket(fd);
@@ -31,25 +33,25 @@ export function NewTicketForm() {
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="bg-white border border-gray-100 p-6 space-y-4">
-      <h3 className="text-sm font-medium text-black">Abrir novo ticket</h3>
+      <h3 className="text-sm font-medium text-black">{t("sup.newTitle")}</h3>
       {error && <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3">{error}</div>}
       <div>
-        <label className="block text-xs font-semibold text-gray-600 mb-1.5">Assunto</label>
-        <input required name="subject" placeholder="Ex.: Ponteadora não arranca" className="w-full rounded-none border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors" />
+        <label className="block text-xs font-semibold text-gray-600 mb-1.5">{t("sup.subject")}</label>
+        <input required name="subject" placeholder={t("sup.subjectPh")} className="w-full rounded-none border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors" />
       </div>
       <div>
-        <label className="block text-xs font-semibold text-gray-600 mb-1.5">Descrição do problema</label>
-        <textarea required name="body" rows={4} placeholder="Descreva o que se passa, mensagens de erro, o que já tentou…" className="w-full rounded-none border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors" />
+        <label className="block text-xs font-semibold text-gray-600 mb-1.5">{t("sup.desc")}</label>
+        <textarea required name="body" rows={4} placeholder={t("sup.descPh")} className="w-full rounded-none border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-black transition-colors" />
       </div>
       <div>
         <label className="inline-flex items-center gap-2 border border-gray-200 px-4 py-2.5 text-sm text-gray-600 cursor-pointer hover:border-black transition-colors">
-          <Paperclip className="h-4 w-4" /> Anexar ficheiros
+          <Paperclip className="h-4 w-4" /> {t("sup.attachFiles")}
           <input type="file" name="attachments" multiple onChange={(e) => setFiles(Array.from(e.target.files ?? []).map((f) => f.name))} className="hidden" />
         </label>
         {files.length > 0 && <p className="text-[11px] text-gray-400 mt-2">{files.join(", ")}</p>}
       </div>
       <button type="submit" disabled={pending} className="bg-black text-white text-sm font-semibold px-7 py-3 hover:bg-red-600 transition-colors disabled:opacity-50">
-        {pending ? "A enviar..." : "Abrir ticket"}
+        {pending ? t("sup.sending") : t("sup.open")}
       </button>
     </form>
   );

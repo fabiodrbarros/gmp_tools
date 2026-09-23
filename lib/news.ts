@@ -1,5 +1,7 @@
 import { db } from "@/lib/db";
 import { parseImages } from "@/lib/upload";
+import { getLocale } from "@/lib/i18n-server";
+import { localize } from "@/lib/translations";
 
 export interface Article {
   slug: string;
@@ -21,6 +23,7 @@ function parseBody(raw: string | null): string[] {
 }
 
 type NewsRow = {
+  id: string;
   slug: string;
   title: string;
   category: string;
@@ -46,8 +49,10 @@ function toArticle(n: NewsRow): Article {
 
 export async function listArticles(): Promise<Article[]> {
   try {
+    const locale = await getLocale();
     const rows = await db.news.findMany({ where: { isPublished: true }, orderBy: { date: "desc" } });
-    return rows.map(toArticle);
+    const localized = await localize("news", rows, locale);
+    return localized.map(toArticle);
   } catch {
     return [];
   }
@@ -55,8 +60,11 @@ export async function listArticles(): Promise<Article[]> {
 
 export async function getArticle(slug: string): Promise<Article | null> {
   try {
+    const locale = await getLocale();
     const n = await db.news.findFirst({ where: { slug, isPublished: true } });
-    return n ? toArticle(n) : null;
+    if (!n) return null;
+    const [localized] = await localize("news", [n], locale);
+    return toArticle(localized);
   } catch {
     return null;
   }

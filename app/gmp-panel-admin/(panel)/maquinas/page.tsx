@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Plus, Cpu, Pencil } from "lucide-react";
+import { Plus, Cpu, Pencil, Languages } from "lucide-react";
 import { db } from "@/lib/db";
 import { deleteMachine } from "@/app/actions/admin-machine";
 import { DeleteButton } from "@/components/admin/delete-button";
@@ -82,6 +82,9 @@ export default async function AdminMaquinasPage() {
                       <div className="flex items-center justify-end gap-1">
                         <Link href={`/gmp-panel-admin/maquinas/${m.id}`} title="Editar" className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 transition-colors">
                           <Pencil className="h-4 w-4" />
+                        </Link>
+                        <Link href={`/gmp-panel-admin/traducoes/machine/${m.id}`} title="Traduções EN/FR" className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 transition-colors">
+                          <Languages className="h-4 w-4" />
                         </Link>
                         <DeleteButton action={deleteMachine} id={m.id} />
                       </div>

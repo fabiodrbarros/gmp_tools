@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Plus, Newspaper, Pencil } from "lucide-react";
+import { Plus, Newspaper, Pencil, Languages } from "lucide-react";
 import { db } from "@/lib/db";
 import { deleteNews } from "@/app/actions/admin-news";
 import { DeleteButton } from "@/components/admin/delete-button";
@@ -69,6 +69,9 @@ export default async function AdminNoticiasPage() {
                     <div className="flex items-center justify-end gap-1">
                       <Link href={`/gmp-panel-admin/noticias/${n.id}`} title="Editar" className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 transition-colors">
                         <Pencil className="h-4 w-4" />
+                      </Link>
+                      <Link href={`/gmp-panel-admin/traducoes/news/${n.id}`} title="Traduções EN/FR" className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 transition-colors">
+                        <Languages className="h-4 w-4" />
                       </Link>
                       <DeleteButton action={deleteNews} id={n.id} />
                     </div>

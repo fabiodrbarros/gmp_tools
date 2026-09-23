@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Plus, Package, Pencil } from "lucide-react";
+import { Plus, Package, Pencil, Languages } from "lucide-react";
 import { db } from "@/lib/db";
 import { deleteProduct } from "@/app/actions/admin-product";
 import { DeleteButton } from "@/components/admin/delete-button";
@@ -80,6 +80,9 @@ export default async function AdminProdutosPage() {
                     <div className="flex items-center justify-end gap-1">
                       <Link href={`/gmp-panel-admin/produtos/${p.id}`} title="Editar" className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 transition-colors">
                         <Pencil className="h-4 w-4" />
+                      </Link>
+                      <Link href={`/gmp-panel-admin/traducoes/product/${p.id}`} title="Traduções EN/FR" className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 transition-colors">
+                        <Languages className="h-4 w-4" />
                       </Link>
                       <DeleteButton action={deleteProduct} id={p.id} />
                     </div>

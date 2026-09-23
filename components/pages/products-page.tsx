@@ -3,19 +3,27 @@ import { parseImages } from "@/lib/upload";
 import { Catalog, type CatalogCategory, type CatalogItem } from "@/components/pages/catalog";
 import { getCustomer } from "@/lib/customer-auth";
 import { loadCustomerDiscountContext, customerDiscountFor, applyDiscount } from "@/lib/discounts";
-import { getT } from "@/lib/i18n-server";
+import { getT, getLocale } from "@/lib/i18n-server";
+import { localize } from "@/lib/translations";
 
 async function load(pricesVisible: boolean, discountCtx: Awaited<ReturnType<typeof loadCustomerDiscountContext>>): Promise<{ categories: CatalogCategory[]; items: CatalogItem[] }> {
   try {
-    const products = await db.product.findMany({
+    const locale = await getLocale();
+    const rows = await db.product.findMany({
       where: { isActive: true },
       include: { category: true, brand: true },
       orderBy: { createdAt: "asc" },
     });
+    const products = await localize("product", rows, locale);
+
+    // translate category filter labels
+    const uniqueCats = [...new Map(rows.filter((p) => p.category).map((p) => [p.category!.id, p.category!])).values()];
+    const localizedCats = await localize("category", uniqueCats, locale);
+    const catNameById = new Map(localizedCats.map((c) => [c.id, c.name]));
 
     const catMap = new Map<string, string>();
     const items: CatalogItem[] = products.map((p) => {
-      if (p.category) catMap.set(p.category.slug, p.category.name);
+      if (p.category) catMap.set(p.category.slug, catNameById.get(p.category.id) ?? p.category.name);
       const list = p.quoteOnly ? null : p.price;
 
       // Customer base discount for this product's category (quantity tiers apply in the cart).

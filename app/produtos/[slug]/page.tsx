@@ -9,7 +9,8 @@ import { db } from "@/lib/db";
 import { parseImages } from "@/lib/upload";
 import { getCustomer } from "@/lib/customer-auth";
 import { loadCustomerDiscountContext, customerDiscountFor, applyDiscount } from "@/lib/discounts";
-import { getT } from "@/lib/i18n-server";
+import { getT, getLocale } from "@/lib/i18n-server";
+import { localizeOne } from "@/lib/translations";
 
 interface Spec { key: string; value: string; }
 interface ViewProduct {
@@ -48,16 +49,19 @@ function parseSpecs(raw: string | null | undefined): Spec[] {
 
 async function getProduct(slug: string): Promise<ViewProduct | null> {
   try {
-    const p = await db.product.findFirst({
+    const row = await db.product.findFirst({
       where: { OR: [{ slug }, { sku: slug.toUpperCase() }], isActive: true },
       include: { category: true, brand: true },
     });
-    if (!p) return null;
+    if (!row) return null;
+    const locale = await getLocale();
+    const p = (await localizeOne("product", row, locale))!;
+    const category = row.category ? (await localizeOne("category", row.category, locale))!.name : "Catálogo";
     return {
       name: p.name,
       sku: p.sku,
       brand: p.brand?.name ?? "GMP Tools",
-      category: p.category?.name ?? "Catálogo",
+      category,
       categoryId: p.categoryId,
       price: p.quoteOnly ? null : p.price,
       comparePrice: p.comparePrice,

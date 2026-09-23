@@ -4,7 +4,8 @@ import { ArrowRight } from "lucide-react";
 import { db } from "@/lib/db";
 import { parseImages } from "@/lib/upload";
 import { Catalog, type CatalogCategory, type CatalogItem } from "@/components/pages/catalog";
-import { getT } from "@/lib/i18n-server";
+import { getT, getLocale } from "@/lib/i18n-server";
+import { localize } from "@/lib/translations";
 
 export const metadata: Metadata = {
   title: "Máquinas Usadas e Recondicionadas",
@@ -22,12 +23,14 @@ const DEMO: CatalogItem[] = [
 
 async function load(): Promise<CatalogItem[]> {
   try {
-    const rows = await db.machine.findMany({
+    const locale = await getLocale();
+    const rawRows = await db.machine.findMany({
       where: { isActive: true, condition: { in: ["USED", "REFURBISHED"] } },
       include: { brand: true },
       orderBy: { createdAt: "asc" },
     });
-    if (rows.length === 0) return DEMO;
+    if (rawRows.length === 0) return DEMO;
+    const rows = await localize("machine", rawRows, locale);
     return rows.map((m) => ({
       id: m.id,
       name: `${m.name}${m.year ? ` (${m.year})` : ""}`,

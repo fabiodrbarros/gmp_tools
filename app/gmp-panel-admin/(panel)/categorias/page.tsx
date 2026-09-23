@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { Languages } from "lucide-react";
 import { db } from "@/lib/db";
 import { deleteCategory } from "@/app/actions/admin-category";
 import { DeleteButton } from "@/components/admin/delete-button";
@@ -63,6 +65,9 @@ function CategoryList({
               </div>
               <div className="flex items-center gap-3">
                 {showCount && <span className="text-[11px] text-gray-400">{c._count.products} produto{c._count.products !== 1 ? "s" : ""}</span>}
+                <Link href={`/gmp-panel-admin/traducoes/category/${c.id}`} title="Traduções EN/FR" className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 transition-colors">
+                  <Languages className="h-4 w-4" />
+                </Link>
                 <DeleteButton action={deleteCategory} id={c.id} confirmLabel="Apagar esta categoria?" />
               </div>
             </li>

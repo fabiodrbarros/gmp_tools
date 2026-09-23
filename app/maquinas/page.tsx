@@ -4,7 +4,8 @@ import { ArrowRight } from "lucide-react";
 import { db } from "@/lib/db";
 import { parseImages } from "@/lib/upload";
 import { Catalog, type CatalogCategory, type CatalogItem } from "@/components/pages/catalog";
-import { getT } from "@/lib/i18n-server";
+import { getT, getLocale } from "@/lib/i18n-server";
+import { localize } from "@/lib/translations";
 
 export const metadata: Metadata = {
   title: "Máquinas",
@@ -17,7 +18,8 @@ const DEMO: CatalogItem[] = [
 
 async function load(): Promise<{ categories: CatalogCategory[]; items: CatalogItem[] }> {
   try {
-    const [rows, cats] = await Promise.all([
+    const locale = await getLocale();
+    const [rawRows, rawCats] = await Promise.all([
       db.machine.findMany({
         where: { isActive: true, condition: "NEW" },
         include: { brand: true },
@@ -25,7 +27,8 @@ async function load(): Promise<{ categories: CatalogCategory[]; items: CatalogIt
       }),
       db.category.findMany({ where: { kind: "MACHINE" }, orderBy: { name: "asc" } }),
     ]);
-    if (rows.length === 0) return { categories: [], items: DEMO };
+    if (rawRows.length === 0) return { categories: [], items: DEMO };
+    const [rows, cats] = await Promise.all([localize("machine", rawRows, locale), localize("category", rawCats, locale)]);
 
     const labelOf = new Map(cats.map((c) => [c.slug, c.name]));
     const used = new Set<string>();

@@ -144,6 +144,22 @@ model News {
   updatedAt   DateTime @updatedAt
 }
 
+// Reviewed machine translations of customer-facing content (products, machines,
+// news, categories). PT is always the source; only en/fr rows are stored here.
+model Translation {
+  id        String   @id @default(cuid())
+  entity    String // product | machine | news | category
+  entityId  String
+  field     String // name | description | specifications | ...
+  locale    String // en | fr
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([entity, entityId, field, locale])
+  @@index([entity, entityId, locale])
+}
+
 model Customer {
   id                String                     @id @default(cuid())
   email             String                     @unique

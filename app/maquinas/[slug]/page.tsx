@@ -8,7 +8,8 @@ import { Gallery } from "@/components/gallery";
 import { QuoteForm } from "@/components/forms/quote-form";
 import { SITE } from "@/lib/site";
 import { getCustomer } from "@/lib/customer-auth";
-import { getT } from "@/lib/i18n-server";
+import { getT, getLocale } from "@/lib/i18n-server";
+import { localizeOne } from "@/lib/translations";
 
 const COND_CLS: Record<string, string> = {
   NEW: "bg-green-50 text-green-600",
@@ -42,10 +43,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function MachinePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const m = await getMachine(slug);
-  if (!m) notFound();
+  const raw = await getMachine(slug);
+  if (!raw) notFound();
 
-  const { t } = await getT();
+  const { t, locale } = await getT();
+  const m = (await localizeOne("machine", raw, locale))!;
   const specs = parseSpecs(m.specifications);
   const images = parseImages(m.images);
   const cond = { label: t(`md.cond${m.condition}`), cls: COND_CLS[m.condition] ?? COND_CLS.NEW };

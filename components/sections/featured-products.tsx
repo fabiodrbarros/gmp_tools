@@ -1,15 +1,22 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { db } from "@/lib/db";
+import { getLocale } from "@/lib/i18n-server";
+import { localize } from "@/lib/translations";
 
 async function getProducts() {
   try {
-    return await db.product.findMany({
+    const locale = await getLocale();
+    const rows = await db.product.findMany({
       where: { isFeatured: true, isActive: true },
       include: { category: true, brand: true },
       take: 6,
       orderBy: { createdAt: "desc" },
     });
+    const products = await localize("product", rows, locale);
+    const cats = [...new Map(rows.filter((p) => p.category).map((p) => [p.category!.id, p.category!])).values()];
+    const nameById = new Map((await localize("category", cats, locale)).map((c) => [c.id, c.name]));
+    return products.map((p) => (p.category ? { ...p, category: { ...p.category, name: nameById.get(p.category.id) ?? p.category.name } } : p));
   } catch {
     return DEMO_PRODUCTS;
   }

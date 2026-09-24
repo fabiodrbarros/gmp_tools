@@ -37,8 +37,8 @@ export default async function AdminSuportePage() {
           <p className="text-gray-400 text-sm">Ainda não há tickets de suporte.</p>
         </div>
       ) : (
-        <div className="bg-white border border-gray-100 overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="bg-white border border-gray-100 overflow-x-auto">
+          <table className="w-full min-w-[560px] text-sm">
             <thead>
               <tr className="border-b border-gray-100 text-left text-[11px] uppercase tracking-wider text-gray-400">
                 <th className="px-5 py-3 font-semibold">Assunto</th>

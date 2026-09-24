@@ -54,8 +54,8 @@ export default async function AdminEncomendaPage({ params }: { params: Promise<{
       )}
 
       {/* Items */}
-      <div className="bg-white border border-gray-100 overflow-hidden mb-5">
-        <table className="w-full text-sm">
+      <div className="bg-white border border-gray-100 overflow-x-auto mb-5">
+        <table className="w-full min-w-[560px] text-sm">
           <thead>
             <tr className="border-b border-gray-100 text-left text-[11px] uppercase tracking-wider text-gray-400">
               <th className="px-5 py-3 font-semibold">Artigo</th>

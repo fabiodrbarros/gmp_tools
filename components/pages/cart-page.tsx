@@ -39,7 +39,7 @@ export function CartPage() {
         {/* Items */}
         <div className="lg:col-span-2 space-y-px bg-gray-200">
           {items.map((item) => (
-            <div key={item.sku} className="bg-white flex items-center gap-6 p-5">
+            <div key={item.sku} className="bg-white flex items-start gap-4 p-4 sm:p-5">
               {/* Image placeholder */}
               <div className="h-16 w-16 bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0">
                 <svg viewBox="0 0 60 60" className="h-8 w-8 text-gray-200" fill="none">
@@ -49,41 +49,48 @@ export function CartPage() {
               </div>
 
               <div className="flex-1 min-w-0">
-                <div className="text-xs text-gray-400 font-mono mb-0.5">{item.sku}</div>
-                <div className="text-sm font-medium text-black truncate">{item.name}</div>
-                <div className="text-sm font-medium text-black mt-1">{fmt(item.price)}</div>
-              </div>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="text-xs text-gray-400 font-mono mb-0.5">{item.sku}</div>
+                    <div className="text-sm font-medium text-black break-words">{item.name}</div>
+                    <div className="text-sm font-medium text-black mt-1">{fmt(item.price)}</div>
+                  </div>
+                  <button
+                    onClick={() => remove(item.sku)}
+                    aria-label={t("cartp.remove")}
+                    className="text-gray-300 hover:text-red-600 transition-colors shrink-0 p-1 -m-1"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
 
-              {/* Qty */}
-              <div className="flex items-center border border-gray-200 shrink-0">
-                <button
-                  onClick={() => update(item.sku, item.qty - 1)}
-                  className="w-9 h-9 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors"
-                >
-                  <Minus className="h-3.5 w-3.5" />
-                </button>
-                <span className="w-9 h-9 flex items-center justify-center text-sm font-medium border-x border-gray-200">
-                  {item.qty}
-                </span>
-                <button
-                  onClick={() => update(item.sku, item.qty + 1)}
-                  className="w-9 h-9 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                </button>
-              </div>
+                {/* Controls */}
+                <div className="flex items-center justify-between gap-3 mt-3">
+                  <div className="flex items-center border border-gray-200 shrink-0">
+                    <button
+                      onClick={() => update(item.sku, item.qty - 1)}
+                      aria-label="-"
+                      className="w-9 h-9 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors"
+                    >
+                      <Minus className="h-3.5 w-3.5" />
+                    </button>
+                    <span className="w-10 h-9 flex items-center justify-center text-sm font-medium border-x border-gray-200">
+                      {item.qty}
+                    </span>
+                    <button
+                      onClick={() => update(item.sku, item.qty + 1)}
+                      aria-label="+"
+                      className="w-9 h-9 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
 
-              {/* Subtotal */}
-              <div className="text-sm font-medium text-black w-20 text-right shrink-0">
-                {fmt(item.price * item.qty)}
+                  <div className="text-sm font-semibold text-black text-right">
+                    {fmt(item.price * item.qty)}
+                  </div>
+                </div>
               </div>
-
-              <button
-                onClick={() => remove(item.sku)}
-                className="text-gray-300 hover:text-red-600 transition-colors shrink-0"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
             </div>
           ))}
         </div>

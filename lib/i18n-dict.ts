@@ -294,6 +294,7 @@ export const DICT: Record<Locale, Dict> = {
     "cartp.subtotal": "Subtotal",
     "cartp.novat": "Valores sem IVA.",
     "cartp.checkout": "Finalizar encomenda",
+    "cartp.remove": "Remover",
     // checkout
     "co.title": "Finalizar encomenda",
     "co.subtitle": "Confirme os artigos e envie o pedido.",
@@ -584,6 +585,7 @@ export const DICT: Record<Locale, Dict> = {
     "cartp.subtotal": "Subtotal",
     "cartp.novat": "Prices excl. VAT.",
     "cartp.checkout": "Checkout",
+    "cartp.remove": "Remove",
     "co.title": "Complete order",
     "co.subtitle": "Confirm the items and send your order.",
     "co.delivery": "Delivery address",
@@ -873,6 +875,7 @@ export const DICT: Record<Locale, Dict> = {
     "cartp.subtotal": "Sous-total",
     "cartp.novat": "Prix HT.",
     "cartp.checkout": "Finaliser la commande",
+    "cartp.remove": "Retirer",
     "co.title": "Finaliser la commande",
     "co.subtitle": "Confirmez les articles et envoyez votre commande.",
     "co.delivery": "Adresse de livraison",

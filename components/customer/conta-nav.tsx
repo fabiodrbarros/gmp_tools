@@ -15,15 +15,17 @@ export function ContaNav() {
     { href: "/conta/palavra-passe", label: t("acct.password"), Icon: KeyRound },
   ];
   return (
-    <nav className="flex lg:flex-col gap-1 overflow-x-auto">
+    <nav className="grid grid-cols-2 gap-1.5 lg:flex lg:flex-col lg:gap-1">
       {LINKS.map(({ href, label, Icon }) => {
         const active = pathname === href || pathname.startsWith(href + "/");
         return (
           <Link
             key={href}
             href={href}
-            className={`inline-flex items-center gap-2.5 px-3.5 py-2.5 text-sm whitespace-nowrap transition-colors ${
-              active ? "bg-black text-white" : "text-gray-600 hover:text-black hover:bg-gray-50"
+            className={`flex items-center gap-2.5 px-3.5 py-2.5 text-sm transition-colors border lg:border-0 ${
+              active
+                ? "bg-black text-white border-black"
+                : "text-gray-600 border-gray-200 hover:text-black hover:bg-gray-50 lg:border-transparent"
             }`}
           >
             <Icon className="h-4 w-4 shrink-0" />

@@ -88,6 +88,21 @@ export function Header({ customer = null }: { customer?: HeaderCustomer | null }
               {/* Language selector */}
               <LanguageSelector light={light} />
 
+              {/* Cart — appears in the bar as soon as there are items */}
+              {!open && count > 0 && (
+                <Link
+                  href="/carrinho"
+                  aria-label={`${t("nav.cart")} (${count})`}
+                  title={t("nav.cart")}
+                  className={`relative grid place-items-center h-11 w-9 transition-colors ${light ? "text-white hover:text-red-500" : "text-black hover:text-red-600"}`}
+                >
+                  <ShoppingCart className="h-[21px] w-[21px]" />
+                  <span className="absolute top-1.5 right-0 min-w-[16px] h-4 px-1 grid place-items-center rounded-full bg-red-600 text-white text-[10px] font-semibold leading-none">
+                    {count}
+                  </span>
+                </Link>
+              )}
+
               {/* Menu toggle */}
               <button
                 onClick={() => setOpen((v) => !v)}

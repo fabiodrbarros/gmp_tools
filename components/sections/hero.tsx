@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLang } from "@/lib/i18n";
 
@@ -35,6 +37,21 @@ export function Hero() {
             <Line delay={0.28} className="text-red-500">{t("hero.l2")}</Line>
             <Line delay={0.41}>{t("hero.l3")}</Line>
           </h1>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7, ease: EASE }}
+            className="mt-10"
+          >
+            <Link
+              href="/produtos"
+              className="group inline-flex items-center gap-3 bg-red-600 text-white text-sm font-semibold uppercase tracking-[0.12em] px-8 py-4 hover:bg-white hover:text-black transition-colors"
+            >
+              {t("hero.cta")}
+              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </motion.div>
         </div>
       </div>
 

@@ -49,7 +49,7 @@ export default async function SobrePage() {
             <div className="border border-gray-100 divide-y divide-gray-100">
               {SERVICES.map((s) => (
                 <div key={s.num} className="grid grid-cols-[56px_1fr] gap-5 p-6 hover:bg-gray-50 transition-colors">
-                  <div className="font-display text-2xl font-medium text-gray-300">{s.num}</div>
+                  <div className="font-display text-2xl font-medium text-red-600">{s.num}</div>
                   <div>
                     <h3 className="font-display text-lg font-medium text-black tracking-tight mb-1">{t(`svc.${s.num}.title`)}</h3>
                     <p className="text-sm text-gray-500 leading-relaxed font-light">{t(`svc.${s.num}.desc`)}</p>

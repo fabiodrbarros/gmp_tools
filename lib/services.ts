@@ -39,7 +39,7 @@ export const SERVICES: Service[] = [
     num: "05",
     eyebrow: "Serviço 05",
     title: "Rechapagem de Discos",
-    desc: "Rechapagem de discos diamantados: substituímos os segmentos gastos e devolvemos ao disco a capacidade de corte, a uma fração do custo de um disco novo.",
+    desc: "Rechapagem de discos diamantados: substituímos os segmentos gastos e devolvemos ao disco a capacidade de corte.",
     cta: { label: "Pedir orçamento", href: "/contactos" },
   },
 ];

@@ -46,7 +46,7 @@ export function Hero() {
           >
             <Link
               href="/produtos"
-              className="group inline-flex items-center gap-2 border border-red-600 text-red-600 text-xs font-semibold uppercase tracking-[0.12em] px-5 py-2.5 hover:bg-red-600 hover:text-white transition-colors"
+              className="group inline-flex items-center gap-2 bg-red-600 text-white text-xs font-semibold uppercase tracking-[0.12em] px-5 py-2.5"
             >
               {t("hero.cta")}
               <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />

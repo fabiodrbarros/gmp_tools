@@ -44,7 +44,6 @@ export const DICT: Record<Locale, Dict> = {
     "hero.l2": "que transforma",
     "hero.l3": "a indústria.",
     "hero.cta": "Explore os nossos produtos",
-    "hero.contact": "Contacte-nos",
     "hero.scroll": "SCROLL",
     // stats / quem somos
     "stats.eyebrow": "Quem somos",
@@ -360,7 +359,6 @@ export const DICT: Record<Locale, Dict> = {
     "hero.l2": "that transforms",
     "hero.l3": "the industry.",
     "hero.cta": "Explore our products",
-    "hero.contact": "Contact us",
     "hero.scroll": "SCROLL",
     "stats.eyebrow": "Who we are",
     "stats.h1": "Partner of the",
@@ -658,7 +656,6 @@ export const DICT: Record<Locale, Dict> = {
     "hero.l2": "qui transforme",
     "hero.l3": "l'industrie.",
     "hero.cta": "Découvrez nos produits",
-    "hero.contact": "Contactez-nous",
     "hero.scroll": "SCROLL",
     "stats.eyebrow": "Qui sommes-nous",
     "stats.h1": "Partenaire de l'industrie",

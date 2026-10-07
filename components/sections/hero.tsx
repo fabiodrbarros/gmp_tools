@@ -46,16 +46,10 @@ export function Hero() {
           >
             <Link
               href="/produtos"
-              className="group inline-flex items-center gap-2 border border-red-600 text-white text-xs font-semibold uppercase tracking-[0.12em] px-5 py-2.5 hover:bg-red-600 transition-colors"
+              className="group inline-flex items-center gap-2 border border-red-600 text-red-600 text-xs font-semibold uppercase tracking-[0.12em] px-5 py-2.5 hover:bg-red-600 hover:text-white transition-colors"
             >
               {t("hero.cta")}
               <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              href="/contactos"
-              className="inline-flex items-center border border-red-600 bg-red-600 text-white text-xs font-semibold uppercase tracking-[0.12em] px-5 py-2.5 hover:bg-red-700 hover:border-red-700 transition-colors"
-            >
-              {t("hero.contact")}
             </Link>
           </motion.div>
         </div>

@@ -7,7 +7,7 @@ export async function Stats() {
     <section className="min-h-screen w-full flex items-center bg-white border-b border-gray-100 px-6 sm:px-[8vw]">
       <div className="max-w-screen-xl w-full mx-auto grid lg:grid-cols-12 gap-10 items-center">
         <div className="lg:col-span-7">
-          <h2 className="font-display uppercase font-medium text-black leading-[0.95] tracking-tight text-[clamp(2.6rem,6vw,5.5rem)]">
+          <h2 className="font-display uppercase font-medium text-black leading-[0.95] tracking-tight text-[clamp(2.1rem,4.8vw,4.4rem)]">
             {t("stats.h1")}<br /><span className="text-red-600">{t("stats.h2")}</span>
           </h2>
         </div>

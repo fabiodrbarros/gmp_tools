@@ -6,7 +6,7 @@ import { SERVICES } from "@/lib/services";
 import { getT } from "@/lib/i18n-server";
 
 export const metadata: Metadata = {
-  title: "A GMP",
+  title: "GMP",
   description: "Parceiro técnico para a transformação de granitos, mármores, quartzo e cerâmicos em Portugal — máquinas, ferramentas diamantadas, suporte técnico e formação. Representantes Thibaut e Aquafill.",
 };
 

@@ -41,7 +41,7 @@ export const DICT: Record<Locale, Dict> = {
     "account.area": "A minha conta",
     // hero
     "hero.l1": "Precisão que transforma",
-    "hero.l2": "a indústria.",
+    "hero.l2": "a indústria da pedra.",
     "hero.cta": "Explore os nossos produtos",
     "hero.scroll": "SCROLL",
     // stats / quem somos
@@ -355,7 +355,7 @@ export const DICT: Record<Locale, Dict> = {
     "account.login": "Sign in",
     "account.area": "My account",
     "hero.l1": "Precision that transforms",
-    "hero.l2": "the industry.",
+    "hero.l2": "the stone industry.",
     "hero.cta": "Explore our products",
     "hero.scroll": "SCROLL",
     "stats.eyebrow": "Who we are",
@@ -651,7 +651,7 @@ export const DICT: Record<Locale, Dict> = {
     "account.login": "Se connecter",
     "account.area": "Mon compte",
     "hero.l1": "La précision qui transforme",
-    "hero.l2": "l'industrie.",
+    "hero.l2": "l'industrie de la pierre.",
     "hero.cta": "Découvrez nos produits",
     "hero.scroll": "SCROLL",
     "stats.eyebrow": "Qui sommes-nous",

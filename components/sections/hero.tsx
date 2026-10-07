@@ -42,14 +42,20 @@ export function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7, ease: EASE }}
-            className="mt-10"
+            className="mt-8 flex flex-wrap items-center gap-3"
           >
             <Link
               href="/produtos"
-              className="group inline-flex items-center gap-3 bg-red-600 text-white text-sm font-semibold uppercase tracking-[0.12em] px-8 py-4 hover:bg-white hover:text-black transition-colors"
+              className="group inline-flex items-center gap-2 border border-red-600 text-white text-xs font-semibold uppercase tracking-[0.12em] px-5 py-2.5 hover:bg-red-600 transition-colors"
             >
               {t("hero.cta")}
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link
+              href="/contactos"
+              className="inline-flex items-center border border-red-600 bg-red-600 text-white text-xs font-semibold uppercase tracking-[0.12em] px-5 py-2.5 hover:bg-red-700 hover:border-red-700 transition-colors"
+            >
+              {t("hero.contact")}
             </Link>
           </motion.div>
         </div>

@@ -84,7 +84,7 @@ export default async function AdminProdutosPage() {
                       <Link href={`/gmp-panel-admin/traducoes/product/${p.id}`} title="Traduções EN/FR" className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 transition-colors">
                         <Languages className="h-4 w-4" />
                       </Link>
-                      <DeleteButton action={deleteProduct} id={p.id} />
+                      <DeleteButton action={deleteProduct} id={p.id} confirmLabel={`Apagar o produto "${p.name}"? Esta acção é irreversível.`} />
                     </div>
                   </td>
                 </tr>

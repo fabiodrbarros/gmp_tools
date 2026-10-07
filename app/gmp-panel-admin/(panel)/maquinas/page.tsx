@@ -86,7 +86,7 @@ export default async function AdminMaquinasPage() {
                         <Link href={`/gmp-panel-admin/traducoes/machine/${m.id}`} title="Traduções EN/FR" className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 transition-colors">
                           <Languages className="h-4 w-4" />
                         </Link>
-                        <DeleteButton action={deleteMachine} id={m.id} />
+                        <DeleteButton action={deleteMachine} id={m.id} confirmLabel={`Apagar a máquina "${m.name}"? Esta acção é irreversível.`} />
                       </div>
                     </td>
                   </tr>

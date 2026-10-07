@@ -74,7 +74,7 @@ export default async function AdminClientesPage() {
                       <Link href={`/gmp-panel-admin/clientes/${c.id}`} title="Editar" className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 transition-colors">
                         <Pencil className="h-4 w-4" />
                       </Link>
-                      <DeleteButton action={deleteCustomer} id={c.id} />
+                      <DeleteButton action={deleteCustomer} id={c.id} confirmLabel={`Apagar o cliente "${c.name}"? Esta acção é irreversível.`} />
                     </div>
                   </td>
                 </tr>

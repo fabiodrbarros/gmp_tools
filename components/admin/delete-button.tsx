@@ -18,10 +18,12 @@ export function DeleteButton({
   const router = useRouter();
   const confirm = useConfirm();
 
-  function onClick() {
+  async function onClick() {
+    // Ask OUTSIDE the transition: state updates made inside an async transition are held
+    // until it finishes, so the dialog would never render and the delete would hang.
+    const ok = await confirm({ title: "Apagar", message: confirmLabel, confirmLabel: "Apagar", danger: true });
+    if (!ok) return;
     start(async () => {
-      const ok = await confirm({ title: "Apagar", message: confirmLabel, confirmLabel: "Apagar", danger: true });
-      if (!ok) return;
       const res = await action(id);
       if (!res.success) window.alert(res.error ?? "Erro ao apagar.");
       else router.refresh();

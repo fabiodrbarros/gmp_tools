@@ -32,10 +32,10 @@ export function Hero() {
       {/* Headline */}
       <div className="relative z-10 h-full flex items-center">
         <div className="w-full max-w-screen-xl mx-auto px-6 lg:px-16">
-          <h1 className="font-display font-medium tracking-tight text-white leading-[0.9] text-[clamp(3rem,8.5vw,8rem)]">
-            <Line delay={0.15}>{t("hero.l1")}</Line>
-            <Line delay={0.28} className="text-red-500">{t("hero.l2")}</Line>
-            <Line delay={0.41}>{t("hero.l3")}</Line>
+          <h1 className="font-display font-medium tracking-tight text-white leading-[0.9] text-[clamp(1.3rem,6.2vw,5.6rem)]">
+            {/* Always exactly two lines; the second in the logo red */}
+            <Line delay={0.15} className="whitespace-nowrap">{t("hero.l1")}</Line>
+            <Line delay={0.28} className="whitespace-nowrap text-red-600">{t("hero.l2")}</Line>
           </h1>
 
           <motion.div

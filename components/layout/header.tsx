@@ -34,6 +34,16 @@ const NAV_ITEMS: NavItem[] = [
   { key: "nav.contact", href: "/contactos" },
 ];
 
+// Mobile ☰ menu — the original list, with Produtos grouping its sub-pages underneath
+const MENU_LINKS: NavItem[] = [
+  { key: "nav.home", href: "/" },
+  NAV_ITEMS[0], // Produtos → Máquinas novas, Máquinas usadas, Ferramentas
+  { key: "nav.services", href: "/servicos" },
+  { key: "nav.news", href: "/noticias" },
+  { key: "nav.about", href: "/sobre" },
+  { key: "nav.contact", href: "/contactos" },
+];
+
 export function Header({ customer = null }: { customer?: HeaderCustomer | null }) {
   const pathname = usePathname();
   const [open, setOpen] = React.useState(false);
@@ -185,7 +195,7 @@ export function Header({ customer = null }: { customer?: HeaderCustomer | null }
               {/* Column 2 — navigation */}
               <div className="flex flex-col justify-center px-6 lg:px-12 xl:px-16 lg:border-r border-gray-100 pt-24 lg:pt-0 pb-10 lg:pb-0">
                 <nav className="flex flex-col">
-                  {NAV_ITEMS.map((item, i) => (
+                  {MENU_LINKS.map((item, i) => (
                     <MaskReveal key={item.href} delay={0.2 + i * 0.05}>
                       <Link href={item.href} className="group inline-flex items-center gap-4 py-2 lg:py-2.5 w-fit">
                         <span className="font-display uppercase font-semibold text-2xl sm:text-3xl lg:text-[clamp(1.6rem,2.3vw,2.25rem)] leading-tight tracking-tight text-black group-hover:text-red-600 transition-colors duration-300">
@@ -194,10 +204,12 @@ export function Header({ customer = null }: { customer?: HeaderCustomer | null }
                         <span className="h-px w-0 bg-red-600 group-hover:w-10 transition-all duration-300 hidden sm:block" />
                       </Link>
                       {item.children && (
-                        <div className="flex flex-wrap gap-x-5 gap-y-1 pb-2">
+                        <div className="flex flex-col border-l border-gray-200 ml-1 pl-4 mb-2">
                           {item.children.map((c) => (
-                            <Link key={c.href} href={c.href} className="text-sm text-gray-500 hover:text-red-600 transition-colors">
-                              {t(c.key)}
+                            <Link key={c.key} href={c.href} className="group inline-flex items-center gap-3 py-1.5 w-fit">
+                              <span className="font-display uppercase font-medium text-lg sm:text-xl leading-tight tracking-tight text-gray-600 group-hover:text-red-600 transition-colors duration-300">
+                                {t(c.key)}
+                              </span>
                             </Link>
                           ))}
                         </div>

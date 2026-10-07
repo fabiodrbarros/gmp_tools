@@ -17,7 +17,7 @@ async function getMachines() {
 
 const COND: Record<string, { label: string; cls: string }> = {
   NEW: { label: "Nova", cls: "bg-green-50 text-green-600" },
-  REFURBISHED: { label: "Recondicionada", cls: "bg-blue-50 text-blue-600" },
+  REFURBISHED: { label: "Recondicionada", cls: "bg-red-50 text-red-600" },
   USED: { label: "Usada", cls: "bg-gray-100 text-gray-500" },
 };
 

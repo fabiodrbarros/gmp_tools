@@ -51,7 +51,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           ) : (
             <svg width="100" height="100" viewBox="0 0 32 32" aria-hidden>
               <path d="M16 3L29 16L16 29L3 16Z" fill="#0a0a0a" opacity="0.06" />
-              <path d="M16 9L23 16L16 23L9 16Z" fill="#1878b6" opacity="0.12" />
+              <path d="M16 9L23 16L16 23L9 16Z" fill="#d3192b" opacity="0.12" />
             </svg>
           )}
         </div>

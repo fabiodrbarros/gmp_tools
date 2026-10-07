@@ -32,7 +32,7 @@ export async function HomeNews() {
               ) : (
                 <svg width="80" height="80" viewBox="0 0 32 32" aria-hidden>
                   <path d="M16 3L29 16L16 29L3 16Z" fill="#0a0a0a" opacity="0.06" />
-                  <path d="M16 9L23 16L16 23L9 16Z" fill="#1878b6" opacity="0.12" />
+                  <path d="M16 9L23 16L16 23L9 16Z" fill="#d3192b" opacity="0.12" />
                 </svg>
               )}
               <span className="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-medium px-2 py-1 uppercase tracking-wider">{featured.category}</span>
@@ -61,7 +61,7 @@ export async function HomeNews() {
                   ) : (
                     <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden>
                       <path d="M16 3L29 16L16 29L3 16Z" fill="#0a0a0a" opacity="0.06" />
-                      <path d="M16 9L23 16L16 23L9 16Z" fill="#1878b6" opacity="0.14" />
+                      <path d="M16 9L23 16L16 23L9 16Z" fill="#d3192b" opacity="0.14" />
                     </svg>
                   )}
                 </div>

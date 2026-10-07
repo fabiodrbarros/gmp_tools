@@ -16,8 +16,8 @@ interface LogoProps {
 
 export function Logo({ white = false, iconOnly = false, className = "", height = 38 }: LogoProps) {
   const src = iconOnly ? (white ? iconWhite : iconDark) : (white ? logoWhite : logoDark);
-  // intrinsic aspect ratios: full 480x172, icon 348x401
-  const ratio = iconOnly ? 348 / 401 : 480 / 172;
+  // intrinsic aspect ratios: full 960x407, icon 421x400
+  const ratio = iconOnly ? 421 / 400 : 960 / 407;
   const width = Math.round(height * ratio);
 
   return (

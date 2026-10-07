@@ -15,14 +15,22 @@ export interface HeaderCustomer { name: string }
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-const MENU_LINKS = [
-  { key: "nav.home", href: "/" },
-  { key: "nav.products", href: "/produtos" },
-  { key: "nav.newMachines", href: "/maquinas" },
-  { key: "nav.usedMachines", href: "/maquinas/usadas" },
-  { key: "nav.services", href: "/servicos" },
-  { key: "nav.news", href: "/noticias" },
+interface NavItem { key: string; href: string; children?: { key: string; href: string }[] }
+
+// Order and grouping requested by the client: shown inline on desktop, in the ☰ menu on mobile
+const NAV_ITEMS: NavItem[] = [
+  {
+    key: "nav.products",
+    href: "/produtos",
+    children: [
+      { key: "nav.newMachines", href: "/maquinas" },
+      { key: "nav.usedMachines", href: "/maquinas/usadas" },
+      { key: "nav.tools", href: "/produtos" },
+    ],
+  },
+  { key: "nav.servicesShort", href: "/servicos" },
   { key: "nav.about", href: "/sobre" },
+  { key: "nav.news", href: "/noticias" },
   { key: "nav.contact", href: "/contactos" },
 ];
 
@@ -74,14 +82,19 @@ export function Header({ customer = null }: { customer?: HeaderCustomer | null }
         <div className="max-w-screen-xl mx-auto px-6">
           <div className="flex items-center justify-between h-16">
             {/* Header logo hidden while the menu overlay is open (the menu shows its own) */}
-            {open ? <span /> : <Logo white={light} height={34} />}
+            {open ? <span /> : <Logo white={light} height={42} />}
 
             <div className="flex items-center gap-5 md:gap-7">
-              {/* Inline featured links — hidden while the menu overlay is open */}
+              {/* Full navigation on desktop — hidden while the menu overlay is open */}
               {!open && (
-                <nav className="hidden md:flex items-center gap-7">
-                  <InlineLink href="/sobre" light={light}>{t("nav.about")}</InlineLink>
-                  <InlineLink href="/servicos" light={light}>{t("nav.services")}</InlineLink>
+                <nav className="hidden lg:flex items-center gap-8">
+                  {NAV_ITEMS.map((item) =>
+                    item.children ? (
+                      <NavDropdown key={item.href} item={item} light={light} />
+                    ) : (
+                      <InlineLink key={item.href} href={item.href} light={light}>{t(item.key)}</InlineLink>
+                    )
+                  )}
                 </nav>
               )}
 
@@ -108,7 +121,7 @@ export function Header({ customer = null }: { customer?: HeaderCustomer | null }
                 onClick={() => setOpen((v) => !v)}
                 aria-label={open ? "Fechar menu" : "Abrir menu"}
                 aria-expanded={open}
-                className={`-mr-1 grid place-items-center h-11 w-11 transition-colors ${
+                className={`lg:hidden -mr-1 grid place-items-center h-11 w-11 transition-colors ${
                   light ? "text-white hover:text-red-500" : "text-black hover:text-red-600"
                 }`}
               >
@@ -172,7 +185,7 @@ export function Header({ customer = null }: { customer?: HeaderCustomer | null }
               {/* Column 2 — navigation */}
               <div className="flex flex-col justify-center px-6 lg:px-12 xl:px-16 lg:border-r border-gray-100 pt-24 lg:pt-0 pb-10 lg:pb-0">
                 <nav className="flex flex-col">
-                  {MENU_LINKS.map((item, i) => (
+                  {NAV_ITEMS.map((item, i) => (
                     <MaskReveal key={item.href} delay={0.2 + i * 0.05}>
                       <Link href={item.href} className="group inline-flex items-center gap-4 py-2 lg:py-2.5 w-fit">
                         <span className="font-display uppercase font-semibold text-2xl sm:text-3xl lg:text-[clamp(1.6rem,2.3vw,2.25rem)] leading-tight tracking-tight text-black group-hover:text-red-600 transition-colors duration-300">
@@ -180,6 +193,15 @@ export function Header({ customer = null }: { customer?: HeaderCustomer | null }
                         </span>
                         <span className="h-px w-0 bg-red-600 group-hover:w-10 transition-all duration-300 hidden sm:block" />
                       </Link>
+                      {item.children && (
+                        <div className="flex flex-wrap gap-x-5 gap-y-1 pb-2">
+                          {item.children.map((c) => (
+                            <Link key={c.href} href={c.href} className="text-sm text-gray-500 hover:text-red-600 transition-colors">
+                              {t(c.key)}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                     </MaskReveal>
                   ))}
                 </nav>
@@ -202,7 +224,7 @@ export function Header({ customer = null }: { customer?: HeaderCustomer | null }
                   <p className="text-sm text-gray-500 leading-relaxed">{SITE.address.street}<br />{SITE.address.postal}</p>
                 </MenuInfo>
                 <MenuInfo title={t("menu.hours")}>
-                  <p className="text-sm text-gray-500">{SITE.hours}</p>
+                  <p className="text-sm text-gray-500">{t("site.hours")}</p>
                 </MenuInfo>
                 <div className="flex flex-col gap-3 pt-2">
                   <Link href={loggedIn ? "/conta" : "/entrar"} className="inline-flex items-center gap-2 text-sm text-gray-700 hover:text-red-600 transition-colors">
@@ -255,6 +277,38 @@ function InlineLink({ href, light, children }: { href: string; light: boolean; c
       {children}
       <span className="absolute bottom-0 left-0 h-px w-0 bg-red-500 group-hover:w-full transition-all duration-300" />
     </Link>
+  );
+}
+
+function NavDropdown({ item, light }: { item: NavItem; light: boolean }) {
+  const { t } = useLang();
+  return (
+    <div className="group/dd relative">
+      <Link
+        href={item.href}
+        className={`relative inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.15em] py-5 transition-colors duration-300 ${
+          light ? "text-white/80 hover:text-red-500" : "text-gray-600 hover:text-red-600"
+        }`}
+      >
+        {t(item.key)}
+        <ChevronDown className="h-3 w-3 transition-transform duration-300 group-hover/dd:rotate-180" />
+      </Link>
+      {/* Opens on hover (and keyboard focus) */}
+      <div className="invisible opacity-0 translate-y-1 group-hover/dd:visible group-hover/dd:opacity-100 group-hover/dd:translate-y-0 group-focus-within/dd:visible group-focus-within/dd:opacity-100 group-focus-within/dd:translate-y-0 transition-all duration-200 absolute left-1/2 -translate-x-1/2 top-full pt-1 z-[130]">
+        <ul className="min-w-[200px] bg-white border border-gray-100 shadow-xl py-2">
+          {item.children!.map((c) => (
+            <li key={c.href}>
+              <Link
+                href={c.href}
+                className="block px-5 py-2.5 text-[12px] font-medium text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors whitespace-nowrap"
+              >
+                {t(c.key)}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }
 

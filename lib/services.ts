@@ -35,4 +35,14 @@ export const SERVICES: Service[] = [
     desc: "Formação de operadores e equipas técnicas na utilização das máquinas e ferramentas. Tiramos o máximo partido do equipamento com segurança e produtividade.",
     cta: { label: "Falar connosco", href: "/contactos" },
   },
+  {
+    num: "05",
+    eyebrow: "Serviço 05",
+    title: "Rechapagem de Discos",
+    desc: "Rechapagem de discos diamantados: substituímos os segmentos gastos e devolvemos ao disco a capacidade de corte, a uma fração do custo de um disco novo.",
+    cta: { label: "Pedir orçamento", href: "/contactos" },
+  },
 ];
+
+// Services featured on the homepage "Os nossos serviços" block (kept at the original four)
+export const HOME_SERVICES = SERVICES.filter((s) => ["01", "02", "03", "04"].includes(s.num));

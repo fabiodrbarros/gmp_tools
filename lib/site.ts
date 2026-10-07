@@ -16,7 +16,7 @@ export const SITE = {
     street: "Rua do Barreiro",
     postal: "4730-590 Turiz",
   },
-  hours: "Segunda a Sábado · 09:00–19:00",
+  hours: "Segunda a Sexta, das 8h às 17h", // translated copies: "site.hours" in lib/i18n-dict.ts
   freeShippingThreshold: 300,
   social: {
     facebook: "https://www.facebook.com/gmptoolspt",

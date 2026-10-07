@@ -12,19 +12,19 @@ const features = [
 
 export function ThibautBanner() {
   return (
-    <section className="bg-[#0a0a0a] relative overflow-hidden">
+    <section className="bg-red-600 relative overflow-hidden">
       {/* Subtle diamond pattern bg */}
       <div className="absolute right-0 top-0 bottom-0 w-1/2 pointer-events-none opacity-[0.03]">
         <svg width="100%" height="100%" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid slice">
-          <path d="M200 0L400 300L200 600L0 300Z" fill="#1878b6" />
+          <path d="M200 0L400 300L200 600L0 300Z" fill="#000000" />
         </svg>
       </div>
 
       <div className="relative max-w-screen-xl mx-auto px-6 py-24 lg:py-32">
         {/* Top label */}
         <div className="flex items-center gap-3 mb-16">
-          <span className="block w-8 h-px bg-red-600" />
-          <span className="text-[11px] font-semibold tracking-[0.3em] text-red-500 uppercase">
+          <span className="block w-8 h-px bg-white" />
+          <span className="text-[11px] font-semibold tracking-[0.3em] text-white/70 uppercase">
             Representante exclusivo · Portugal
           </span>
         </div>
@@ -43,7 +43,7 @@ export function ThibautBanner() {
             </p>
             <Link
               href="/maquinas"
-              className="inline-flex items-center gap-2.5 text-white border border-white/20 text-[13px] font-semibold px-8 py-4 hover:bg-red-600 hover:border-red-600 transition-all group"
+              className="inline-flex items-center gap-2.5 text-white border border-white/20 text-[13px] font-semibold px-8 py-4 hover:bg-black hover:border-black transition-all group"
             >
               Ver máquinas Thibaut
               <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />

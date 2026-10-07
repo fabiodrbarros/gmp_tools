@@ -88,10 +88,10 @@ export default async function SobrePage() {
       </section>
 
       {/* O Nosso Compromisso */}
-      <section className="bg-[#0a0a0a] py-24 lg:py-32 relative overflow-hidden">
+      <section className="bg-red-600 py-24 lg:py-32 relative overflow-hidden">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-16 relative">
           <div className="max-w-3xl">
-            <span className="block text-[11px] font-semibold tracking-[0.3em] text-red-500 uppercase mb-5">{t("about.commitmentEyebrow")}</span>
+            <span className="block text-[11px] font-semibold tracking-[0.3em] text-white/70 uppercase mb-5">{t("about.commitmentEyebrow")}</span>
             <h2 className="font-display text-3xl lg:text-5xl font-medium text-white tracking-tight leading-[1.05]">
               {t("about.commitment")}
             </h2>

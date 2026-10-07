@@ -18,7 +18,7 @@ export function AboutHero() {
         width="760" height="760" viewBox="0 0 700 700" fill="none"
         className="absolute right-[-12%] top-1/2 -translate-y-1/2 pointer-events-none"
       >
-        <path d="M350 30L670 350L350 670L30 350Z" fill="#1878b6" />
+        <path d="M350 30L670 350L350 670L30 350Z" fill="#d3192b" />
       </motion.svg>
 
       {/* Gradient */}
@@ -30,12 +30,12 @@ export function AboutHero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="block text-[11px] font-semibold tracking-[0.3em] text-red-500 uppercase mb-7"
+          className="block text-[11px] font-semibold tracking-[0.3em] text-red-600 uppercase mb-7"
         >
           {t("about.eyebrow")}
         </motion.span>
 
-        <h1 className="font-display uppercase font-medium text-white leading-[0.95] tracking-tight text-[clamp(2.6rem,7vw,6rem)] flex flex-wrap gap-x-[0.28em] mb-8 max-w-5xl">
+        <h1 className="font-display uppercase font-medium text-red-600 leading-[0.95] tracking-tight text-[clamp(2.6rem,7vw,6rem)] flex flex-wrap gap-x-[0.28em] mb-8 max-w-5xl">
           {HEADLINE.map((w, i) => (
             <span key={i} className="inline-block overflow-hidden py-[0.05em]">
               <motion.span

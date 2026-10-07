@@ -64,12 +64,12 @@ export default async function MaquinasPage() {
 
       {/* CTA — não encontra a máquina? */}
       <div className="max-w-screen-xl mx-auto px-6 lg:px-10 pb-20">
-        <div className="bg-[#0a0a0a] p-10 lg:p-12 flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div className="bg-red-600 p-10 lg:p-12 flex flex-col lg:flex-row items-center justify-between gap-6">
           <div>
             <h3 className="font-display text-2xl font-medium text-white mb-2">{t("machn.ctaTitle")}</h3>
-            <p className="text-gray-400">{t("machn.ctaBody")}</p>
+            <p className="text-white/80">{t("machn.ctaBody")}</p>
           </div>
-          <Link href="/contactos" className="inline-flex items-center gap-2 bg-red-600 text-white text-sm font-semibold px-7 py-3.5 hover:bg-red-700 transition-colors group shrink-0">
+          <Link href="/contactos" className="inline-flex items-center gap-2 bg-black text-white text-sm font-semibold px-7 py-3.5 hover:bg-gray-900 transition-colors group shrink-0">
             {t("machn.ctaButton")} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>

@@ -15,7 +15,7 @@ export default async function ContactosPage() {
     { icon: MapPin, label: t("contacts.addressLabel"), value: `${SITE.address.street}, ${SITE.address.postal}` },
     { icon: Phone, label: t("contacts.phoneLabel"), value: SITE.phone, href: `tel:${SITE.phoneHref}`, note: t("common.callcost") },
     { icon: Mail, label: t("contacts.emailLabel"), value: SITE.email, href: `mailto:${SITE.email}` },
-    { icon: Clock, label: t("contacts.hoursLabel"), value: SITE.hours },
+    { icon: Clock, label: t("contacts.hoursLabel"), value: t("site.hours") },
   ];
   return (
     <div className="bg-white">

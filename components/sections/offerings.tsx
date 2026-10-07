@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SERVICES } from "@/lib/services";
+import { HOME_SERVICES } from "@/lib/services";
 import { getT } from "@/lib/i18n-server";
 
 // Optional photo per service (drop files in /public/images/servicos/ and map here).
@@ -12,13 +12,13 @@ const IMAGES: Record<string, string | undefined> = {
 };
 
 export async function Offerings() {
-  const items = SERVICES;
+  const items = HOME_SERVICES;
   const { t } = await getT();
 
   return (
     <section className="relative bg-[#0a0a0a] overflow-hidden">
       {/* subtle depth */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_-10%,rgba(24,120,182,0.14),transparent_60%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_-10%,rgba(211,25,43,0.14),transparent_60%)]" />
 
       <div className="relative max-w-screen-2xl mx-auto px-6 lg:px-12 pt-20 lg:pt-24">
         {/* Header */}
@@ -65,7 +65,7 @@ export async function Offerings() {
             ) : (
               <div className="aspect-[4/3] w-full bg-white/[0.04] flex items-center justify-center">
                 <svg viewBox="0 0 32 32" className="h-16 w-16 opacity-[0.06]" fill="none" aria-hidden>
-                  <path d="M16 3L29 16L16 29L3 16Z" fill="#1878b6" />
+                  <path d="M16 3L29 16L16 29L3 16Z" fill="#d3192b" />
                 </svg>
               </div>
             )}

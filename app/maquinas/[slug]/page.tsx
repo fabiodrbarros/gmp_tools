@@ -13,7 +13,7 @@ import { localizeOne } from "@/lib/translations";
 
 const COND_CLS: Record<string, string> = {
   NEW: "bg-green-50 text-green-600",
-  REFURBISHED: "bg-blue-50 text-blue-600",
+  REFURBISHED: "bg-red-50 text-red-600",
   USED: "bg-gray-100 text-gray-500",
 };
 

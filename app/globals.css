@@ -1,20 +1,34 @@
 @import "tailwindcss";
 
-/* Brand accent = the blue of the machine in the hero video (#1878B6).
-   We remap Tailwind's red-* scale to this blue so every existing `red-*`
-   utility across the site becomes blue without touching each file. */
+/* Brand palette — from the GMP "Ativos Marca" guide:
+   red #d3192b (accent — also used for the dark/feature sections), black #000000, off-white #efefef.
+   Tailwind's red-* scale is redefined around the brand red so every existing
+   `red-*` utility follows the brand without touching each file. */
 @theme {
-  --color-red-50: #eef6fc;
-  --color-red-100: #d6e9f6;
-  --color-red-200: #b3d5ee;
-  --color-red-300: #82badf;
-  --color-red-400: #3f9bd6;
-  --color-red-500: #2186c4;
-  --color-red-600: #1878b6;
-  --color-red-700: #135f90;
-  --color-red-800: #104d73;
-  --color-red-900: #10405f;
-  --color-black: #0a0a0a;
+  --color-red-50: #fef2f3;
+  --color-red-100: #fde3e5;
+  --color-red-200: #f9c5ca;
+  --color-red-300: #f39aa3;
+  --color-red-400: #e85d6c;
+  --color-red-500: #dc2f40;
+  --color-red-600: #d3192b;
+  --color-red-700: #b11423;
+  --color-red-800: #8f1220;
+  --color-red-900: #76131f;
+  --color-offwhite: #efefef;
+  /* Tailwind's default gray is blue-tinted — use neutral greys so nothing reads as blue */
+  --color-gray-50: #fafafa;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #e5e5e5;
+  --color-gray-300: #d4d4d4;
+  --color-gray-400: #a1a1a1;
+  --color-gray-500: #737373;
+  --color-gray-600: #525252;
+  --color-gray-700: #404040;
+  --color-gray-800: #262626;
+  --color-gray-900: #171717;
+  --color-gray-950: #0a0a0a;
+  --color-black: #000000;
   --font-sans: var(--font-sans), system-ui, sans-serif;
   --font-display: var(--font-display), system-ui, sans-serif;
 }
@@ -36,11 +50,11 @@ h1, h2, h3, h4, h5 {
 }
 
 ::selection {
-  background: #1878b6;
+  background: #d3192b;
   color: #fff;
 }
 
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: #f5f5f5; }
 ::-webkit-scrollbar-thumb { background: #e0e0e0; }
-::-webkit-scrollbar-thumb:hover { background: #1878b6; }
+::-webkit-scrollbar-thumb:hover { background: #d3192b; }

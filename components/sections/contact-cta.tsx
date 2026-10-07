@@ -33,7 +33,7 @@ export async function ContactCTA() {
               <div>
                 <div className="text-[10px] font-medium tracking-widest text-gray-400 uppercase mb-0.5">{t("contact.phoneLabel")}</div>
                 <div className="text-base font-medium text-black">{SITE.phone}</div>
-                <div className="text-xs text-gray-400">{SITE.hours}</div>
+                <div className="text-xs text-gray-400">{t("site.hours")}</div>
               </div>
             </a>
             <a href={`mailto:${SITE.email}`} className="flex items-center gap-5 p-6 bg-white border border-gray-100 hover:border-gray-300 transition-all group">

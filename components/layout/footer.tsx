@@ -30,7 +30,7 @@ export function Footer() {
         <div className="grid lg:grid-cols-[1.6fr_1fr_1.2fr] gap-12 lg:gap-16 pb-12 border-b border-gray-200">
           {/* Brand */}
           <div>
-            <Logo height={42} />
+            <Logo height={52} />
             <p className="mt-6 text-[13px] font-light text-gray-500 leading-relaxed max-w-[34ch]">
               {t("common.menuTagline")}
             </p>
@@ -65,7 +65,7 @@ export function Footer() {
                 <a href={`mailto:${SITE.email}`} className="hover:text-red-600 transition-colors">{SITE.email}</a>
               </ContactItem>
               <ContactItem label={t("footer.hours")}>
-                {SITE.hours}
+                {t("site.hours")}
               </ContactItem>
             </div>
           </div>

@@ -6,8 +6,8 @@ export interface OrderStatusDef {
 
 export const ORDER_STATUSES: OrderStatusDef[] = [
   { value: "PENDING", label: "Pendente", cls: "bg-amber-50 text-amber-600" },
-  { value: "CONFIRMED", label: "Confirmada", cls: "bg-blue-50 text-blue-600" },
-  { value: "PROCESSING", label: "Em processamento", cls: "bg-indigo-50 text-indigo-600" },
+  { value: "CONFIRMED", label: "Confirmada", cls: "bg-red-50 text-red-600" },
+  { value: "PROCESSING", label: "Em processamento", cls: "bg-red-100 text-red-700" },
   { value: "SHIPPED", label: "Enviada", cls: "bg-green-50 text-green-600" },
   { value: "CANCELLED", label: "Cancelada", cls: "bg-gray-100 text-gray-400" },
 ];

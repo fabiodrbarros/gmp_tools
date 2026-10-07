@@ -61,7 +61,7 @@ export function MachinesGrid({ categories, machines }: { categories: MachineCate
             <div className="p-8 flex flex-col flex-1 border-t border-gray-100">
               <div className="flex items-center gap-2 mb-5">
                 <span className="text-[10px] font-medium tracking-widest text-red-500 uppercase bg-red-50 px-2 py-1">{m.label}</span>
-                <span className={`text-[10px] font-medium tracking-widest uppercase px-2 py-1 ${m.condition === "Nova" ? "bg-green-50 text-green-600" : "bg-blue-50 text-blue-600"}`}>
+                <span className={`text-[10px] font-medium tracking-widest uppercase px-2 py-1 ${m.condition === "Nova" ? "bg-green-50 text-green-600" : "bg-red-50 text-red-600"}`}>
                   {m.condition}
                 </span>
               </div>
@@ -83,13 +83,13 @@ export function MachinesGrid({ categories, machines }: { categories: MachineCate
         ))}
 
         {/* CTA card */}
-        <div className="bg-[#0a0a0a] p-9 flex flex-col justify-between min-h-[300px]">
+        <div className="bg-red-600 p-9 flex flex-col justify-between min-h-[300px]">
           <div>
-            <div className="text-[10px] font-medium tracking-widest text-red-500 uppercase mb-4">Thibaut · Portugal</div>
+            <div className="text-[10px] font-medium tracking-widest text-white/70 uppercase mb-4">Thibaut · Portugal</div>
             <h3 className="text-xl font-medium text-white mb-3">Não encontrou a máquina certa?</h3>
-            <p className="text-sm text-gray-400 leading-relaxed">Temos acesso a toda a gama Thibaut. Consulte-nos.</p>
+            <p className="text-sm text-white/80 leading-relaxed">Temos acesso a toda a gama Thibaut. Consulte-nos.</p>
           </div>
-          <Link href="/contactos" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white border border-white/20 px-5 py-3 hover:bg-red-600 hover:border-red-600 transition-all w-fit">
+          <Link href="/contactos" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white border border-white/30 px-5 py-3 hover:bg-black hover:border-black transition-all w-fit">
             Falar com um especialista <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

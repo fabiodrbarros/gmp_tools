@@ -6,7 +6,7 @@ export interface TicketStatusDef {
 
 export const TICKET_STATUSES: TicketStatusDef[] = [
   { value: "OPEN", label: "Aberto", cls: "bg-amber-50 text-amber-600" },
-  { value: "ANSWERED", label: "Respondido", cls: "bg-blue-50 text-blue-600" },
+  { value: "ANSWERED", label: "Respondido", cls: "bg-red-50 text-red-600" },
   { value: "CLOSED", label: "Fechado", cls: "bg-gray-100 text-gray-400" },
 ];
 

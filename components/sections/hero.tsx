@@ -13,7 +13,7 @@ export function Hero() {
     <section className="relative h-screen min-h-[600px] w-full overflow-hidden bg-[#0a0a0a]">
       {/* Background video */}
       <video
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover grayscale"
         autoPlay
         muted
         loop

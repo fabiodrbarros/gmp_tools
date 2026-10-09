@@ -43,6 +43,3 @@ export const SERVICES: Service[] = [
     cta: { label: "Pedir orçamento", href: "/contactos" },
   },
 ];
-
-// Services featured on the homepage "Os nossos serviços" block (kept at the original four)
-export const HOME_SERVICES = SERVICES.filter((s) => ["01", "02", "03", "04"].includes(s.num));

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HOME_SERVICES } from "@/lib/services";
+import { SERVICES } from "@/lib/services";
 import { getT } from "@/lib/i18n-server";
 
 // Optional photo per service (drop files in /public/images/servicos/ and map here).
@@ -9,10 +9,11 @@ const IMAGES: Record<string, string | undefined> = {
   "02": "/images/servicos/02-ferramentas.jpg",
   "03": "/images/servicos/03-suporte.jpg",
   "04": "/images/servicos/04-formacao.jpg",
+  "05": "/images/servicos/05-rechapagem.jpg",
 };
 
 export async function Offerings() {
-  const items = HOME_SERVICES;
+  const items = SERVICES;
   const { t } = await getT();
 
   return (
@@ -39,17 +40,17 @@ export async function Offerings() {
 
       {/* Columns */}
       <div className="relative max-w-screen-2xl mx-auto px-6 lg:px-12 pb-20 lg:pb-24">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
         {items.map((s) => (
           <Link
             key={s.num}
-            href="/servicos"
-            className="group flex flex-col overflow-hidden"
+            href={`/servicos#servico-${s.num}`}
+            className="group flex flex-col"
           >
             {/* Label */}
             <div className="mb-3">
               <span className="block text-[13px] font-medium tracking-widest text-white/40 mb-3 group-hover:text-red-500 transition-colors">{s.num}</span>
-              <h3 className="font-display uppercase font-medium text-white leading-[1.05] tracking-tight text-xl lg:text-2xl min-h-[2.4em]">
+              <h3 className="font-display uppercase font-medium text-white leading-[1.05] tracking-tight text-lg lg:text-xl min-h-[2.2em]">
                 {t(`svc.${s.num}.title`)}
               </h3>
             </div>
@@ -57,11 +58,13 @@ export async function Offerings() {
             {/* Photo / placeholder */}
             {IMAGES[s.num] ? (
               /* eslint-disable-next-line @next/next/no-img-element */
-              <img
-                src={IMAGES[s.num]}
-                alt={s.title}
-                className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-[1.03]"
-              />
+              <div className="aspect-[21/20] w-full overflow-hidden">
+                <img
+                  src={IMAGES[s.num]}
+                  alt={s.title}
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+              </div>
             ) : (
               <div className="aspect-[4/3] w-full bg-white/[0.04] flex items-center justify-center">
                 <svg viewBox="0 0 32 32" className="h-16 w-16 opacity-[0.06]" fill="none" aria-hidden>

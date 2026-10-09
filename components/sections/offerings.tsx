@@ -44,7 +44,7 @@ export async function Offerings() {
         {items.map((s) => (
           <Link
             key={s.num}
-            href={`/servicos#servico-${s.num}`}
+            href={s.cta.href}
             className="group flex flex-col"
           >
             {/* Label */}
